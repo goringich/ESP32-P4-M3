@@ -1,0 +1,7 @@
+menu "app"
+
+config APP_TICK_LOG
+  bool "log app tick"
+  default y
+
+endmenu

@@ -1,0 +1,18 @@
+menu "i2c bus"
+
+config I2C_BUS_SDA_GPIO
+  int "SDA GPIO"
+  default 10
+  range 0 48
+
+config I2C_BUS_SCL_GPIO
+  int "SCL GPIO"
+  default 11
+  range 0 48
+
+config I2C_BUS_FREQ_HZ
+  int "frequency (Hz)"
+  default 400000
+  range 10000 1000000
+
+endmenu
