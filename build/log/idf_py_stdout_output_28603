@@ -1,0 +1,32 @@
+Command: ninja all
+[1/12] Building C object esp-idf/app/CMakeFiles/__idf_app.dir/src/app.c.obj
+[2/12] Building C object esp-idf/i2c_bus/CMakeFiles/__idf_i2c_bus.dir/src/i2c_bus.c.obj
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c: In function 'i2c_bus_scan':
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:108:8: warning: variable 'present' set but not used [-Wunused-but-set-variable]
+  108 |   bool present[128] = {0};
+      |        ^~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c: At top level:
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:258:13: warning: 'i2c_bus_selfcheck_gpio' defined but not used [-Wunused-function]
+  258 | static bool i2c_bus_selfcheck_gpio(const char *where) {
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:233:13: warning: 'i2c_bus_log_scan_table' defined but not used [-Wunused-function]
+  233 | static void i2c_bus_log_scan_table(const bool present[128]) {
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+[3/12] Performing build step for 'bootloader'
+[1/1] cd /home/goringich/hello_p4/build/bootloader/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 /home/goringich/hello_p4/build/bootloader/bootloader.bin
+Bootloader binary size 0x5a30 bytes. 0x5d0 bytes (6%) free.
+[4/12] No install step for 'bootloader'
+[5/12] Linking C static library esp-idf/i2c_bus/libi2c_bus.a
+[6/12] Linking C static library esp-idf/app/libapp.a
+[7/12] Completed 'bootloader'
+[8/12] Linking C static library esp-idf/main/libmain.a
+[9/12] Generating esp-idf/esp_system/ld/sections.ld
+[10/12] Linking CXX executable p4_lab.elf
+[11/12] Generating binary image from built executable
+esptool.py v4.12.dev1
+Creating esp32p4 image...
+Merged 3 ELF sections
+Successfully created esp32p4 image.
+Generated /home/goringich/hello_p4/build/p4_lab.bin
+[12/12] cd /home/goringich/hello_p4/build/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/goringich/hello_p4/build/partition_table/partition-table.bin /home/goringich/hello_p4/build/p4_lab.bin
+p4_lab.bin binary size 0x386d0 bytes. Smallest app partition is 0x100000 bytes. 0xc7930 bytes (78%) free.

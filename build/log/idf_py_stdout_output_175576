@@ -1,0 +1,23 @@
+Command: ninja all
+[1/11] Building C object esp-idf/app/CMakeFiles/__idf_app.dir/src/app.c.obj
+[2/11] Performing build step for 'bootloader'
+[1/1] cd /home/goringich/hello_p4/build/bootloader/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 /home/goringich/hello_p4/build/bootloader/bootloader.bin
+Bootloader binary size 0x5a30 bytes. 0x5d0 bytes (6%) free.
+[3/11] Building C object esp-idf/i2c_bus/CMakeFiles/__idf_i2c_bus.dir/src/i2c_bus.c.obj
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:261:13: warning: 'i2c_bus_recover_gpio' defined but not used [-Wunused-function]
+  261 | static bool i2c_bus_recover_gpio(bool *did_recover) {
+      |             ^~~~~~~~~~~~~~~~~~~~
+[4/11] No install step for 'bootloader'
+[5/11] Linking C static library esp-idf/i2c_bus/libi2c_bus.a
+[6/11] Completed 'bootloader'
+[7/11] Linking C static library esp-idf/app/libapp.a
+[8/11] Generating esp-idf/esp_system/ld/sections.ld
+[9/11] Linking CXX executable p4_lab.elf
+[10/11] Generating binary image from built executable
+esptool.py v4.12.dev1
+Creating esp32p4 image...
+Merged 3 ELF sections
+Successfully created esp32p4 image.
+Generated /home/goringich/hello_p4/build/p4_lab.bin
+[11/11] cd /home/goringich/hello_p4/build/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/goringich/hello_p4/build/partition_table/partition-table.bin /home/goringich/hello_p4/build/p4_lab.bin
+p4_lab.bin binary size 0x395b0 bytes. Smallest app partition is 0x100000 bytes. 0xc6a50 bytes (78%) free.

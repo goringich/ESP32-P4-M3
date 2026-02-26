@@ -1,0 +1,18 @@
+Command: ninja all
+[1/9] Building C object esp-idf/i2c_bus/CMakeFiles/__idf_i2c_bus.dir/src/i2c_bus.c.obj
+[2/9] Performing build step for 'bootloader'
+[1/1] cd /home/goringich/hello_p4/build/bootloader/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 /home/goringich/hello_p4/build/bootloader/bootloader.bin
+Bootloader binary size 0x5a30 bytes. 0x5d0 bytes (6%) free.
+[3/9] Linking C static library esp-idf/i2c_bus/libi2c_bus.a
+[4/9] No install step for 'bootloader'
+[5/9] Completed 'bootloader'
+[6/9] Generating esp-idf/esp_system/ld/sections.ld
+[7/9] Linking CXX executable p4_lab.elf
+[8/9] Generating binary image from built executable
+esptool.py v4.12.dev1
+Creating esp32p4 image...
+Merged 3 ELF sections
+Successfully created esp32p4 image.
+Generated /home/goringich/hello_p4/build/p4_lab.bin
+[9/9] cd /home/goringich/hello_p4/build/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/goringich/hello_p4/build/partition_table/partition-table.bin /home/goringich/hello_p4/build/p4_lab.bin
+p4_lab.bin binary size 0x386b0 bytes. Smallest app partition is 0x100000 bytes. 0xc7950 bytes (78%) free.

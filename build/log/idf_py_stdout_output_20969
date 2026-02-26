@@ -1,0 +1,983 @@
+Command: ninja flash
+[1/14] Building C object esp-idf/app/CMakeFiles/__idf_app.dir/src/app.c.obj
+FAILED: [code=1] esp-idf/app/CMakeFiles/__idf_app.dir/src/app.c.obj 
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/bin/riscv32-esp-elf-gcc -DESP_PLATFORM -DIDF_VER=\"v5.5.2\" -DSOC_MMU_PAGE_SIZE=CONFIG_MMU_PAGE_SIZE -DSOC_XTAL_FREQ_MHZ=CONFIG_XTAL_FREQ -D_GLIBCXX_HAVE_POSIX_SEMAPHORE -D_GLIBCXX_USE_POSIX_SEMAPHORE -D_GNU_SOURCE -D_POSIX_READER_WRITER_LOCKS -I/home/goringich/hello_p4/build/config -I/home/goringich/hello_p4/components/app/include -I/home/goringich/esp-idf/components/newlib/platform_include -I/home/goringich/esp-idf/components/freertos/config/include -I/home/goringich/esp-idf/components/freertos/config/include/freertos -I/home/goringich/esp-idf/components/freertos/config/riscv/include -I/home/goringich/esp-idf/components/freertos/FreeRTOS-Kernel/include -I/home/goringich/esp-idf/components/freertos/FreeRTOS-Kernel/portable/riscv/include -I/home/goringich/esp-idf/components/freertos/FreeRTOS-Kernel/portable/riscv/include/freertos -I/home/goringich/esp-idf/components/freertos/esp_additions/include -I/home/goringich/esp-idf/components/esp_hw_support/include -I/home/goringich/esp-idf/components/esp_hw_support/include/soc -I/home/goringich/esp-idf/components/esp_hw_support/include/soc/esp32p4 -I/home/goringich/esp-idf/components/esp_hw_support/dma/include -I/home/goringich/esp-idf/components/esp_hw_support/ldo/include -I/home/goringich/esp-idf/components/esp_hw_support/debug_probe/include -I/home/goringich/esp-idf/components/esp_hw_support/mspi_timing_tuning/include -I/home/goringich/esp-idf/components/esp_hw_support/mspi_timing_tuning/tuning_scheme_impl/include -I/home/goringich/esp-idf/components/esp_hw_support/power_supply/include -I/home/goringich/esp-idf/components/esp_hw_support/port/esp32p4/. -I/home/goringich/esp-idf/components/esp_hw_support/port/esp32p4/include -I/home/goringich/esp-idf/components/esp_hw_support/port/esp32p4/private_include -I/home/goringich/esp-idf/components/esp_hw_support/mspi_timing_tuning/port/esp32p4/. -I/home/goringich/esp-idf/components/heap/include -I/home/goringich/esp-idf/components/heap/tlsf -I/home/goringich/esp-idf/components/log/include -I/home/goringich/esp-idf/components/soc/include -I/home/goringich/esp-idf/components/soc/esp32p4 -I/home/goringich/esp-idf/components/soc/esp32p4/include -I/home/goringich/esp-idf/components/soc/esp32p4/register/hw_ver1 -I/home/goringich/esp-idf/components/hal/platform_port/include -I/home/goringich/esp-idf/components/hal/esp32p4/include -I/home/goringich/esp-idf/components/hal/include -I/home/goringich/esp-idf/components/esp_rom/include -I/home/goringich/esp-idf/components/esp_rom/esp32p4/include -I/home/goringich/esp-idf/components/esp_rom/esp32p4/include/esp32p4 -I/home/goringich/esp-idf/components/esp_rom/esp32p4 -I/home/goringich/esp-idf/components/esp_common/include -I/home/goringich/esp-idf/components/esp_system/include -I/home/goringich/esp-idf/components/esp_system/port/soc -I/home/goringich/esp-idf/components/esp_system/port/include/riscv -I/home/goringich/esp-idf/components/esp_system/port/include/private -I/home/goringich/esp-idf/components/riscv/include -I/home/goringich/esp-idf/components/lwip/include -I/home/goringich/esp-idf/components/lwip/include/apps -I/home/goringich/esp-idf/components/lwip/include/apps/sntp -I/home/goringich/esp-idf/components/lwip/lwip/src/include -I/home/goringich/esp-idf/components/lwip/port/include -I/home/goringich/esp-idf/components/lwip/port/freertos/include -I/home/goringich/esp-idf/components/lwip/port/esp32xx/include -I/home/goringich/esp-idf/components/lwip/port/esp32xx/include/arch -I/home/goringich/esp-idf/components/lwip/port/esp32xx/include/sys -I/home/goringich/hello_p4/components/i2c_bus/include -march=rv32imafc_zicsr_zifencei_xesploop_xespv -mabi=ilp32f  -fdiagnostics-color=always -ffunction-sections -fdata-sections -Wall -Werror=all -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=deprecated-declarations -Wextra -Wno-error=extra -Wno-unused-parameter -Wno-sign-compare -Wno-enum-conversion -gdwarf-4 -ggdb -nostartfiles -Og -fno-shrink-wrap -fmacro-prefix-map=/home/goringich/hello_p4=. -fmacro-prefix-map=/home/goringich/esp-idf=/IDF -fstrict-volatile-bitfields -fno-jump-tables -fno-tree-switch-conversion -march=rv32imafc_zicsr_zifencei_xesppie -std=gnu17 -Wno-old-style-declaration -MD -MT esp-idf/app/CMakeFiles/__idf_app.dir/src/app.c.obj -MF esp-idf/app/CMakeFiles/__idf_app.dir/src/app.c.obj.d -o esp-idf/app/CMakeFiles/__idf_app.dir/src/app.c.obj -c /home/goringich/hello_p4/components/app/src/app.c
+/home/goringich/hello_p4/components/app/src/app.c: In function 'i2c_bus_selfcheck_gpio':
+/home/goringich/hello_p4/components/app/src/app.c:8:20: error: storage class specified for parameter 'TAG'
+    8 | static const char *TAG = "app";
+      |                    ^~~
+/home/goringich/hello_p4/components/app/src/app.c:8:1: error: parameter 'TAG' is initialized
+    8 | static const char *TAG = "app";
+      | ^~~~~~
+/home/goringich/hello_p4/components/app/src/app.c:9:12: error: storage class specified for parameter 's_counter'
+    9 | static int s_counter = 0;
+      |            ^~~~~~~~~
+/home/goringich/hello_p4/components/app/src/app.c:9:1: error: parameter 's_counter' is initialized
+    9 | static int s_counter = 0;
+      | ^~~~~~
+/home/goringich/hello_p4/components/app/src/app.c:11:21: error: expected '=', ',', ';', 'asm' or '__attribute__' before '{' token
+   11 | void app_init(void) {
+      |                     ^
+/home/goringich/hello_p4/components/app/src/app.c:31:21: error: expected '=', ',', ';', 'asm' or '__attribute__' before '{' token
+   31 | void app_tick(void) {
+      |                     ^
+In file included from /home/goringich/hello_p4/components/app/src/app.c:6:
+/home/goringich/hello_p4/components/i2c_bus/include/i2c_bus.h:22:13: error: old-style parameter declarations in prototyped function definition
+   22 | static bool i2c_bus_selfcheck_gpio(const char *where)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/hello_p4/components/app/src/app.c:41: error: expected '{' at end of input
+/home/goringich/hello_p4/components/app/src/app.c:40:1: error: no return statement in function returning non-void [-Werror=return-type]
+   40 | }
+      | ^
+/home/goringich/hello_p4/components/i2c_bus/include/i2c_bus.h: At top level:
+/home/goringich/hello_p4/components/i2c_bus/include/i2c_bus.h:22:13: warning: 'i2c_bus_selfcheck_gpio' defined but not used [-Wunused-function]
+   22 | static bool i2c_bus_selfcheck_gpio(const char *where)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+cc1: some warnings being treated as errors
+[2/14] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
+[3/14] Building C object esp-idf/i2c_bus/CMakeFiles/__idf_i2c_bus.dir/src/i2c_bus.c.obj
+FAILED: [code=1] esp-idf/i2c_bus/CMakeFiles/__idf_i2c_bus.dir/src/i2c_bus.c.obj 
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/bin/riscv32-esp-elf-gcc -DESP_PLATFORM -DIDF_VER=\"v5.5.2\" -DSOC_MMU_PAGE_SIZE=CONFIG_MMU_PAGE_SIZE -DSOC_XTAL_FREQ_MHZ=CONFIG_XTAL_FREQ -D_GLIBCXX_HAVE_POSIX_SEMAPHORE -D_GLIBCXX_USE_POSIX_SEMAPHORE -D_GNU_SOURCE -D_POSIX_READER_WRITER_LOCKS -I/home/goringich/hello_p4/build/config -I/home/goringich/hello_p4/components/i2c_bus/include -I/home/goringich/esp-idf/components/newlib/platform_include -I/home/goringich/esp-idf/components/freertos/config/include -I/home/goringich/esp-idf/components/freertos/config/include/freertos -I/home/goringich/esp-idf/components/freertos/config/riscv/include -I/home/goringich/esp-idf/components/freertos/FreeRTOS-Kernel/include -I/home/goringich/esp-idf/components/freertos/FreeRTOS-Kernel/portable/riscv/include -I/home/goringich/esp-idf/components/freertos/FreeRTOS-Kernel/portable/riscv/include/freertos -I/home/goringich/esp-idf/components/freertos/esp_additions/include -I/home/goringich/esp-idf/components/esp_hw_support/include -I/home/goringich/esp-idf/components/esp_hw_support/include/soc -I/home/goringich/esp-idf/components/esp_hw_support/include/soc/esp32p4 -I/home/goringich/esp-idf/components/esp_hw_support/dma/include -I/home/goringich/esp-idf/components/esp_hw_support/ldo/include -I/home/goringich/esp-idf/components/esp_hw_support/debug_probe/include -I/home/goringich/esp-idf/components/esp_hw_support/mspi_timing_tuning/include -I/home/goringich/esp-idf/components/esp_hw_support/mspi_timing_tuning/tuning_scheme_impl/include -I/home/goringich/esp-idf/components/esp_hw_support/power_supply/include -I/home/goringich/esp-idf/components/esp_hw_support/port/esp32p4/. -I/home/goringich/esp-idf/components/esp_hw_support/port/esp32p4/include -I/home/goringich/esp-idf/components/esp_hw_support/port/esp32p4/private_include -I/home/goringich/esp-idf/components/esp_hw_support/mspi_timing_tuning/port/esp32p4/. -I/home/goringich/esp-idf/components/heap/include -I/home/goringich/esp-idf/components/heap/tlsf -I/home/goringich/esp-idf/components/log/include -I/home/goringich/esp-idf/components/soc/include -I/home/goringich/esp-idf/components/soc/esp32p4 -I/home/goringich/esp-idf/components/soc/esp32p4/include -I/home/goringich/esp-idf/components/soc/esp32p4/register/hw_ver1 -I/home/goringich/esp-idf/components/hal/platform_port/include -I/home/goringich/esp-idf/components/hal/esp32p4/include -I/home/goringich/esp-idf/components/hal/include -I/home/goringich/esp-idf/components/esp_rom/include -I/home/goringich/esp-idf/components/esp_rom/esp32p4/include -I/home/goringich/esp-idf/components/esp_rom/esp32p4/include/esp32p4 -I/home/goringich/esp-idf/components/esp_rom/esp32p4 -I/home/goringich/esp-idf/components/esp_common/include -I/home/goringich/esp-idf/components/esp_system/include -I/home/goringich/esp-idf/components/esp_system/port/soc -I/home/goringich/esp-idf/components/esp_system/port/include/riscv -I/home/goringich/esp-idf/components/esp_system/port/include/private -I/home/goringich/esp-idf/components/riscv/include -I/home/goringich/esp-idf/components/lwip/include -I/home/goringich/esp-idf/components/lwip/include/apps -I/home/goringich/esp-idf/components/lwip/include/apps/sntp -I/home/goringich/esp-idf/components/lwip/lwip/src/include -I/home/goringich/esp-idf/components/lwip/port/include -I/home/goringich/esp-idf/components/lwip/port/freertos/include -I/home/goringich/esp-idf/components/lwip/port/esp32xx/include -I/home/goringich/esp-idf/components/lwip/port/esp32xx/include/arch -I/home/goringich/esp-idf/components/lwip/port/esp32xx/include/sys -I/home/goringich/esp-idf/components/driver/deprecated -I/home/goringich/esp-idf/components/driver/i2c/include -I/home/goringich/esp-idf/components/driver/touch_sensor/include -I/home/goringich/esp-idf/components/driver/twai/include -I/home/goringich/esp-idf/components/esp_pm/include -I/home/goringich/esp-idf/components/esp_ringbuf/include -I/home/goringich/esp-idf/components/esp_driver_gpio/include -I/home/goringich/esp-idf/components/esp_driver_pcnt/include -I/home/goringich/esp-idf/components/esp_driver_gptimer/include -I/home/goringich/esp-idf/components/esp_driver_spi/include -I/home/goringich/esp-idf/components/esp_driver_mcpwm/include -I/home/goringich/esp-idf/components/esp_driver_ana_cmpr/include -I/home/goringich/esp-idf/components/esp_driver_i2s/include -I/home/goringich/esp-idf/components/esp_driver_sdmmc/include -I/home/goringich/esp-idf/components/sdmmc/include -I/home/goringich/esp-idf/components/esp_driver_sdspi/include -I/home/goringich/esp-idf/components/esp_driver_sdio/include -I/home/goringich/esp-idf/components/esp_driver_dac/include -I/home/goringich/esp-idf/components/esp_driver_rmt/include -I/home/goringich/esp-idf/components/esp_driver_tsens/include -I/home/goringich/esp-idf/components/esp_driver_sdm/include -I/home/goringich/esp-idf/components/esp_driver_i2c/include -I/home/goringich/esp-idf/components/esp_driver_uart/include -I/home/goringich/esp-idf/components/vfs/include -I/home/goringich/esp-idf/components/esp_driver_ledc/include -I/home/goringich/esp-idf/components/esp_driver_parlio/include -I/home/goringich/esp-idf/components/esp_driver_usb_serial_jtag/include -I/home/goringich/esp-idf/components/esp_driver_twai/include -I/home/goringich/esp-idf/components/esp_timer/include -march=rv32imafc_zicsr_zifencei_xesploop_xespv -mabi=ilp32f  -fdiagnostics-color=always -ffunction-sections -fdata-sections -Wall -Werror=all -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=deprecated-declarations -Wextra -Wno-error=extra -Wno-unused-parameter -Wno-sign-compare -Wno-enum-conversion -gdwarf-4 -ggdb -nostartfiles -Og -fno-shrink-wrap -fmacro-prefix-map=/home/goringich/hello_p4=. -fmacro-prefix-map=/home/goringich/esp-idf=/IDF -fstrict-volatile-bitfields -fno-jump-tables -fno-tree-switch-conversion -march=rv32imafc_zicsr_zifencei_xesppie -std=gnu17 -Wno-old-style-declaration -MD -MT esp-idf/i2c_bus/CMakeFiles/__idf_i2c_bus.dir/src/i2c_bus.c.obj -MF esp-idf/i2c_bus/CMakeFiles/__idf_i2c_bus.dir/src/i2c_bus.c.obj.d -o esp-idf/i2c_bus/CMakeFiles/__idf_i2c_bus.dir/src/i2c_bus.c.obj -c /home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c
+In file included from /home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:1:
+/home/goringich/hello_p4/components/i2c_bus/include/i2c_bus.h:22:8: error: unknown type name 'bool'
+   22 | static bool i2c_bus_selfcheck_gpio(const char *where)
+      |        ^~~~
+/home/goringich/hello_p4/components/i2c_bus/include/i2c_bus.h:7:1: note: 'bool' is defined in header '<stdbool.h>'; this is probably fixable by adding '#include <stdbool.h>'
+    6 | #include "esp_err.h"
+  +++ |+#include <stdbool.h>
+    7 | 
+In file included from /home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:13,
+                 from /home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:13,
+                 from /home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:5:
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_types.h: In function 'i2c_bus_selfcheck_gpio':
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_types.h:13:16: error: storage class specified for parameter 'intr_handler_t'
+   13 | typedef void (*intr_handler_t)(void *arg);
+      |                ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_types.h:16:36: error: storage class specified for parameter 'intr_handle_t'
+   16 | typedef struct intr_handle_data_t *intr_handle_t;
+      |                                    ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_types.h:27:3: error: storage class specified for parameter 'esp_intr_cpu_affinity_t'
+   27 | } esp_intr_cpu_affinity_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:149:49: error: expected declaration specifiers or '...' before 'intr_handler_t'
+  149 | esp_err_t esp_intr_alloc(int source, int flags, intr_handler_t handler, void *arg, intr_handle_t *ret_handle);
+      |                                                 ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:149:84: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  149 | esp_err_t esp_intr_alloc(int source, int flags, intr_handler_t handler, void *arg, intr_handle_t *ret_handle);
+      |                                                                                    ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:188:109: error: expected declaration specifiers or '...' before 'intr_handler_t'
+  188 | esp_err_t esp_intr_alloc_intrstatus(int source, int flags, uint32_t intrstatusreg, uint32_t intrstatusmask, intr_handler_t handler, void *arg, intr_handle_t *ret_handle);
+      |                                                                                                             ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:188:144: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  188 | esp_err_t esp_intr_alloc_intrstatus(int source, int flags, uint32_t intrstatusreg, uint32_t intrstatusmask, intr_handler_t handler, void *arg, intr_handle_t *ret_handle);
+      |                                                                                                                                                ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:226:54: error: expected declaration specifiers or '...' before 'intr_handler_t'
+  226 | esp_err_t esp_intr_alloc_bind(int source, int flags, intr_handler_t handler, void *arg, intr_handle_t shared_handle, intr_handle_t *ret_handle);
+      |                                                      ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:226:89: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  226 | esp_err_t esp_intr_alloc_bind(int source, int flags, intr_handler_t handler, void *arg, intr_handle_t shared_handle, intr_handle_t *ret_handle);
+      |                                                                                         ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:226:118: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  226 | esp_err_t esp_intr_alloc_bind(int source, int flags, intr_handler_t handler, void *arg, intr_handle_t shared_handle, intr_handle_t *ret_handle);
+      |                                                                                                                      ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:269:114: error: expected declaration specifiers or '...' before 'intr_handler_t'
+  269 | esp_err_t esp_intr_alloc_intrstatus_bind(int source, int flags, uint32_t intrstatusreg, uint32_t intrstatusmask, intr_handler_t handler,
+      |                                                                                                                  ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:270:53: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  270 |                                          void *arg, intr_handle_t shared_handle, intr_handle_t *ret_handle);
+      |                                                     ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:270:82: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  270 |                                          void *arg, intr_handle_t shared_handle, intr_handle_t *ret_handle);
+      |                                                                                  ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:290:25: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  290 | esp_err_t esp_intr_free(intr_handle_t handle);
+      |                         ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:300:22: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  300 | int esp_intr_get_cpu(intr_handle_t handle);
+      |                      ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:309:24: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  309 | int esp_intr_get_intno(intr_handle_t handle);
+      |                        ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:327:28: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  327 | esp_err_t esp_intr_disable(intr_handle_t handle);
+      |                            ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:340:27: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  340 | esp_err_t esp_intr_enable(intr_handle_t handle);
+      |                           ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:354:32: error: expected declaration specifiers or '...' before 'intr_handle_t'
+  354 | esp_err_t esp_intr_set_in_iram(intr_handle_t handle, bool is_in_iram);
+      |                                ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:383:1: error: expected '=', ',', ';', 'asm' or '__attribute__' before '{' token
+  383 | {
+      | ^
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_intr_alloc.h:392:1: error: expected '=', ',', ';', 'asm' or '__attribute__' before '{' token
+  392 | {
+      | ^
+In file included from /home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:12,
+                 from /home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:15:
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/gpio_num.h:74:3: error: storage class specified for parameter 'gpio_num_t'
+   74 | } gpio_num_t;
+      |   ^~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:22:3: error: storage class specified for parameter 'gpio_port_t'
+   22 | } gpio_port_t;
+      |   ^~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:88:3: error: storage class specified for parameter 'gpio_int_type_t'
+   88 | } gpio_int_type_t;
+      |   ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:104:3: error: storage class specified for parameter 'gpio_mode_t'
+  104 | } gpio_mode_t;
+      |   ^~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:109:3: error: storage class specified for parameter 'gpio_pullup_t'
+  109 | } gpio_pullup_t;
+      |   ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:114:3: error: storage class specified for parameter 'gpio_pulldown_t'
+  114 | } gpio_pulldown_t;
+      |   ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:121:3: error: storage class specified for parameter 'gpio_pull_mode_t'
+  121 | } gpio_pull_mode_t;
+      |   ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:130:3: error: storage class specified for parameter 'gpio_drive_cap_t'
+  130 | } gpio_drive_cap_t;
+      |   ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:142:3: error: storage class specified for parameter 'gpio_hys_ctrl_mode_t'
+  142 | } gpio_hys_ctrl_mode_t;
+      |   ^~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:151:5: error: expected specifier-qualifier-list before 'gpio_drive_cap_t'
+  151 |     gpio_drive_cap_t drv;           /*!< Value of drive strength */
+      |     ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/gpio_types.h:160:3: error: storage class specified for parameter 'gpio_io_config_t'
+  160 | } gpio_io_config_t;
+      |   ^~~~~~~~~~~~~~~~
+In file included from /home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:10,
+                 from /home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:17:
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:19:35: error: storage class specified for parameter 'esp_etm_channel_handle_t'
+   19 | typedef struct esp_etm_channel_t *esp_etm_channel_handle_t;
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:24:33: error: storage class specified for parameter 'esp_etm_event_handle_t'
+   24 | typedef struct esp_etm_event_t *esp_etm_event_handle_t;
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:29:32: error: storage class specified for parameter 'esp_etm_task_handle_t'
+   29 | typedef struct esp_etm_task_t *esp_etm_task_handle_t;
+      |                                ^~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:40:3: error: storage class specified for parameter 'esp_etm_channel_config_t'
+   40 | } esp_etm_channel_config_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:56:37: error: type defaults to 'int' in declaration of 'esp_etm_channel_config_t' [-Wimplicit-int]
+   56 | esp_err_t esp_etm_new_channel(const esp_etm_channel_config_t *config, esp_etm_channel_handle_t *ret_chan);
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:56:62: error: expected ';', ',' or ')' before '*' token
+   56 | esp_err_t esp_etm_new_channel(const esp_etm_channel_config_t *config, esp_etm_channel_handle_t *ret_chan);
+      |                                                              ^
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:67:31: error: expected declaration specifiers or '...' before 'esp_etm_channel_handle_t'
+   67 | esp_err_t esp_etm_del_channel(esp_etm_channel_handle_t chan);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:81:34: error: expected declaration specifiers or '...' before 'esp_etm_channel_handle_t'
+   81 | esp_err_t esp_etm_channel_enable(esp_etm_channel_handle_t chan);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:95:35: error: expected declaration specifiers or '...' before 'esp_etm_channel_handle_t'
+   95 | esp_err_t esp_etm_channel_disable(esp_etm_channel_handle_t chan);
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:110:35: error: expected declaration specifiers or '...' before 'esp_etm_channel_handle_t'
+  110 | esp_err_t esp_etm_channel_connect(esp_etm_channel_handle_t chan, esp_etm_event_handle_t event, esp_etm_task_handle_t task);
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:110:66: error: expected declaration specifiers or '...' before 'esp_etm_event_handle_t'
+  110 | esp_err_t esp_etm_channel_connect(esp_etm_channel_handle_t chan, esp_etm_event_handle_t event, esp_etm_task_handle_t task);
+      |                                                                  ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:110:96: error: expected declaration specifiers or '...' before 'esp_etm_task_handle_t'
+  110 | esp_err_t esp_etm_channel_connect(esp_etm_channel_handle_t chan, esp_etm_event_handle_t event, esp_etm_task_handle_t task);
+      |                                                                                                ^~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:123:29: error: expected declaration specifiers or '...' before 'esp_etm_event_handle_t'
+  123 | esp_err_t esp_etm_del_event(esp_etm_event_handle_t event);
+      |                             ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_hw_support/include/esp_etm.h:136:28: error: expected declaration specifiers or '...' before 'esp_etm_task_handle_t'
+  136 | esp_err_t esp_etm_del_task(esp_etm_task_handle_t task);
+      |                            ^~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:26:3: error: storage class specified for parameter 'gpio_etm_event_edge_t'
+   26 | } gpio_etm_event_edge_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:36:9: error: expected specifier-qualifier-list before 'gpio_etm_event_edge_t'
+   36 |         gpio_etm_event_edge_t edge;                                 /*!< Which kind of edge can trigger the ETM event module */
+      |         ^~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:39:3: error: storage class specified for parameter 'gpio_etm_event_config_t'
+   39 | } gpio_etm_event_config_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:58:36: error: type defaults to 'int' in declaration of 'gpio_etm_event_config_t' [-Wimplicit-int]
+   58 | esp_err_t gpio_new_etm_event(const gpio_etm_event_config_t *config, esp_etm_event_handle_t *ret_event, ...);
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:58:60: error: expected ';', ',' or ')' before '*' token
+   58 | esp_err_t gpio_new_etm_event(const gpio_etm_event_config_t *config, esp_etm_event_handle_t *ret_event, ...);
+      |                                                            ^
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:73:36: error: expected declaration specifiers or '...' before 'esp_etm_event_handle_t'
+   73 | esp_err_t gpio_etm_event_bind_gpio(esp_etm_event_handle_t event, int gpio_num);
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:82:3: error: storage class specified for parameter 'gpio_etm_task_action_t'
+   82 | } gpio_etm_task_action_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:91:9: error: expected specifier-qualifier-list before 'gpio_etm_task_action_t'
+   91 |         gpio_etm_task_action_t action;                                  /*!< Action to take by the ETM task module */
+      |         ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:94:3: error: storage class specified for parameter 'gpio_etm_task_config_t'
+   94 | } gpio_etm_task_config_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:114:35: error: type defaults to 'int' in declaration of 'gpio_etm_task_config_t' [-Wimplicit-int]
+  114 | esp_err_t gpio_new_etm_task(const gpio_etm_task_config_t *config, esp_etm_task_handle_t *ret_task, ...);
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:114:58: error: expected ';', ',' or ')' before '*' token
+  114 | esp_err_t gpio_new_etm_task(const gpio_etm_task_config_t *config, esp_etm_task_handle_t *ret_task, ...);
+      |                                                          ^
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:130:34: error: expected declaration specifiers or '...' before 'esp_etm_task_handle_t'
+  130 | esp_err_t gpio_etm_task_add_gpio(esp_etm_task_handle_t task, int gpio_num);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio_etm.h:146:33: error: expected declaration specifiers or '...' before 'esp_etm_task_handle_t'
+  146 | esp_err_t gpio_etm_task_rm_gpio(esp_etm_task_handle_t task, int gpio_num);
+      |                                 ^~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:34:23: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'gpio_isr_handle_t'
+   34 | typedef intr_handle_t gpio_isr_handle_t;
+      |                       ^~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:41:16: error: storage class specified for parameter 'gpio_isr_t'
+   41 | typedef void (*gpio_isr_t)(void *arg);
+      |                ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:48:5: error: expected specifier-qualifier-list before 'gpio_mode_t'
+   48 |     gpio_mode_t mode;               /*!< GPIO mode: set input/output mode                     */
+      |     ^~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:55:3: error: storage class specified for parameter 'gpio_config_t'
+   55 | } gpio_config_t;
+      |   ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:71:29: error: type defaults to 'int' in declaration of 'gpio_config_t' [-Wimplicit-int]
+   71 | esp_err_t gpio_config(const gpio_config_t *pGPIOConfig);
+      |                             ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:71:43: error: expected ';', ',' or ')' before '*' token
+   71 | esp_err_t gpio_config(const gpio_config_t *pGPIOConfig);
+      |                                           ^
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:82:26: error: expected declaration specifiers or '...' before 'gpio_num_t'
+   82 | esp_err_t gpio_reset_pin(gpio_num_t gpio_num);
+      |                          ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:95:30: error: expected declaration specifiers or '...' before 'gpio_num_t'
+   95 | esp_err_t gpio_set_intr_type(gpio_num_t gpio_num, gpio_int_type_t intr_type);
+      |                              ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:95:51: error: expected declaration specifiers or '...' before 'gpio_int_type_t'
+   95 | esp_err_t gpio_set_intr_type(gpio_num_t gpio_num, gpio_int_type_t intr_type);
+      |                                                   ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:112:28: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  112 | esp_err_t gpio_intr_enable(gpio_num_t gpio_num);
+      |                            ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:126:29: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  126 | esp_err_t gpio_intr_disable(gpio_num_t gpio_num);
+      |                             ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:141:26: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  141 | esp_err_t gpio_set_level(gpio_num_t gpio_num, uint32_t level);
+      |                          ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:155:20: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  155 | int gpio_get_level(gpio_num_t gpio_num);
+      |                    ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:172:30: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  172 | esp_err_t gpio_set_direction(gpio_num_t gpio_num, gpio_mode_t mode);
+      |                              ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:172:51: error: expected declaration specifiers or '...' before 'gpio_mode_t'
+  172 | esp_err_t gpio_set_direction(gpio_num_t gpio_num, gpio_mode_t mode);
+      |                                                   ^~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:183:29: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  183 | esp_err_t gpio_input_enable(gpio_num_t gpio_num);
+      |                             ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:199:30: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  199 | esp_err_t gpio_set_pull_mode(gpio_num_t gpio_num, gpio_pull_mode_t pull);
+      |                              ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:199:51: error: expected declaration specifiers or '...' before 'gpio_pull_mode_t'
+  199 | esp_err_t gpio_set_pull_mode(gpio_num_t gpio_num, gpio_pull_mode_t pull);
+      |                                                   ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:212:30: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  212 | esp_err_t gpio_wakeup_enable(gpio_num_t gpio_num, gpio_int_type_t intr_type);
+      |                              ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:212:51: error: expected declaration specifiers or '...' before 'gpio_int_type_t'
+  212 | esp_err_t gpio_wakeup_enable(gpio_num_t gpio_num, gpio_int_type_t intr_type);
+      |                                                   ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:223:31: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  223 | esp_err_t gpio_wakeup_disable(gpio_num_t gpio_num);
+      |                               ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:249:82: error: unknown type name 'gpio_isr_handle_t'
+  249 | esp_err_t gpio_isr_register(void (*fn)(void *), void *arg, int intr_alloc_flags, gpio_isr_handle_t *handle);
+      |                                                                                  ^~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:260:26: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  260 | esp_err_t gpio_pullup_en(gpio_num_t gpio_num);
+      |                          ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:271:27: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  271 | esp_err_t gpio_pullup_dis(gpio_num_t gpio_num);
+      |                           ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:282:28: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  282 | esp_err_t gpio_pulldown_en(gpio_num_t gpio_num);
+      |                            ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:293:29: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  293 | esp_err_t gpio_pulldown_dis(gpio_num_t gpio_num);
+      |                             ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:341:32: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  341 | esp_err_t gpio_isr_handler_add(gpio_num_t gpio_num, gpio_isr_t isr_handler, void *args);
+      |                                ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:341:53: error: expected declaration specifiers or '...' before 'gpio_isr_t'
+  341 | esp_err_t gpio_isr_handler_add(gpio_num_t gpio_num, gpio_isr_t isr_handler, void *args);
+      |                                                     ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:353:35: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  353 | esp_err_t gpio_isr_handler_remove(gpio_num_t gpio_num);
+      |                                   ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:365:37: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  365 | esp_err_t gpio_set_drive_capability(gpio_num_t gpio_num, gpio_drive_cap_t strength);
+      |                                     ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:365:58: error: expected declaration specifiers or '...' before 'gpio_drive_cap_t'
+  365 | esp_err_t gpio_set_drive_capability(gpio_num_t gpio_num, gpio_drive_cap_t strength);
+      |                                                          ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:377:37: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  377 | esp_err_t gpio_get_drive_capability(gpio_num_t gpio_num, gpio_drive_cap_t *strength);
+      |                                     ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:377:58: error: expected declaration specifiers or '...' before 'gpio_drive_cap_t'
+  377 | esp_err_t gpio_get_drive_capability(gpio_num_t gpio_num, gpio_drive_cap_t *strength);
+      |                                                          ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:411:24: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  411 | esp_err_t gpio_hold_en(gpio_num_t gpio_num);
+      |                        ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:430:25: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  430 | esp_err_t gpio_hold_dis(gpio_num_t gpio_num);
+      |                         ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:509:29: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  509 | esp_err_t gpio_sleep_sel_en(gpio_num_t gpio_num);
+      |                             ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:518:30: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  518 | esp_err_t gpio_sleep_sel_dis(gpio_num_t gpio_num);
+      |                              ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:532:36: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  532 | esp_err_t gpio_sleep_set_direction(gpio_num_t gpio_num, gpio_mode_t mode);
+      |                                    ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:532:57: error: expected declaration specifiers or '...' before 'gpio_mode_t'
+  532 | esp_err_t gpio_sleep_set_direction(gpio_num_t gpio_num, gpio_mode_t mode);
+      |                                                         ^~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:546:36: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  546 | esp_err_t gpio_sleep_set_pull_mode(gpio_num_t gpio_num, gpio_pull_mode_t pull);
+      |                                    ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:546:57: error: expected declaration specifiers or '...' before 'gpio_pull_mode_t'
+  546 | esp_err_t gpio_sleep_set_pull_mode(gpio_num_t gpio_num, gpio_pull_mode_t pull);
+      |                                                         ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:566:41: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  566 | esp_err_t gpio_deep_sleep_wakeup_enable(gpio_num_t gpio_num, gpio_int_type_t intr_type);
+      |                                         ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:566:62: error: expected declaration specifiers or '...' before 'gpio_int_type_t'
+  566 | esp_err_t gpio_deep_sleep_wakeup_enable(gpio_num_t gpio_num, gpio_int_type_t intr_type);
+      |                                                              ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:577:42: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  577 | esp_err_t gpio_deep_sleep_wakeup_disable(gpio_num_t gpio_num);
+      |                                          ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:603:30: error: expected declaration specifiers or '...' before 'gpio_num_t'
+  603 | esp_err_t gpio_get_io_config(gpio_num_t gpio_num, gpio_io_config_t *out_io_config);
+      |                              ^~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_gpio/include/driver/gpio.h:603:51: error: expected declaration specifiers or '...' before 'gpio_io_config_t'
+  603 | esp_err_t gpio_get_io_config(gpio_num_t gpio_num, gpio_io_config_t *out_io_config);
+      |                                                   ^~~~~~~~~~~~~~~~
+In file included from /home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:16,
+                 from /home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:11,
+                 from /home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:11,
+                 from /home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:6:
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:74:3: error: storage class specified for parameter 'soc_root_clk_t'
+   74 | } soc_root_clk_t;
+      |   ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:86:3: error: storage class specified for parameter 'soc_cpu_clk_src_t'
+   86 | } soc_cpu_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:97:3: error: storage class specified for parameter 'soc_rtc_slow_clk_src_t'
+   97 | } soc_rtc_slow_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:112:3: error: storage class specified for parameter 'soc_rtc_fast_clk_src_t'
+  112 | } soc_rtc_fast_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:122:3: error: storage class specified for parameter 'soc_lp_pll_clk_src_t'
+  122 | } soc_lp_pll_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:132:3: error: storage class specified for parameter 'soc_xtal_freq_t'
+  132 | } soc_xtal_freq_t;
+      |   ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:171:3: error: storage class specified for parameter 'soc_module_clk_t'
+  171 | } soc_module_clk_t;
+      |   ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:182:3: error: storage class specified for parameter 'soc_periph_systimer_clk_src_t'
+  182 | } soc_periph_systimer_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:216:3: error: storage class specified for parameter 'soc_periph_gptimer_clk_src_t'
+  216 | } soc_periph_gptimer_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:229:3: error: storage class specified for parameter 'soc_periph_tg_clk_src_legacy_t'
+  229 | } soc_periph_tg_clk_src_legacy_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:246:3: error: storage class specified for parameter 'soc_periph_rmt_clk_src_t'
+  246 | } soc_periph_rmt_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:255:3: error: storage class specified for parameter 'soc_periph_rmt_clk_src_legacy_t'
+  255 | } soc_periph_rmt_clk_src_legacy_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:272:3: error: storage class specified for parameter 'soc_periph_uart_clk_src_legacy_t'
+  272 | } soc_periph_uart_clk_src_legacy_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:287:3: error: storage class specified for parameter 'soc_periph_lp_uart_clk_src_t'
+  287 | } soc_periph_lp_uart_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:303:3: error: storage class specified for parameter 'soc_periph_mcpwm_timer_clk_src_t'
+  303 | } soc_periph_mcpwm_timer_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:317:3: error: storage class specified for parameter 'soc_periph_mcpwm_capture_clk_src_t'
+  317 | } soc_periph_mcpwm_capture_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:331:3: error: storage class specified for parameter 'soc_periph_mcpwm_carrier_clk_src_t'
+  331 | } soc_periph_mcpwm_carrier_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:349:3: error: storage class specified for parameter 'soc_periph_i2s_clk_src_t'
+  349 | } soc_periph_i2s_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:363:3: error: storage class specified for parameter 'soc_periph_lp_i2s_clk_src_t'
+  363 | } soc_periph_lp_i2s_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:380:3: error: storage class specified for parameter 'soc_periph_lcd_clk_src_t'
+  380 | } soc_periph_lcd_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:397:3: error: storage class specified for parameter 'soc_periph_cam_clk_src_t'
+  397 | } soc_periph_cam_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:414:3: error: storage class specified for parameter 'soc_periph_mipi_csi_phy_clk_src_t'
+  414 | } soc_periph_mipi_csi_phy_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:432:3: error: storage class specified for parameter 'soc_periph_mipi_dsi_dpi_clk_src_t'
+  432 | } soc_periph_mipi_dsi_dpi_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:442:3: error: storage class specified for parameter 'soc_periph_mipi_dsi_phy_cfg_clk_src_t'
+  442 | } soc_periph_mipi_dsi_phy_cfg_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:461:3: error: storage class specified for parameter 'soc_periph_mipi_dsi_phy_pllref_clk_src_t'
+  461 | } soc_periph_mipi_dsi_phy_pllref_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:484:3: error: storage class specified for parameter 'soc_periph_i2c_clk_src_t'
+  484 | } soc_periph_i2c_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:501:3: error: storage class specified for parameter 'soc_periph_lp_i2c_clk_src_t'
+  501 | } soc_periph_lp_i2c_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:518:3: error: storage class specified for parameter 'soc_periph_spi_clk_src_t'
+  518 | } soc_periph_spi_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:536:3: error: storage class specified for parameter 'soc_periph_psram_clk_src_t'
+  536 | } soc_periph_psram_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:553:3: error: storage class specified for parameter 'soc_periph_flash_clk_src_t'
+  553 | } soc_periph_flash_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:570:3: error: storage class specified for parameter 'soc_periph_isp_clk_src_t'
+  570 | } soc_periph_isp_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:586:3: error: storage class specified for parameter 'soc_periph_sdm_clk_src_t'
+  586 | } soc_periph_sdm_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:603:3: error: storage class specified for parameter 'soc_periph_glitch_filter_clk_src_t'
+  603 | } soc_periph_glitch_filter_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:619:3: error: storage class specified for parameter 'soc_periph_ana_cmpr_clk_src_t'
+  619 | } soc_periph_ana_cmpr_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:633:3: error: storage class specified for parameter 'soc_periph_twai_clk_src_t'
+  633 | } soc_periph_twai_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:650:3: error: storage class specified for parameter 'soc_periph_adc_digi_clk_src_t'
+  650 | } soc_periph_adc_digi_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:663:3: error: storage class specified for parameter 'soc_periph_adc_rtc_clk_src_t'
+  663 | } soc_periph_adc_rtc_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:677:3: error: storage class specified for parameter 'soc_periph_lp_adc_clk_src_t'
+  677 | } soc_periph_lp_adc_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:694:3: error: storage class specified for parameter 'soc_periph_mwdt_clk_src_t'
+  694 | } soc_periph_mwdt_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:711:3: error: storage class specified for parameter 'soc_periph_ledc_clk_src_legacy_t'
+  711 | } soc_periph_ledc_clk_src_legacy_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:729:3: error: storage class specified for parameter 'soc_periph_parlio_clk_src_t'
+  729 | } soc_periph_parlio_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:745:3: error: storage class specified for parameter 'soc_periph_sdmmc_clk_src_t'
+  745 | } soc_periph_sdmmc_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:760:3: error: storage class specified for parameter 'soc_periph_temperature_sensor_clk_src_t'
+  760 | } soc_periph_temperature_sensor_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:773:3: error: storage class specified for parameter 'soc_periph_i3c_master_clk_src_t'
+  773 | } soc_periph_i3c_master_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:786:3: error: storage class specified for parameter 'soc_periph_emac_ptp_clk_src_t'
+  786 | } soc_periph_emac_ptp_clk_src_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/clk_tree_defs.h:807:3: error: storage class specified for parameter 'soc_clkout_sig_id_t'
+  807 | } soc_clkout_sig_id_t;
+      |   ^~~~~~~~~~~~~~~~~~~
+In file included from /home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:17:
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:24:3: error: storage class specified for parameter 'hal_utils_div_round_opt_t'
+   24 | } hal_utils_div_round_opt_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:38:9: error: expected specifier-qualifier-list before 'hal_utils_div_round_opt_t'
+   38 |         hal_utils_div_round_opt_t round_opt;     /*!< Integer division operation. For the case that doesn't have fractal part, set this field to the to specify the rounding method  */
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:40:3: error: storage class specified for parameter 'hal_utils_clk_info_t'
+   40 | } hal_utils_clk_info_t;
+      |   ^~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:50:3: error: storage class specified for parameter 'hal_utils_clk_div_t'
+   50 | } hal_utils_clk_div_t;
+      |   ^~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:63:49: error: type defaults to 'int' in declaration of 'hal_utils_clk_info_t' [-Wimplicit-int]
+   63 | uint32_t hal_utils_calc_clk_div_frac_fast(const hal_utils_clk_info_t *clk_info, hal_utils_clk_div_t *clk_div);
+      |                                                 ^~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:63:70: error: expected ';', ',' or ')' before '*' token
+   63 | uint32_t hal_utils_calc_clk_div_frac_fast(const hal_utils_clk_info_t *clk_info, hal_utils_clk_div_t *clk_div);
+      |                                                                      ^
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:76:53: error: type defaults to 'int' in declaration of 'hal_utils_clk_info_t' [-Wimplicit-int]
+   76 | uint32_t hal_utils_calc_clk_div_frac_accurate(const hal_utils_clk_info_t *clk_info, hal_utils_clk_div_t *clk_div);
+      |                                                     ^~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:76:74: error: expected ';', ',' or ')' before '*' token
+   76 | uint32_t hal_utils_calc_clk_div_frac_accurate(const hal_utils_clk_info_t *clk_info, hal_utils_clk_div_t *clk_div);
+      |                                                                          ^
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:89:47: error: type defaults to 'int' in declaration of 'hal_utils_clk_info_t' [-Wimplicit-int]
+   89 | uint32_t hal_utils_calc_clk_div_integer(const hal_utils_clk_info_t *clk_info, uint32_t *int_div);
+      |                                               ^~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:89:68: error: expected ';', ',' or ')' before '*' token
+   89 | uint32_t hal_utils_calc_clk_div_integer(const hal_utils_clk_info_t *clk_info, uint32_t *int_div);
+      |                                                                    ^
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:97:1: error: expected declaration specifiers before '__attribute__'
+   97 | __attribute__((always_inline))
+      | ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:114:1: error: expected declaration specifiers before '__attribute__'
+  114 | __attribute__((always_inline))
+      | ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:144:1: error: expected declaration specifiers before '__attribute__'
+  144 | __attribute__((always_inline))
+      | ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:163:3: error: storage class specified for parameter 'hal_utils_fixed_point_t'
+  163 | } hal_utils_fixed_point_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:182:57: error: type defaults to 'int' in declaration of 'hal_utils_fixed_point_t' [-Wimplicit-int]
+  182 | int hal_utils_float_to_fixed_point_32b(float flt, const hal_utils_fixed_point_t *fp_cfg, uint32_t *fp_out);
+      |                                                         ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/hal_utils.h:182:81: error: expected ';', ',' or ')' before '*' token
+  182 | int hal_utils_float_to_fixed_point_32b(float flt, const hal_utils_fixed_point_t *fp_cfg, uint32_t *fp_out);
+      |                                                                                 ^
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:31:3: error: storage class specified for parameter 'i2c_port_t'
+   31 | } i2c_port_t;
+      |   ^~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:41:3: error: storage class specified for parameter 'i2c_addr_bit_len_t'
+   41 | } i2c_addr_bit_len_t;
+      |   ^~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:56:3: error: storage class specified for parameter 'i2c_hal_clk_config_t'
+   56 | } i2c_hal_clk_config_t;
+      |   ^~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:64:3: error: storage class specified for parameter 'i2c_mode_t'
+   64 | } i2c_mode_t;
+      |   ^~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:69:3: error: storage class specified for parameter 'i2c_rw_t'
+   69 | } i2c_rw_t;
+      |   ^~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:75:3: error: storage class specified for parameter 'i2c_trans_mode_t'
+   75 | } i2c_trans_mode_t;
+      |   ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:77:1: error: expected declaration specifiers before '__attribute__'
+   77 | __attribute__((deprecated("please use 'i2c_addr_bit_len_t' instead")))
+      | ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:82:3: error: expected declaration specifiers before 'i2c_addr_mode_t'
+   82 | } i2c_addr_mode_t;
+      |   ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:89:3: error: storage class specified for parameter 'i2c_ack_type_t'
+   89 | } i2c_ack_type_t;
+      |   ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:99:3: error: storage class specified for parameter 'i2c_slave_stretch_cause_t'
+   99 | } i2c_slave_stretch_cause_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:104:3: error: storage class specified for parameter 'i2c_slave_read_write_status_t'
+  104 | } i2c_slave_read_write_status_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:112:3: error: storage class specified for parameter 'i2c_bus_mode_t'
+  112 | } i2c_bus_mode_t;
+      |   ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:118:34: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'i2c_clock_source_t'
+  118 | typedef soc_periph_i2c_clk_src_t i2c_clock_source_t;
+      |                                  ^~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/hal/include/hal/i2c_types.h:124:37: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'lp_i2c_clock_source_t'
+  124 | typedef soc_periph_lp_i2c_clk_src_t lp_i2c_clock_source_t;
+      |                                     ^~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:22:13: error: storage class specified for parameter 'i2c_port_num_t'
+   22 | typedef int i2c_port_num_t;
+      |             ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:37:3: error: storage class specified for parameter 'i2c_master_status_t'
+   37 | } i2c_master_status_t;
+      |   ^~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:47:3: error: storage class specified for parameter 'i2c_master_event_t'
+   47 | } i2c_master_event_t;
+      |   ^~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:60:3: error: storage class specified for parameter 'i2c_master_command_t'
+   60 | } i2c_master_command_t;
+      |   ^~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:70:28: error: storage class specified for parameter 'i2c_ack_value_t'
+   70 | }  __attribute__((packed)) i2c_ack_value_t;
+      |                            ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:75:34: error: storage class specified for parameter 'i2c_master_bus_handle_t'
+   75 | typedef struct i2c_master_bus_t *i2c_master_bus_handle_t;
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:80:34: error: storage class specified for parameter 'i2c_master_dev_handle_t'
+   80 | typedef struct i2c_master_dev_t *i2c_master_dev_handle_t;
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:85:33: error: storage class specified for parameter 'i2c_slave_dev_handle_t'
+   85 | typedef struct i2c_slave_dev_t *i2c_slave_dev_handle_t;
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:91:5: error: expected specifier-qualifier-list before 'i2c_master_event_t'
+   91 |     i2c_master_event_t event;  /**< The I2C hardware event that I2C callback is called. */
+      |     ^~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:92:3: error: storage class specified for parameter 'i2c_master_event_data_t'
+   92 | } i2c_master_event_data_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:103:39: error: expected declaration specifiers or '...' before 'i2c_master_dev_handle_t'
+  103 | typedef bool (*i2c_master_callback_t)(i2c_master_dev_handle_t i2c_dev, const i2c_master_event_data_t *evt_data, void *arg);
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:103:78: error: type defaults to 'int' in declaration of 'i2c_master_event_data_t' [-Wimplicit-int]
+  103 | typedef bool (*i2c_master_callback_t)(i2c_master_dev_handle_t i2c_dev, const i2c_master_event_data_t *evt_data, void *arg);
+      |                                                                              ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:103:102: error: expected ';', ',' or ')' before '*' token
+  103 | typedef bool (*i2c_master_callback_t)(i2c_master_dev_handle_t i2c_dev, const i2c_master_event_data_t *evt_data, void *arg);
+      |                                                                                                      ^
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:113:3: error: storage class specified for parameter 'i2c_slave_rx_done_event_data_t'
+  113 | } i2c_slave_rx_done_event_data_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:124:47: error: expected declaration specifiers or '...' before 'i2c_slave_dev_handle_t'
+  124 | typedef bool (*i2c_slave_received_callback_t)(i2c_slave_dev_handle_t i2c_slave, const i2c_slave_rx_done_event_data_t *evt_data, void *arg);
+      |                                               ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:124:87: error: type defaults to 'int' in declaration of 'i2c_slave_rx_done_event_data_t' [-Wimplicit-int]
+  124 | typedef bool (*i2c_slave_received_callback_t)(i2c_slave_dev_handle_t i2c_slave, const i2c_slave_rx_done_event_data_t *evt_data, void *arg);
+      |                                                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:124:118: error: expected ';', ',' or ')' before '*' token
+  124 | typedef bool (*i2c_slave_received_callback_t)(i2c_slave_dev_handle_t i2c_slave, const i2c_slave_rx_done_event_data_t *evt_data, void *arg);
+      |                                                                                                                      ^
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:132:5: error: expected specifier-qualifier-list before 'i2c_slave_stretch_cause_t'
+  132 |     i2c_slave_stretch_cause_t stretch_cause;  /*!< Stretch cause can be got in callback */
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:133:3: error: storage class specified for parameter 'i2c_slave_stretch_event_data_t'
+  133 | } i2c_slave_stretch_event_data_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:144:46: error: expected declaration specifiers or '...' before 'i2c_slave_dev_handle_t'
+  144 | typedef bool (*i2c_slave_stretch_callback_t)(i2c_slave_dev_handle_t i2c_slave, const i2c_slave_stretch_event_data_t *evt_cause, void *arg);
+      |                                              ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:144:86: error: type defaults to 'int' in declaration of 'i2c_slave_stretch_event_data_t' [-Wimplicit-int]
+  144 | typedef bool (*i2c_slave_stretch_callback_t)(i2c_slave_dev_handle_t i2c_slave, const i2c_slave_stretch_event_data_t *evt_cause, void *arg);
+      |                                                                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:144:117: error: expected ';', ',' or ')' before '*' token
+  144 | typedef bool (*i2c_slave_stretch_callback_t)(i2c_slave_dev_handle_t i2c_slave, const i2c_slave_stretch_event_data_t *evt_cause, void *arg);
+      |                                                                                                                     ^
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:153:3: error: storage class specified for parameter 'i2c_slave_request_event_data_t'
+  153 | } i2c_slave_request_event_data_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:165:46: error: expected declaration specifiers or '...' before 'i2c_slave_dev_handle_t'
+  165 | typedef bool (*i2c_slave_request_callback_t)(i2c_slave_dev_handle_t i2c_slave, const i2c_slave_request_event_data_t *evt_data, void *arg);
+      |                                              ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:165:86: error: type defaults to 'int' in declaration of 'i2c_slave_request_event_data_t' [-Wimplicit-int]
+  165 | typedef bool (*i2c_slave_request_callback_t)(i2c_slave_dev_handle_t i2c_slave, const i2c_slave_request_event_data_t *evt_data, void *arg);
+      |                                                                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_types.h:165:117: error: expected ';', ',' or ')' before '*' token
+  165 | typedef bool (*i2c_slave_request_callback_t)(i2c_slave_dev_handle_t i2c_slave, const i2c_slave_request_event_data_t *evt_data, void *arg);
+      |                                                                                                                     ^
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:22:5: error: expected specifier-qualifier-list before 'i2c_port_num_t'
+   22 |     i2c_port_num_t i2c_port;              /*!< I2C port number, `-1` for auto selecting, (not include LP I2C instance) */
+      |     ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:40:3: error: storage class specified for parameter 'i2c_master_bus_config_t'
+   40 | } i2c_master_bus_config_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:48:5: error: expected specifier-qualifier-list before 'i2c_addr_bit_len_t'
+   48 |     i2c_addr_bit_len_t dev_addr_length;         /*!< Select the address length of the slave device. */
+      |     ^~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:55:3: error: storage class specified for parameter 'i2c_device_config_t'
+   55 | } i2c_device_config_t;
+      |   ^~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:64:5: error: expected specifier-qualifier-list before 'i2c_master_command_t'
+   64 |     i2c_master_command_t command; /**< I2C command indicating the type of operation (START, WRITE, READ, or STOP) */
+      |     ^~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:87:3: error: storage class specified for parameter 'i2c_operation_job_t'
+   87 | } i2c_operation_job_t;
+      |   ^~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:95:3: error: storage class specified for parameter 'i2c_master_transmit_multi_buffer_info_t'
+   95 | } i2c_master_transmit_multi_buffer_info_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:104:5: error: unknown type name 'i2c_master_callback_t'
+  104 |     i2c_master_callback_t on_trans_done;  /*!< I2C master transaction finish callback */
+      |     ^~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:105:3: error: storage class specified for parameter 'i2c_master_event_callbacks_t'
+  105 | } i2c_master_event_callbacks_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:118:36: error: type defaults to 'int' in declaration of 'i2c_master_bus_config_t' [-Wimplicit-int]
+  118 | esp_err_t i2c_new_master_bus(const i2c_master_bus_config_t *bus_config, i2c_master_bus_handle_t *ret_bus_handle);
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:118:60: error: expected ';', ',' or ')' before '*' token
+  118 | esp_err_t i2c_new_master_bus(const i2c_master_bus_config_t *bus_config, i2c_master_bus_handle_t *ret_bus_handle);
+      |                                                            ^
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:131:37: error: expected declaration specifiers or '...' before 'i2c_master_bus_handle_t'
+  131 | esp_err_t i2c_master_bus_add_device(i2c_master_bus_handle_t bus_handle, const i2c_device_config_t *dev_config, i2c_master_dev_handle_t *ret_handle);
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:131:79: error: type defaults to 'int' in declaration of 'i2c_device_config_t' [-Wimplicit-int]
+  131 | esp_err_t i2c_master_bus_add_device(i2c_master_bus_handle_t bus_handle, const i2c_device_config_t *dev_config, i2c_master_dev_handle_t *ret_handle);
+      |                                                                               ^~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:131:99: error: expected ';', ',' or ')' before '*' token
+  131 | esp_err_t i2c_master_bus_add_device(i2c_master_bus_handle_t bus_handle, const i2c_device_config_t *dev_config, i2c_master_dev_handle_t *ret_handle);
+      |                                                                                                   ^
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:141:30: error: expected declaration specifiers or '...' before 'i2c_master_bus_handle_t'
+  141 | esp_err_t i2c_del_master_bus(i2c_master_bus_handle_t bus_handle);
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:150:36: error: expected declaration specifiers or '...' before 'i2c_master_dev_handle_t'
+  150 | esp_err_t i2c_master_bus_rm_device(i2c_master_dev_handle_t handle);
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:169:31: error: expected declaration specifiers or '...' before 'i2c_master_dev_handle_t'
+  169 | esp_err_t i2c_master_transmit(i2c_master_dev_handle_t i2c_dev, const uint8_t *write_buffer, size_t write_size, int xfer_timeout_ms);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:187:44: error: expected declaration specifiers or '...' before 'i2c_master_dev_handle_t'
+  187 | esp_err_t i2c_master_multi_buffer_transmit(i2c_master_dev_handle_t i2c_dev, i2c_master_transmit_multi_buffer_info_t *buffer_info_array, size_t array_size, int xfer_timeout_ms);
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:187:77: error: expected declaration specifiers or '...' before 'i2c_master_transmit_multi_buffer_info_t'
+  187 | esp_err_t i2c_master_multi_buffer_transmit(i2c_master_dev_handle_t i2c_dev, i2c_master_transmit_multi_buffer_info_t *buffer_info_array, size_t array_size, int xfer_timeout_ms);
+      |                                                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:208:39: error: expected declaration specifiers or '...' before 'i2c_master_dev_handle_t'
+  208 | esp_err_t i2c_master_transmit_receive(i2c_master_dev_handle_t i2c_dev, const uint8_t *write_buffer, size_t write_size, uint8_t *read_buffer, size_t read_size, int xfer_timeout_ms);
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:227:30: error: expected declaration specifiers or '...' before 'i2c_master_dev_handle_t'
+  227 | esp_err_t i2c_master_receive(i2c_master_dev_handle_t i2c_dev, uint8_t *read_buffer, size_t read_size, int xfer_timeout_ms);
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:253:28: error: expected declaration specifiers or '...' before 'i2c_master_bus_handle_t'
+  253 | esp_err_t i2c_master_probe(i2c_master_bus_handle_t bus_handle, uint16_t address, int xfer_timeout_ms);
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:277:49: error: expected declaration specifiers or '...' before 'i2c_master_dev_handle_t'
+  277 | esp_err_t i2c_master_execute_defined_operations(i2c_master_dev_handle_t i2c_dev, i2c_operation_job_t *i2c_operation, size_t operation_list_num, int xfer_timeout_ms);
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:277:82: error: expected declaration specifiers or '...' before 'i2c_operation_job_t'
+  277 | esp_err_t i2c_master_execute_defined_operations(i2c_master_dev_handle_t i2c_dev, i2c_operation_job_t *i2c_operation, size_t operation_list_num, int xfer_timeout_ms);
+      |                                                                                  ^~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:295:47: error: expected declaration specifiers or '...' before 'i2c_master_dev_handle_t'
+  295 | esp_err_t i2c_master_register_event_callbacks(i2c_master_dev_handle_t i2c_dev, const i2c_master_event_callbacks_t *cbs, void *user_data);
+      |                                               ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:295:86: error: type defaults to 'int' in declaration of 'i2c_master_event_callbacks_t' [-Wimplicit-int]
+  295 | esp_err_t i2c_master_register_event_callbacks(i2c_master_dev_handle_t i2c_dev, const i2c_master_event_callbacks_t *cbs, void *user_data);
+      |                                                                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:295:115: error: expected ';', ',' or ')' before '*' token
+  295 | esp_err_t i2c_master_register_event_callbacks(i2c_master_dev_handle_t i2c_dev, const i2c_master_event_callbacks_t *cbs, void *user_data);
+      |                                                                                                                   ^
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:306:32: error: expected declaration specifiers or '...' before 'i2c_master_bus_handle_t'
+  306 | esp_err_t i2c_master_bus_reset(i2c_master_bus_handle_t bus_handle);
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:329:44: error: expected declaration specifiers or '...' before 'i2c_master_dev_handle_t'
+  329 | esp_err_t i2c_master_device_change_address(i2c_master_dev_handle_t i2c_dev, uint16_t new_device_address, int timeout_ms);
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:342:40: error: expected declaration specifiers or '...' before 'i2c_master_bus_handle_t'
+  342 | esp_err_t i2c_master_bus_wait_all_done(i2c_master_bus_handle_t bus_handle, int timeout_ms);
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:358:37: error: expected declaration specifiers or '...' before 'i2c_port_num_t'
+  358 | esp_err_t i2c_master_get_bus_handle(i2c_port_num_t port_num, i2c_master_bus_handle_t *ret_handle);
+      |                                     ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_driver_i2c/include/driver/i2c_master.h:358:62: error: expected declaration specifiers or '...' before 'i2c_master_bus_handle_t'
+  358 | esp_err_t i2c_master_get_bus_handle(i2c_port_num_t port_num, i2c_master_bus_handle_t *ret_handle);
+      |                                                              ^~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/goringich/esp-idf/components/log/include/esp_log.h:11,
+                 from /home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:8:
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:315:3: error: storage class specified for parameter 'imaxdiv_t'
+  315 | } imaxdiv_t;
+      |   ^~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:323:18: error: storage class specified for parameter 'imaxabs'
+  323 | extern intmax_t  imaxabs(intmax_t);
+      |                  ^~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:324:18: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'imaxdiv'
+  324 | extern imaxdiv_t imaxdiv(intmax_t __numer, intmax_t __denomer);
+      |                  ^~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:325:18: error: storage class specified for parameter 'strtoimax'
+  325 | extern intmax_t  strtoimax(const char *__restrict, char **__restrict, int);
+      |                  ^~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:326:18: error: storage class specified for parameter '_strtoimax_r'
+  326 | extern intmax_t  _strtoimax_r(struct _reent *, const char *__restrict, char **__restrict, int);
+      |                  ^~~~~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:327:18: error: storage class specified for parameter 'strtoumax'
+  327 | extern uintmax_t strtoumax(const char *__restrict, char **__restrict, int);
+      |                  ^~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:328:18: error: storage class specified for parameter '_strtoumax_r'
+  328 | extern uintmax_t _strtoumax_r(struct _reent *, const char *__restrict, char **__restrict, int);
+      |                  ^~~~~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:329:18: error: storage class specified for parameter 'wcstoimax'
+  329 | extern intmax_t  wcstoimax(const wchar_t *__restrict, wchar_t **__restrict, int);
+      |                  ^~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:330:18: error: storage class specified for parameter '_wcstoimax_r'
+  330 | extern intmax_t  _wcstoimax_r(struct _reent *, const wchar_t *__restrict, wchar_t **__restrict, int);
+      |                  ^~~~~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:331:18: error: storage class specified for parameter 'wcstoumax'
+  331 | extern uintmax_t wcstoumax(const wchar_t *__restrict, wchar_t **__restrict, int);
+      |                  ^~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:332:18: error: storage class specified for parameter '_wcstoumax_r'
+  332 | extern uintmax_t _wcstoumax_r(struct _reent *, const wchar_t *__restrict, wchar_t **__restrict, int);
+      |                  ^~~~~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:335:18: error: storage class specified for parameter 'strtoimax_l'
+  335 | extern intmax_t  strtoimax_l(const char *__restrict, char **_restrict, int, locale_t);
+      |                  ^~~~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:336:18: error: storage class specified for parameter 'strtoumax_l'
+  336 | extern uintmax_t strtoumax_l(const char *__restrict, char **_restrict, int, locale_t);
+      |                  ^~~~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:337:18: error: storage class specified for parameter 'wcstoimax_l'
+  337 | extern intmax_t  wcstoimax_l(const wchar_t *__restrict, wchar_t **_restrict, int, locale_t);
+      |                  ^~~~~~~~~~~
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/inttypes.h:338:18: error: storage class specified for parameter 'wcstoumax_l'
+  338 | extern uintmax_t wcstoumax_l(const wchar_t *__restrict, wchar_t **_restrict, int, locale_t);
+      |                  ^~~~~~~~~~~
+In file included from /home/goringich/esp-idf/components/esp_rom/include/esp_rom_sys.h:13,
+                 from /home/goringich/esp-idf/components/log/include/esp_log.h:13:
+/home/goringich/esp-idf/components/soc/esp32p4/include/soc/reset_reasons.h:49:3: error: storage class specified for parameter 'soc_reset_reason_t'
+   49 | } soc_reset_reason_t;
+      |   ^~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_rom/include/esp_rom_sys.h:121:1: error: expected declaration specifiers before 'soc_reset_reason_t'
+  121 | soc_reset_reason_t esp_rom_get_reset_reason(int cpu_no);
+      | ^~~~~~~~~~~~~~~~~~
+In file included from /home/goringich/esp-idf/components/log/include/esp_log_config.h:13,
+                 from /home/goringich/esp-idf/components/log/include/esp_log.h:14:
+/home/goringich/esp-idf/components/log/include/esp_log_level.h:28:3: error: storage class specified for parameter 'esp_log_level_t'
+   28 | } esp_log_level_t;
+      |   ^~~~~~~~~~~~~~~
+In file included from /home/goringich/esp-idf/components/newlib/platform_include/assert.h:15,
+                 from /home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/sys/reent.h:458,
+                 from /home/goringich/esp-idf/components/newlib/platform_include/sys/reent.h:15,
+                 from /home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/stdio.h:60,
+                 from /home/goringich/esp-idf/components/newlib/platform_include/stdio.h:10,
+                 from /home/goringich/esp-idf/components/esp_common/include/esp_err.h:10,
+                 from /home/goringich/hello_p4/components/i2c_bus/include/i2c_bus.h:6:
+/home/goringich/esp-idf/components/esp_common/include/esp_assert.h:13:27: error: expected declaration specifiers before '_Static_assert'
+   13 | #define ESP_STATIC_ASSERT static_assert
+      |                           ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_level.h:36:1: note: in expansion of macro 'ESP_STATIC_ASSERT'
+   36 | ESP_STATIC_ASSERT(ESP_LOG_MAX <= ESP_LOG_LEVEL_MASK, "Log level items of esp_log_level_t must fit ESP_LOG_LEVEL_MASK");
+      | ^~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_level.h:107:1: error: expected declaration specifiers before '__attribute__'
+  107 | __attribute__((always_inline))
+      | ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_level.h:168:41: error: expected declaration specifiers or '...' before 'esp_log_level_t'
+  168 | void esp_log_level_set(const char* tag, esp_log_level_t level);
+      |                                         ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_level.h:180:1: error: expected declaration specifiers before 'esp_log_level_t'
+  180 | esp_log_level_t esp_log_level_get(const char* tag);
+      | ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_config.h:122:13: error: expected specifier-qualifier-list before 'esp_log_level_t'
+  122 |             esp_log_level_t log_level: ESP_LOG_LEVEL_LEN; /*!< Log level */
+      |             ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_config.h:132:3: error: storage class specified for parameter 'esp_log_config_t'
+  132 | } esp_log_config_t;
+      |   ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/esp_common/include/esp_assert.h:13:27: error: expected declaration specifiers before '_Static_assert'
+   13 | #define ESP_STATIC_ASSERT static_assert
+      |                           ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_config.h:141:1: note: in expansion of macro 'ESP_STATIC_ASSERT'
+  141 | ESP_STATIC_ASSERT(ESP_LOG_OFFSET_CONSTRAINED_ENV == ESP_LOG_LEVEL_LEN, "The log level should not overlap the following fields in esp_log_config_t");
+      | ^~~~~~~~~~~~~~~~~
+In file included from /home/goringich/esp-idf/components/log/include/esp_log.h:17:
+/home/goringich/esp-idf/components/log/include/esp_log_buffer.h:30:90: error: expected declaration specifiers or '...' before 'esp_log_level_t'
+   30 | void esp_log_buffer_hex_internal(const char *tag, const void *buffer, uint16_t buff_len, esp_log_level_t level);
+      |                                                                                          ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_buffer.h:45:91: error: expected declaration specifiers or '...' before 'esp_log_level_t'
+   45 | void esp_log_buffer_char_internal(const char *tag, const void *buffer, uint16_t buff_len, esp_log_level_t level);
+      |                                                                                           ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_buffer.h:62:94: error: expected declaration specifiers or '...' before 'esp_log_level_t'
+   62 | void esp_log_buffer_hexdump_internal(const char *tag, const void *buffer, uint16_t buff_len, esp_log_level_t log_level);
+      |                                                                                              ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_buffer.h:156:1: error: expected declaration specifiers before '__attribute__'
+  156 | __attribute__((deprecated("Use 'ESP_LOG_BUFFER_HEX' instead")))
+      | ^~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_buffer.h:167:1: error: expected declaration specifiers before '__attribute__'
+  167 | __attribute__((deprecated("Use 'ESP_LOG_BUFFER_CHAR' instead")))
+      | ^~~~~~~~~~~~~
+In file included from /home/goringich/esp-idf/components/log/include/esp_log.h:19:
+/home/goringich/esp-idf/components/log/include/esp_log_write.h:17:15: error: storage class specified for parameter 'vprintf_like_t'
+   17 | typedef int (*vprintf_like_t)(const char *, va_list);
+      |               ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_write.h:33:1: error: expected declaration specifiers before 'vprintf_like_t'
+   33 | vprintf_like_t esp_log_set_vprintf(vprintf_like_t func);
+      | ^~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_write.h:51:20: error: expected declaration specifiers or '...' before 'esp_log_level_t'
+   51 | void esp_log_write(esp_log_level_t level, const char* tag, const char* format, ...) __attribute__((format(printf, 3, 4)));
+      |                    ^~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_write.h:68:21: error: expected declaration specifiers or '...' before 'esp_log_level_t'
+   68 | void esp_log_writev(esp_log_level_t level, const char* tag, const char* format, va_list args);
+      |                     ^~~~~~~~~~~~~~~
+In file included from /home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/string.h:175,
+                 from /home/goringich/esp-idf/components/log/include/esp_log_args.h:10,
+                 from /home/goringich/esp-idf/components/log/include/esp_log.h:21:
+/home/goringich/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include/sys/string.h:16:1: error: expected '=', ',', ';', 'asm' or '__attribute__' before '{' token
+   16 | {
+      | ^
+/home/goringich/esp-idf/components/log/include/esp_log_args.h:41:3: error: storage class specified for parameter 'esp_log_args_type_t'
+   41 | } esp_log_args_type_t;
+      |   ^~~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log_args.h:55:3: error: storage class specified for parameter 'esp_log_args_end_t'
+   55 | } esp_log_args_end_t;
+      |   ^~~~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log.h:38:14: error: expected declaration specifiers or '...' before 'esp_log_config_t'
+   38 | void esp_log(esp_log_config_t config, const char* tag, const char* format, ...);
+      |              ^~~~~~~~~~~~~~~~
+/home/goringich/esp-idf/components/log/include/esp_log.h:50:17: error: expected declaration specifiers or '...' before 'esp_log_config_t'
+   50 | void esp_log_va(esp_log_config_t config, const char *tag, const char *format, va_list args);
+      |                 ^~~~~~~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:12:20: error: storage class specified for parameter 'TAG'
+   12 | static const char *TAG = "i2c_bus";
+      |                    ^~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:12:1: error: parameter 'TAG' is initialized
+   12 | static const char *TAG = "i2c_bus";
+      | ^~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:13:32: error: expected '=', ',', ';', 'asm' or '__attribute__' before 's_bus'
+   13 | static i2c_master_bus_handle_t s_bus = NULL;
+      |                                ^~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:18:3: error: storage class specified for parameter 'i2c_lines_t'
+   18 | } i2c_lines_t;
+      |   ^~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:20:20: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'i2c_bus_read_lines'
+   20 | static i2c_lines_t i2c_bus_read_lines(void);
+      |                    ^~~~~~~~~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:21:50: error: expected declaration specifiers or '...' before 'i2c_lines_t'
+   21 | static void i2c_bus_log_lines(const char *where, i2c_lines_t l);
+      |                                                  ^~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:22:13: error: storage class specified for parameter 'i2c_bus_recover_gpio'
+   22 | static bool i2c_bus_recover_gpio(bool *did_recover);
+      |             ^~~~~~~~~~~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:23:13: error: storage class specified for parameter 'i2c_bus_log_scan_table'
+   23 | static void i2c_bus_log_scan_table(const bool present[128]);
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:24:13: error: storage class specified for parameter 'i2c_bus_selfcheck_gpio'
+   24 | static bool i2c_bus_selfcheck_gpio(const char *where);
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:26:30: error: expected '=', ',', ';', 'asm' or '__attribute__' before '{' token
+   26 | esp_err_t i2c_bus_init(void) {
+      |                              ^
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:73:30: error: expected '=', ',', ';', 'asm' or '__attribute__' before '{' token
+   73 | esp_err_t i2c_bus_scan(void) {
+      |                              ^
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:158:20: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'i2c_bus_read_lines'
+  158 | static i2c_lines_t i2c_bus_read_lines(void) {
+      |                    ^~~~~~~~~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:169:50: error: expected declaration specifiers or '...' before 'i2c_lines_t'
+  169 | static void i2c_bus_log_lines(const char *where, i2c_lines_t l) {
+      |                                                  ^~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:177:53: error: expected '=', ',', ';', 'asm' or '__attribute__' before '{' token
+  177 | static bool i2c_bus_recover_gpio(bool *did_recover) {
+      |                                                     ^
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:232:61: error: expected '=', ',', ';', 'asm' or '__attribute__' before '{' token
+  232 | static void i2c_bus_log_scan_table(const bool present[128]) {
+      |                                                             ^
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:257:55: error: expected '=', ',', ';', 'asm' or '__attribute__' before '{' token
+  257 | static bool i2c_bus_selfcheck_gpio(const char *where) {
+      |                                                       ^
+/home/goringich/hello_p4/components/i2c_bus/include/i2c_bus.h:22:13: error: old-style parameter declarations in prototyped function definition
+   22 | static bool i2c_bus_selfcheck_gpio(const char *where)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:311: error: expected '{' at end of input
+/home/goringich/hello_p4/components/i2c_bus/src/i2c_bus.c:310:1: error: no return statement in function returning non-void [-Werror=return-type]
+  310 | }
+      | ^
+/home/goringich/hello_p4/components/i2c_bus/include/i2c_bus.h: At top level:
+/home/goringich/hello_p4/components/i2c_bus/include/i2c_bus.h:22:13: warning: 'i2c_bus_selfcheck_gpio' defined but not used [-Wunused-function]
+   22 | static bool i2c_bus_selfcheck_gpio(const char *where)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+cc1: some warnings being treated as errors
+[4/14] Performing build step for 'bootloader'
+[1/1] cd /home/goringich/hello_p4/build/bootloader/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 /home/goringich/hello_p4/build/bootloader/bootloader.bin
+Bootloader binary size 0x5a30 bytes. 0x5d0 bytes (6%) free.
+ninja: build stopped: subcommand failed.

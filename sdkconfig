@@ -2403,10 +2403,18 @@ CONFIG_WIFI_PROV_STA_ALL_CHANNEL_SCAN=y
 # end of Wi-Fi Provisioning Manager
 
 #
-# App
+# app
 #
 CONFIG_APP_TICK_LOG=y
-# end of App
+# end of app
+
+#
+# i2c bus
+#
+CONFIG_I2C_BUS_SDA_GPIO=1
+CONFIG_I2C_BUS_SCL_GPIO=2
+CONFIG_I2C_BUS_FREQ_HZ=100000
+# end of i2c bus
 # end of Component config
 
 # CONFIG_IDF_EXPERIMENTAL_FEATURES is not set

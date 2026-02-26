@@ -1,0 +1,2025 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python -DESP_PLATFORM=1 -DCCACHE_ENABLE=0 /home/goringich/hello_p4
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_app".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_app".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_app_trace".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_app_trace".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_app_update".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_app_update".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_bootloader".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_bootloader".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_bootloader_support".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_bootloader_support".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_bt".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_bt".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_cmock".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_cmock".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_console".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_console".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_cxx".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_cxx".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_driver".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_driver".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_efuse".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_efuse".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp-tls".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp-tls".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_adc".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_adc".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_app_format".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_app_format".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target
+  "___idf_esp_bootloader_format".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target
+  "___idf_esp_bootloader_format".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_coex".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_coex".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_common".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_common".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_ana_cmpr".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_ana_cmpr".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target
+  "___idf_esp_driver_bitscrambler".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target
+  "___idf_esp_driver_bitscrambler".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_cam".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_cam".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_dac".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_dac".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_gpio".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_gpio".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_gptimer".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_gptimer".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_i2c".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_i2c".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_i2s".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_i2s".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_isp".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_isp".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_jpeg".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_jpeg".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_ledc".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_ledc".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_mcpwm".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_mcpwm".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_parlio".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_parlio".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_pcnt".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_pcnt".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_ppa".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_ppa".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_rmt".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_rmt".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_sdio".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_sdio".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_sdm".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_sdm".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_sdmmc".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_sdmmc".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_sdspi".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_sdspi".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_spi".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_spi".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target
+  "___idf_esp_driver_touch_sens".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target
+  "___idf_esp_driver_touch_sens".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_tsens".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_tsens".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_twai".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_twai".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_uart".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_driver_uart".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target
+  "___idf_esp_driver_usb_serial_jtag".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target
+  "___idf_esp_driver_usb_serial_jtag".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_eth".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_eth".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_event".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_event".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_gdbstub".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_gdbstub".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_hid".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_hid".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_http_client".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_http_client".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_http_server".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_http_server".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_https_ota".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_https_ota".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_https_server".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_https_server".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_hw_support".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_hw_support".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_lcd".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_lcd".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_local_ctrl".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_local_ctrl".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_mm".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_mm".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_netif".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_netif".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_netif_stack".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_netif_stack".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_partition".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_partition".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_phy".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_phy".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_pm".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_pm".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_psram".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_psram".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_ringbuf".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_ringbuf".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_rom".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_rom".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_security".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_security".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_system".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_system".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_tee".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_tee".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_timer".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_timer".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_vfs_console".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_vfs_console".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_wifi".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esp_wifi".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_espcoredump".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_espcoredump".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esptool_py".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_esptool_py".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_fatfs".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_fatfs".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_freertos".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_freertos".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_hal".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_hal".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_heap".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_heap".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_http_parser".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_http_parser".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_i2c_bus".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_i2c_bus".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_idf_test".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_idf_test".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_ieee802154".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_ieee802154".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_json".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_json".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_linux".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_linux".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_log".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_log".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_lwip".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_lwip".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_main".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_main".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_mbedtls".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_mbedtls".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_mqtt".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_mqtt".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_newlib".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_newlib".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_nvs_flash".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_nvs_flash".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_nvs_sec_provider".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_nvs_sec_provider".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_openthread".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_openthread".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_partition_table".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_partition_table".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_perfmon".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_perfmon".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_protobuf-c".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_protobuf-c".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_protocomm".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_protocomm".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_pthread".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_pthread".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_riscv".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_riscv".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_rt".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_rt".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_sdmmc".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_sdmmc".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_soc".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_soc".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_spi_flash".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_spi_flash".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_spiffs".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_spiffs".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_tcp_transport".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_tcp_transport".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_touch_element".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_touch_element".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_ulp".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_ulp".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_unity".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_unity".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_usb".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_usb".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_vfs".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_vfs".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_wear_levelling".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_wear_levelling".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_wifi_provisioning".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_wifi_provisioning".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_wpa_supplicant".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_wpa_supplicant".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_xtensa".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "___idf_xtensa".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "__idf_build_target".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  Policy CMP0111 is not set: An imported target missing its location property
+  fails during generation.  Run "cmake --help-policy CMP0111" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  IMPORTED_LOCATION not set for imported target "__idf_build_target".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+

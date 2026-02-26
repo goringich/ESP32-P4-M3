@@ -160,4 +160,8 @@
 /home/goringich/hello_p4/build/esp-idf/spiffs/libspiffs.a
 /home/goringich/hello_p4/build/esp-idf/usb/libusb.a
 /home/goringich/hello_p4/build/esp-idf/main/libmain.a
+/home/goringich/hello_p4/build/esp-idf/i2c_bus/libi2c_bus.a
+/home/goringich/hello_p4/build/esp-idf/mpu9250/libmpu9250.a
+/home/goringich/hello_p4/build/esp-idf/i2c_bus/libi2c_bus.a
 /home/goringich/hello_p4/build/esp-idf/app/libapp.a
+/home/goringich/hello_p4/build/esp-idf/mpu9250/libmpu9250.a

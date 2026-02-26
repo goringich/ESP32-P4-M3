@@ -36610,17 +36610,64 @@
                     {
                         "children": [],
                         "depends_on": null,
-                        "help": "Enables periodic tick logs.",
+                        "help": null,
                         "id": "APP_TICK_LOG",
                         "name": "APP_TICK_LOG",
                         "range": null,
-                        "title": "Log tick messages",
+                        "title": "log app tick",
                         "type": "bool"
                     }
                 ],
                 "depends_on": null,
                 "id": "component-config-app",
-                "title": "App",
+                "title": "app",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "I2C_BUS_SDA_GPIO",
+                        "name": "I2C_BUS_SDA_GPIO",
+                        "range": [
+                            0,
+                            48
+                        ],
+                        "title": "SDA GPIO",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "I2C_BUS_SCL_GPIO",
+                        "name": "I2C_BUS_SCL_GPIO",
+                        "range": [
+                            0,
+                            48
+                        ],
+                        "title": "SCL GPIO",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "I2C_BUS_FREQ_HZ",
+                        "name": "I2C_BUS_FREQ_HZ",
+                        "range": [
+                            10000,
+                            1000000
+                        ],
+                        "title": "frequency (Hz)",
+                        "type": "int"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-i2c-bus",
+                "title": "i2c bus",
                 "type": "menu"
             }
         ],

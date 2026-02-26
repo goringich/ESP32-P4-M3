@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "options": {
+    "cwd": "${workspaceFolder}"
+  },
+  "tasks": [
+    {
+      "label": "idf: open IDF shell",
+      "type": "shell",
+      "command": "zsh",
+      "args": [
+        "-lc",
+        "cd \"${workspaceFolder}\" && direnv export zsh > /tmp/hello_p4_idf_env.zsh && source /tmp/hello_p4_idf_env.zsh && exec zsh -l"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "idf: build",
+      "type": "shell",
+      "command": "direnv",
+      "args": ["exec", ".", "idf.py", "build"],
+      "problemMatcher": ["$gcc"],
+      "group": "build"
+    },
+    {
+      "label": "idf: flash (/dev/ttyUSB0)",
+      "type": "shell",
+      "command": "direnv",
+      "args": ["exec", ".", "idf.py", "-p", "/dev/ttyUSB0", "-b", "115200", "flash"],
+      "problemMatcher": []
+    },
+    {
+      "label": "idf: monitor (/dev/ttyUSB0)",
+      "type": "shell",
+      "command": "direnv",
+      "args": ["exec", ".", "idf.py", "-p", "/dev/ttyUSB0", "-b", "115200", "monitor"],
+      "problemMatcher": []
+    },
+    {
+      "label": "idf: flash+monitor (/dev/ttyUSB0)",
+      "type": "shell",
+      "command": "direnv",
+      "args": ["exec", ".", "idf.py", "-p", "/dev/ttyUSB0", "-b", "115200", "flash", "monitor"],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "idf: menuconfig",
+      "type": "shell",
+      "command": "direnv",
+      "args": ["exec", ".", "idf.py", "menuconfig"],
+      "problemMatcher": []
+    },
+    {
+      "label": "idf: clean",
+      "type": "shell",
+      "command": "direnv",
+      "args": ["exec", ".", "idf.py", "clean"],
+      "problemMatcher": []
+    }
+  ]
+}

@@ -120,6 +120,8 @@
 		"/home/goringich/hello_p4/build/esp-idf/usb/cmake_install.cmake",
 		"/home/goringich/hello_p4/build/esp-idf/wifi_provisioning/cmake_install.cmake",
 		"/home/goringich/hello_p4/build/esp-idf/main/cmake_install.cmake",
+		"/home/goringich/hello_p4/build/esp-idf/i2c_bus/cmake_install.cmake",
+		"/home/goringich/hello_p4/build/esp-idf/mpu9250/cmake_install.cmake",
 		"/home/goringich/hello_p4/build/esp-idf/app/cmake_install.cmake"
 	],
 	"Parallel" : false

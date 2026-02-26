@@ -1,0 +1,110 @@
+Command: /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix riscv32-esp-elf- --target esp32p4 --revision 1 --decode-panic backtrace /home/goringich/hello_p4/build/p4_lab.elf /home/goringich/hello_p4/build/bootloader/bootloader.elf -m '/home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python' '/home/goringich/esp-idf/tools/idf.py' '-p' '/dev/ttyUSB0' '-b' '115200'
+At 4F�ESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0x1 (POWERON),boot:0x30f (SPI_FAST_FLASH_BOOT)
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x164c
+load:0x4ff29ed0,len:0xe08
+load:0x4ff2cbd0,len:0x3588
+entry 0x4ff29eda
+[0;32mI (25) boot: ESP-IDF v5.5.2 2nd stage bootloader[0m
+[0;32mI (26) boot: compile time Feb 21 2026 12:08:58[0m
+[0;32mI (26) boot: Multicore bootloader[0m
+[0;32mI (27) boot: chip revision: v1.3[0m
+[0;32mI (29) boot: efuse block revision: v0.3[0m
+[0;32mI (32) boot.esp32p4: SPI Speed      : 80MHz[0m
+[0;32mI (36) boot.esp32p4: SPI Mode       : DIO[0m
+[0;32mI (40) boot.esp32p4: SPI Flash Size : 16MB[0m
+[0;32mI (44) boot: Enabling RNG early entropy source...[0m
+[0;32mI (48) boot: Partition Table:[0m
+[0;32mI (51) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (70) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (78) boot: End of partition table[0m
+[0;32mI (80) esp_image: segment 0: paddr=00010020 vaddr=40020020 size=0bc94h ( 48276) map[0m
+[0;32mI (97) esp_image: segment 1: paddr=0001bcbc vaddr=30100000 size=00044h (    68) load[0m
+[0;32mI (98) esp_image: segment 2: paddr=0001bd08 vaddr=4ff00000 size=04310h ( 17168) load[0m
+[0;32mI (107) esp_image: segment 3: paddr=00020020 vaddr=40000020 size=1c178h (115064) map[0m
+[0;32mI (130) esp_image: segment 4: paddr=0003c1a0 vaddr=4ff04310 size=0b394h ( 45972) load[0m
+[0;32mI (141) esp_image: segment 5: paddr=0004753c vaddr=4ff0f700 size=02048h (  8264) load[0m
+[0;32mI (147) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (147) boot: Disabling RNG early entropy source...[0m
+[0;32mI (160) cpu_start: Multicore app[0m
+[0;32mI (170) cpu_start: GPIO 38 and 37 are used as console UART I/O pins[0m
+[0;32mI (170) cpu_start: Pro cpu start user code[0m
+[0;32mI (171) cpu_start: cpu freq: 360000000 Hz[0m
+[0;32mI (172) app_init: Application information:[0m
+[0;32mI (176) app_init: Project name:     p4_lab[0m
+[0;32mI (180) app_init: App version:      1a5ab8e-dirty[0m
+[0;32mI (184) app_init: Compile time:     Feb 24 2026 12:15:47[0m
+[0;32mI (189) app_init: ELF file SHA256:  c07cb3798...[0m
+[0;32mI (194) app_init: ESP-IDF:          v5.5.2[0m
+[0;32mI (198) efuse_init: Min chip rev:     v0.1[0m
+[0;32mI (201) efuse_init: Max chip rev:     v1.99 [0m
+[0;32mI (205) efuse_init: Chip rev:         v1.3[0m
+[0;32mI (209) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (216) heap_init: At 4FF12EE0 len 000280E0 (160 KiB): RETENT_RAM[0m
+[0;32mI (221) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM[0m
+[0;32mI (226) heap_init: At 4FF40000 len 00060000 (384 KiB): RAM[0m
+[0;32mI (232) heap_init: At 50108080 len 00007F80 (31 KiB): RTCRAM[0m
+[0;32mI (237) heap_init: At 30100044 len 00001FBC (7 KiB): TCM[0m
+[0;32mI (243) spi_flash: detected chip: boya[0m
+[0;32mI (246) spi_flash: flash io: dio[0m
+[0;32mI (249) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (255) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (262) main_task: Started on CPU0[0m
+[0;32mI (302) main_task: Calling app_main()[0m
+[0;32mI (302) main: boot[0m
+[0;32mI (302) app: init[0m
+[0;32mI (302) i2c_bus: init: idle lines: sda(gpio=1)=1 scl(gpio=2)=1[0m
+[0;32mI (302) i2c_bus: init: bus ready sda=1 scl=2 freq=100000[0m
+[0;32mI (312) i2c_bus: scan: quick probe 0x68/0x69[0m
+[0;32mI (312) i2c_bus: scan: found 0x68[0m
+[0;32mI (312) i2c_bus: scan: result found=1 timeouts=0 other_err=1[0m
+[0;33mW (322) app: mpu: addr=0x68 WHO_AM_I=0x71 (MPU-9250)[0m
+[0;32mI (322) i2c_bus: deinit: bus released[0m
+[0;33mW (332) app: diag: starting I2C pair sweep for MPU 0x68/0x69[0m
+[0;32mI (332) app: diag: try sda=1 scl=2 idle=(1,1)[0m
+[0;33mW (342) app: diag: FOUND addr=0x68 on sda=1 scl=2[0m
+[0;32mI (342) app: diag: probe addr=0x69 on sda=1 scl=2 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (352) app: diag: try sda=2 scl=1 idle=(1,1)[0m
+[0;32mI (352) app: diag: probe addr=0x68 on sda=2 scl=1 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (362) app: diag: probe addr=0x69 on sda=2 scl=1 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (362) app: diag: try sda=3 scl=2 idle=(0,1)[0m
+[0;32mI (372) app: diag: probe addr=0x68 on sda=3 scl=2 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (372) app: diag: probe addr=0x69 on sda=3 scl=2 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (382) app: diag: try sda=2 scl=3 idle=(1,1)[0m
+[0;32mI (382) app: diag: probe addr=0x68 on sda=2 scl=3 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (392) app: diag: probe addr=0x69 on sda=2 scl=3 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (402) app: diag: try sda=1 scl=3 idle=(1,1)[0m
+[0;32mI (402) app: diag: probe addr=0x68 on sda=1 scl=3 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (412) app: diag: probe addr=0x69 on sda=1 scl=3 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (412) app: diag: try sda=3 scl=1 idle=(1,1)[0m
+[0;32mI (422) app: diag: probe addr=0x68 on sda=3 scl=1 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (422) app: diag: probe addr=0x69 on sda=3 scl=1 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (432) app: diag: try sda=4 scl=2 idle=(0,1)[0m
+[0;32mI (432) app: diag: probe addr=0x68 on sda=4 scl=2 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (442) app: diag: probe addr=0x69 on sda=4 scl=2 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (452) app: diag: try sda=2 scl=4 idle=(1,1)[0m
+[0;32mI (452) app: diag: probe addr=0x68 on sda=2 scl=4 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (462) app: diag: probe addr=0x69 on sda=2 scl=4 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (462) app: diag: try sda=1 scl=4 idle=(1,1)[0m
+[0;32mI (472) app: diag: probe addr=0x68 on sda=1 scl=4 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (472) app: diag: probe addr=0x69 on sda=1 scl=4 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (482) app: diag: try sda=4 scl=1 idle=(1,1)[0m
+[0;32mI (482) app: diag: probe addr=0x68 on sda=4 scl=1 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (492) app: diag: probe addr=0x69 on sda=4 scl=1 -> ESP_ERR_NOT_FOUND[0m
+[0;32mI (502) app: diag: try sda=10 scl=11 idle=(1,0)[0m
+[1;31mE (622) i2c.master: probe device timeout. Please check if xfer_timeout_ms and pull-ups are correctly set up[0m
+[0;32mI (622) app: diag: probe addr=0x68 on sda=10 scl=11 -> ESP_ERR_TIMEOUT[0m
+[1;31mE (742) i2c.master: probe device timeout. Please check if xfer_timeout_ms and pull-ups are correctly set up[0m
+[0;32mI (742) app: diag: probe addr=0x69 on sda=10 scl=11 -> ESP_ERR_TIMEOUT[0m
+[0;32mI (742) app: diag: try sda=11 scl=10 idle=(0,1)[0m
+[1;31mE (862) i2c.master: probe device timeout. Please check if xfer_timeout_ms and pull-ups are correctly set up[0m
+[0;32mI (862) app: diag: probe addr=0x68 on sda=11 scl=10 -> ESP_ERR_TIMEOUT[0m
+[1;31mE (982) i2c.master: probe device timeout. Please check if xfer_timeout_ms and pull-ups are correctly set up[0m
+[0;32mI (982) app: diag: probe addr=0x69 on sda=11 scl=10 -> ESP_ERR_TIMEOUT[0m
+[0;33mW (982) app: diag: I2C pair sweep done[0m
+[0;32mI (4982) app: tick 5[0m
+[0;32mI (9982) app: tick 10[0m
