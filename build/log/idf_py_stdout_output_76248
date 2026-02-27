@@ -1,0 +1,81 @@
+Command: ninja flash
+[1/11] Building C object esp-idf/esp_app_format/CMakeFiles/__idf_esp_app_format.dir/esp_app_desc.c.obj
+[2/11] Linking C static library esp-idf/esp_app_format/libesp_app_format.a
+[3/11] Performing configure step for 'bootloader'
+-- Minimal build - OFF
+-- Building ESP-IDF components for target esp32p4
+-- ESP-TEE is currently supported only on the esp32c6;esp32h2;esp32c5 SoCs
+-- Project sdkconfig file /home/goringich/hello_p4/sdkconfig
+-- Adding linker script /home/goringich/esp-idf/components/riscv/ld/rom.api.ld
+-- Adding linker script /home/goringich/esp-idf/components/soc/esp32p4/ld/esp32p4.peripherals.ld
+-- Bootloader project name: "bootloader" version: 1
+-- Adding linker script /home/goringich/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.ld
+-- Adding linker script /home/goringich/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.api.ld
+-- Adding linker script /home/goringich/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.rvfp.ld
+-- Adding linker script /home/goringich/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.wdt.ld
+-- Adding linker script /home/goringich/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.systimer.ld
+-- Adding linker script /home/goringich/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.version.ld
+-- Adding linker script /home/goringich/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.libc.ld
+-- Adding linker script /home/goringich/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.libc-suboptimal_for_misaligned_mem.ld
+-- Adding linker script /home/goringich/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.newlib.ld
+-- Adding linker script /home/goringich/esp-idf/components/bootloader/subproject/main/ld/esp32p4/bootloader.rom.ld
+-- Components: bootloader bootloader_support efuse esp_app_format esp_bootloader_format esp_common esp_hw_support esp_rom esp_security esp_system esptool_py freertos hal log main micro-ecc newlib partition_table riscv soc spi_flash
+-- Component paths: /home/goringich/esp-idf/components/bootloader /home/goringich/esp-idf/components/bootloader_support /home/goringich/esp-idf/components/efuse /home/goringich/esp-idf/components/esp_app_format /home/goringich/esp-idf/components/esp_bootloader_format /home/goringich/esp-idf/components/esp_common /home/goringich/esp-idf/components/esp_hw_support /home/goringich/esp-idf/components/esp_rom /home/goringich/esp-idf/components/esp_security /home/goringich/esp-idf/components/esp_system /home/goringich/esp-idf/components/esptool_py /home/goringich/esp-idf/components/freertos /home/goringich/esp-idf/components/hal /home/goringich/esp-idf/components/log /home/goringich/esp-idf/components/bootloader/subproject/main /home/goringich/esp-idf/components/bootloader/subproject/components/micro-ecc /home/goringich/esp-idf/components/newlib /home/goringich/esp-idf/components/partition_table /home/goringich/esp-idf/components/riscv /home/goringich/esp-idf/components/soc /home/goringich/esp-idf/components/spi_flash
+-- Adding linker script /home/goringich/esp-idf/components/bootloader/subproject/main/ld/esp32p4/bootloader.ld
+-- Configuring done (2.9s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/goringich/hello_p4/build/bootloader
+[4/11] Performing build step for 'bootloader'
+[1/1] cd /home/goringich/hello_p4/build/bootloader/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 /home/goringich/hello_p4/build/bootloader/bootloader.bin
+Bootloader binary size 0x5a30 bytes. 0x5d0 bytes (6%) free.
+[5/11] No install step for 'bootloader'
+[6/11] Completed 'bootloader'
+[7/11] Generating esp-idf/esp_system/ld/sections.ld
+[8/11] Linking CXX executable p4_lab.elf
+[9/11] Generating binary image from built executable
+esptool.py v4.12.dev1
+Creating esp32p4 image...
+Merged 3 ELF sections
+Successfully created esp32p4 image.
+Generated /home/goringich/hello_p4/build/p4_lab.bin
+[10/11] cd /home/goringich/hello_p4/build/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/goringich/hello_p4/build/partition_table/partition-table.bin /home/goringich/hello_p4/build/p4_lab.bin
+p4_lab.bin binary size 0x395a0 bytes. Smallest app partition is 0x100000 bytes. 0xc6a60 bytes (78%) free.
+[10/11] cd /home/goringich/esp-idf/components/esptool_py && /usr/bin/cmake -D IDF_PATH=/home/goringich/esp-idf -D "SERIAL_TOOL=/home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python;;/home/goringich/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32p4" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args" -D WORKING_DIRECTORY=/home/goringich/hello_p4/build -P /home/goringich/esp-idf/components/esptool_py/run_serial_tool.cmake
+esptool.py --chip esp32p4 -p /dev/ttyUSB0 -b 115200 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 16MB 0x2000 bootloader/bootloader.bin 0x10000 p4_lab.bin 0x8000 partition_table/partition-table.bin
+esptool.py v4.12.dev1
+Serial port /dev/ttyUSB0
+Connecting....
+Chip is ESP32-P4 (revision v1.3)
+Features: High-Performance MCU
+Crystal is 40MHz
+MAC: 30:ed:a0:e3:0b:b7
+Uploading stub...
+Running stub...
+Stub running...
+Configuring flash size...
+Flash will be erased from 0x00002000 to 0x00007fff...
+Flash will be erased from 0x00010000 to 0x00049fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+SHA digest in image updated
+Compressed 23088 bytes to 14202...
+Writing at 0x00002000... (100 %)
+Wrote 23088 bytes (14202 compressed) at 0x00002000 in 1.6 seconds (effective 117.6 kbit/s)...
+Hash of data verified.
+Compressed 234912 bytes to 119902...
+Writing at 0x00010000... (12 %)
+Writing at 0x0001b6ae... (25 %)
+Writing at 0x0002237d... (37 %)
+Writing at 0x00029737... (50 %)
+Writing at 0x000316de... (62 %)
+Writing at 0x000379ba... (75 %)
+Writing at 0x0003e979... (87 %)
+Writing at 0x00045e4c... (100 %)
+Wrote 234912 bytes (119902 compressed) at 0x00010000 in 10.7 seconds (effective 175.6 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 103...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (103 compressed) at 0x00008000 in 0.1 seconds (effective 432.0 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...

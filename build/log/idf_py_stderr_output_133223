@@ -1,0 +1,4 @@
+Command: /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/tools/idf_monitor.py -p /dev/ttyUSB0 -b 921600 --toolchain-prefix riscv32-esp-elf- --target esp32p4 --revision 1 --decode-panic backtrace /home/goringich/hello_p4/build/p4_lab.elf /home/goringich/hello_p4/build/bootloader/bootloader.elf -m '/home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python' '/home/goringich/esp-idf/tools/idf.py' '-p' '/dev/ttyUSB0' '-b' '921600'
+[0;33m--- esp-idf-monitor 1.9.0 on /dev/ttyUSB0 921600[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
+[0m

@@ -48,6 +48,30 @@
       }
     },
     {
+      "label": "idf: app-flash fast (/dev/ttyUSB0)",
+      "type": "shell",
+      "command": "direnv",
+      "args": ["exec", ".", "idf.py", "-p", "/dev/ttyUSB0", "-b", "921600", "app-flash"],
+      "problemMatcher": []
+    },
+    {
+      "label": "idf: app-flash+monitor fast (/dev/ttyUSB0)",
+      "type": "shell",
+      "command": "zsh",
+      "args": [
+        "-lc",
+        "cd \"${workspaceFolder}\" && direnv exec . idf.py -p /dev/ttyUSB0 -b 921600 app-flash && direnv exec . idf.py -p /dev/ttyUSB0 -b 115200 monitor"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "idf: flash fast (/dev/ttyUSB0)",
+      "type": "shell",
+      "command": "direnv",
+      "args": ["exec", ".", "idf.py", "-p", "/dev/ttyUSB0", "-b", "921600", "flash"],
+      "problemMatcher": []
+    },
+    {
       "label": "idf: menuconfig",
       "type": "shell",
       "command": "direnv",

@@ -1,0 +1,43 @@
+Command: ninja app-flash
+[1/7] Building C object esp-idf/app/CMakeFiles/__idf_app.dir/src/app.c.obj
+[2/7] Linking C static library esp-idf/app/libapp.a
+[3/7] Generating esp-idf/esp_system/ld/sections.ld
+[4/7] Linking CXX executable p4_lab.elf
+[5/7] Generating binary image from built executable
+esptool.py v4.12.dev1
+Creating esp32p4 image...
+Merged 3 ELF sections
+Successfully created esp32p4 image.
+Generated /home/goringich/hello_p4/build/p4_lab.bin
+[6/7] cd /home/goringich/hello_p4/build/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/goringich/hello_p4/build/partition_table/partition-table.bin /home/goringich/hello_p4/build/p4_lab.bin
+p4_lab.bin binary size 0x3c440 bytes. Smallest app partition is 0x100000 bytes. 0xc3bc0 bytes (76%) free.
+[6/7] cd /home/goringich/esp-idf/components/esptool_py && /usr/bin/cmake -D IDF_PATH=/home/goringich/esp-idf -D "SERIAL_TOOL=/home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python;;/home/goringich/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32p4" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@app-flash_args" -D WORKING_DIRECTORY=/home/goringich/hello_p4/build -P /home/goringich/esp-idf/components/esptool_py/run_serial_tool.cmake
+esptool.py --chip esp32p4 -p /dev/ttyUSB0 -b 921600 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 16MB 0x10000 p4_lab.bin
+esptool.py v4.12.dev1
+Serial port /dev/ttyUSB0
+Connecting....
+Chip is ESP32-P4 (revision v1.3)
+Features: High-Performance MCU
+Crystal is 40MHz
+MAC: 30:ed:a0:e3:0b:b7
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 921600
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00010000 to 0x0004cfff...
+Compressed 246848 bytes to 123266...
+Writing at 0x00010000... (12 %)
+Writing at 0x0001b709... (25 %)
+Writing at 0x000224de... (37 %)
+Writing at 0x0002990f... (50 %)
+Writing at 0x00031855... (62 %)
+Writing at 0x0003979e... (75 %)
+Writing at 0x00040176... (87 %)
+Writing at 0x0004734e... (100 %)
+Wrote 246848 bytes (123266 compressed) at 0x00010000 in 3.0 seconds (effective 650.1 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...

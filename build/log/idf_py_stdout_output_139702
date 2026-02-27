@@ -1,0 +1,14 @@
+Command: ninja app-flash
+[1/2] cd /home/goringich/hello_p4/build/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/goringich/hello_p4/build/partition_table/partition-table.bin /home/goringich/hello_p4/build/p4_lab.bin
+p4_lab.bin binary size 0x397d0 bytes. Smallest app partition is 0x100000 bytes. 0xc6830 bytes (78%) free.
+[1/2] cd /home/goringich/esp-idf/components/esptool_py && /usr/bin/cmake -D IDF_PATH=/home/goringich/esp-idf -D "SERIAL_TOOL=/home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python;;/home/goringich/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32p4" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@app-flash_args" -D WORKING_DIRECTORY=/home/goringich/hello_p4/build -P /home/goringich/esp-idf/components/esptool_py/run_serial_tool.cmake
+esptool.py --chip esp32p4 -p /dev/ttyUSB0 -b 921600 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 16MB 0x10000 p4_lab.bin
+esptool.py v4.12.dev1
+Serial port /dev/ttyUSB0
+
+A fatal error occurred: Could not open /dev/ttyUSB0, the port is busy or doesn't exist.
+([Errno 11] Could not exclusively lock port /dev/ttyUSB0: [Errno 11] Resource temporarily unavailable)
+
+FAILED: [code=1] esp-idf/esptool_py/CMakeFiles/app-flash /home/goringich/hello_p4/build/esp-idf/esptool_py/CMakeFiles/app-flash 
+cd /home/goringich/esp-idf/components/esptool_py && /usr/bin/cmake -D IDF_PATH=/home/goringich/esp-idf -D "SERIAL_TOOL=/home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python;;/home/goringich/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32p4" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@app-flash_args" -D WORKING_DIRECTORY=/home/goringich/hello_p4/build -P /home/goringich/esp-idf/components/esptool_py/run_serial_tool.cmake
+ninja: build stopped: subcommand failed.

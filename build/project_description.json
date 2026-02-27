@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "p4_lab",
-    "project_version":    "1a5ab8e-dirty",
+    "project_version":    "3a03dd9-dirty",
     "project_path":       "/home/goringich/hello_p4",
     "idf_path":           "/home/goringich/esp-idf",
     "build_dir":          "/home/goringich/hello_p4/build",

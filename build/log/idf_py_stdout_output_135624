@@ -1,0 +1,33 @@
+Command: ninja app-flash
+[1/2] cd /home/goringich/hello_p4/build/esp-idf/esptool_py && /home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python /home/goringich/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/goringich/hello_p4/build/partition_table/partition-table.bin /home/goringich/hello_p4/build/p4_lab.bin
+p4_lab.bin binary size 0x397e0 bytes. Smallest app partition is 0x100000 bytes. 0xc6820 bytes (78%) free.
+[1/2] cd /home/goringich/esp-idf/components/esptool_py && /usr/bin/cmake -D IDF_PATH=/home/goringich/esp-idf -D "SERIAL_TOOL=/home/goringich/.espressif/python_env/idf5.5_py3.14_env/bin/python;;/home/goringich/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32p4" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@app-flash_args" -D WORKING_DIRECTORY=/home/goringich/hello_p4/build -P /home/goringich/esp-idf/components/esptool_py/run_serial_tool.cmake
+esptool.py --chip esp32p4 -p /dev/ttyUSB0 -b 921600 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 16MB 0x10000 p4_lab.bin
+esptool.py v4.12.dev1
+Serial port /dev/ttyUSB0
+Connecting....
+Chip is ESP32-P4 (revision v1.3)
+Features: High-Performance MCU
+Crystal is 40MHz
+MAC: 30:ed:a0:e3:0b:b7
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 921600
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00010000 to 0x00049fff...
+Compressed 235488 bytes to 120248...
+Writing at 0x00010000... (12 %)
+Writing at 0x0001b6e4... (25 %)
+Writing at 0x000223b7... (37 %)
+Writing at 0x0002975c... (50 %)
+Writing at 0x000316b1... (62 %)
+Writing at 0x00037a48... (75 %)
+Writing at 0x0003e8f5... (87 %)
+Writing at 0x00045e33... (100 %)
+Wrote 235488 bytes (120248 compressed) at 0x00010000 in 2.9 seconds (effective 642.8 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
