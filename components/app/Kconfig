@@ -4,4 +4,29 @@ config APP_TICK_LOG
   bool "log app tick"
   default y
 
+config APP_WIFI_SMOKE
+  bool "run Wi-Fi smoke test on boot"
+  default y
+
+config APP_WIFI_SCAN_MAX_AP
+  int "max AP records in scan"
+  default 20
+  range 1 64
+  depends on APP_WIFI_SMOKE
+
+config APP_WIFI_CONNECT
+  bool "attempt Wi-Fi connect after scan"
+  default n
+  depends on APP_WIFI_SMOKE
+
+config APP_WIFI_SSID
+  string "Wi-Fi SSID"
+  default ""
+  depends on APP_WIFI_CONNECT
+
+config APP_WIFI_PASSWORD
+  string "Wi-Fi password"
+  default ""
+  depends on APP_WIFI_CONNECT
+
 endmenu

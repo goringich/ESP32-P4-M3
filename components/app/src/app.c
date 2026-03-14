@@ -1,7 +1,6 @@
 #include "app.h"
 
 #include <inttypes.h>
-#include <stdio.h>
 #include <stdint.h>
 
 #include "esp_log.h"
@@ -9,14 +8,16 @@
 
 #include "i2c_bus.h"
 #include "i2c_bus_diag.h"
+#include "app_mpu_pretty.h"
+#include "app_wifi.h"
 #include "mpu9250.h"
 
 #define APP_LOG_COLOR_RESET "\x1b[0m"
 #define APP_LOG_COLOR_BLOCK_INIT "\x1b[38;5;33m"   /* blue */
 #define APP_LOG_COLOR_BLOCK_SCAN "\x1b[38;5;34m"   /* green */
 #define APP_LOG_COLOR_BLOCK_MPU "\x1b[38;5;135m"   /* violet */
+#define APP_LOG_COLOR_BLOCK_WIFI "\x1b[38;5;45m"   /* cyan */
 #define APP_LOG_COLOR_BLOCK_TICK "\x1b[38;5;178m"  /* amber */
-#define APP_TICK_LINE_WIDTH 72
 
 static const char *TAG = "app";
 static void app_mpu_whoami_check(void);
@@ -64,40 +65,32 @@ void app_init(void) {
   }
 
   app_mpu_whoami_check();
+
+#if CONFIG_APP_WIFI_SMOKE
+  app_log_color_block("WIFI SMOKE TEST", APP_LOG_COLOR_BLOCK_WIFI);
+  err = app_wifi_smoke_run();
+  if (err != ESP_OK) {
+    ESP_LOGW(TAG, "wifi smoke result: %s", esp_err_to_name(err));
+  }
+#endif
 }
 
 void app_tick(void) {
 #if CONFIG_APP_TICK_LOG
   static uint32_t s_counter = 0;
-  static const char spinner[] = {'|', '/', '-', '\\'};
 
   s_counter++;
   if ((s_counter % 5) == 0) {
     const uint32_t uptime_ms = esp_log_timestamp();
-    const uint32_t uptime_sec = uptime_ms / 1000U;
-    const uint32_t uptime_min = uptime_sec / 60U;
-    const uint32_t uptime_rem_sec = uptime_sec % 60U;
-    const char spin = spinner[(s_counter / 5U) % 4U];
-
-    char line[128];
-    int len = snprintf(line,
-                       sizeof(line),
-                       "%sAPP TICK%s #%-6" PRIu32 " up %02" PRIu32 ":%02" PRIu32 " %c",
-                       APP_LOG_COLOR_BLOCK_TICK,
-                       APP_LOG_COLOR_RESET,
-                       s_counter,
-                       uptime_min,
-                       uptime_rem_sec,
-                       spin);
-    if (len < 0) {
-      len = 0;
+    esp_err_t err = app_mpu_pretty_log_line(s_counter, uptime_ms);
+    if (err != ESP_OK) {
+      ESP_LOGW(TAG,
+               "%s tick %" PRIu32 " (mpu log err: %s)%s",
+               APP_LOG_COLOR_BLOCK_TICK,
+               s_counter,
+               esp_err_to_name(err),
+               APP_LOG_COLOR_RESET);
     }
-
-    printf("\r%s", line);
-    if (len < APP_TICK_LINE_WIDTH) {
-      printf("%*s", APP_TICK_LINE_WIDTH - len, "");
-    }
-    fflush(stdout);
   }
 #endif
 }

@@ -1,2 +1,11 @@
+build/
+log/
 logs/monitor/*.log
 logs/monitor/latest.log
+
+*.tmp
+*.swp
+*.swo
+*~
+
+sdkconfig.old
