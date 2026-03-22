@@ -14,6 +14,6 @@ void app_main(void) {
 
   while (1) {
     app_tick();
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(app_tick_delay_ms()));
   }
 }

@@ -26,6 +26,7 @@ static const uint8_t MPU_REG_ACCEL_XOUT_H = 0x3B;
 
 typedef struct {
   uint8_t addr;
+  uint8_t whoami;
   float accel_lsb_per_g;
   float gyro_lsb_per_dps;
   bool ready;
@@ -33,6 +34,7 @@ typedef struct {
 
 static app_mpu_state_t s_mpu = {
   .addr = 0,
+  .whoami = 0,
   .accel_lsb_per_g = 16384.0f,
   .gyro_lsb_per_dps = 131.0f,
   .ready = false,
@@ -41,6 +43,18 @@ static app_mpu_state_t s_mpu = {
 static int16_t app_mpu_i16be(const uint8_t hi, const uint8_t lo);
 static float app_mpu_accel_lsb_per_g(uint8_t accel_cfg);
 static float app_mpu_gyro_lsb_per_dps(uint8_t gyro_cfg);
+static void app_mpu_emit_telemetry_ready(uint32_t tick_counter,
+                                         uint32_t uptime_min,
+                                         uint32_t uptime_rem_sec,
+                                         uint8_t who,
+                                         float ax_g,
+                                         float ay_g,
+                                         float az_g,
+                                         float gx_dps,
+                                         float gy_dps,
+                                         float gz_dps,
+                                         float temp_c);
+static void app_mpu_emit_telemetry_error(esp_err_t err);
 
 static int16_t app_mpu_i16be(const uint8_t hi, const uint8_t lo) {
   return (int16_t)(((uint16_t)hi << 8) | lo);
@@ -78,6 +92,40 @@ static float app_mpu_gyro_lsb_per_dps(uint8_t gyro_cfg) {
   }
 }
 
+static void app_mpu_emit_telemetry_ready(uint32_t tick_counter,
+                                         uint32_t uptime_min,
+                                         uint32_t uptime_rem_sec,
+                                         uint8_t who,
+                                         float ax_g,
+                                         float ay_g,
+                                         float az_g,
+                                         float gx_dps,
+                                         float gy_dps,
+                                         float gz_dps,
+                                         float temp_c) {
+  printf("@telemetry {\"kind\":\"mpu\",\"ready\":true,\"address\":\"0x%02X\",\"whoami\":\"0x%02X\","
+         "\"model\":\"%s\",\"uptime\":\"%02" PRIu32 ":%02" PRIu32 "\","
+         "\"tick\":%" PRIu32 ",\"accel\":{\"x_g\":%.3f,\"y_g\":%.3f,\"z_g\":%.3f},"
+         "\"gyro\":{\"x_dps\":%.2f,\"y_dps\":%.2f,\"z_dps\":%.2f},\"temp_c\":%.2f}\n",
+         s_mpu.addr,
+         who,
+         mpu9250_whoami_name(who),
+         uptime_min,
+         uptime_rem_sec,
+         tick_counter,
+         (double)ax_g,
+         (double)ay_g,
+         (double)az_g,
+         (double)gx_dps,
+         (double)gy_dps,
+         (double)gz_dps,
+         (double)temp_c);
+}
+
+static void app_mpu_emit_telemetry_error(esp_err_t err) {
+  printf("@telemetry {\"kind\":\"mpu\",\"ready\":false,\"error\":\"%s\"}\n", esp_err_to_name(err));
+}
+
 esp_err_t app_mpu_pretty_init(void) {
   uint8_t who = 0;
   uint8_t pwr = 0;
@@ -110,6 +158,7 @@ esp_err_t app_mpu_pretty_init(void) {
 
   s_mpu.gyro_lsb_per_dps = app_mpu_gyro_lsb_per_dps(gyro_cfg);
   s_mpu.accel_lsb_per_g = app_mpu_accel_lsb_per_g(accel_cfg);
+  s_mpu.whoami = who;
   s_mpu.ready = true;
 
   ESP_LOGI(TAG,
@@ -132,46 +181,36 @@ esp_err_t app_mpu_pretty_log_line(uint32_t tick_counter, uint32_t uptime_ms) {
 
   esp_err_t err = app_mpu_pretty_init();
   if (err != ESP_OK) {
-    int len = snprintf(line,
-                       sizeof(line),
-                       "%sMPU ERR%s #%-6" PRIu32 " up %02" PRIu32 ":%02" PRIu32 " : %s",
-                       APP_MPU_COLOR_ERR,
-                       APP_MPU_COLOR_RESET,
-                       tick_counter,
-                       uptime_min,
-                       uptime_rem_sec,
-                       esp_err_to_name(err));
-    if (len < 0) {
-      len = 0;
-    }
+    snprintf(line,
+             sizeof(line),
+             "%sMPU ERR%s #%-6" PRIu32 " up %02" PRIu32 ":%02" PRIu32 " : %s",
+             APP_MPU_COLOR_ERR,
+             APP_MPU_COLOR_RESET,
+             tick_counter,
+             uptime_min,
+             uptime_rem_sec,
+             esp_err_to_name(err));
 
-    printf("\r%s", line);
-    if (len < APP_MPU_LINE_WIDTH) {
-      printf("%*s", APP_MPU_LINE_WIDTH - len, "");
-    }
+    printf("%s\n", line);
+    app_mpu_emit_telemetry_error(err);
     fflush(stdout);
     return err;
   }
 
   err = i2c_bus_read(s_mpu.addr, MPU_REG_ACCEL_XOUT_H, raw, sizeof(raw));
   if (err != ESP_OK) {
-    int len = snprintf(line,
-                       sizeof(line),
-                       "%sMPU ERR%s #%-6" PRIu32 " up %02" PRIu32 ":%02" PRIu32 " : %s",
-                       APP_MPU_COLOR_ERR,
-                       APP_MPU_COLOR_RESET,
-                       tick_counter,
-                       uptime_min,
-                       uptime_rem_sec,
-                       esp_err_to_name(err));
-    if (len < 0) {
-      len = 0;
-    }
+    snprintf(line,
+             sizeof(line),
+             "%sMPU ERR%s #%-6" PRIu32 " up %02" PRIu32 ":%02" PRIu32 " : %s",
+             APP_MPU_COLOR_ERR,
+             APP_MPU_COLOR_RESET,
+             tick_counter,
+             uptime_min,
+             uptime_rem_sec,
+             esp_err_to_name(err));
 
-    printf("\r%s", line);
-    if (len < APP_MPU_LINE_WIDTH) {
-      printf("%*s", APP_MPU_LINE_WIDTH - len, "");
-    }
+    printf("%s\n", line);
+    app_mpu_emit_telemetry_error(err);
     fflush(stdout);
     return err;
   }
@@ -192,39 +231,45 @@ esp_err_t app_mpu_pretty_log_line(uint32_t tick_counter, uint32_t uptime_ms) {
   const float gz_dps = (float)gz_raw / s_mpu.gyro_lsb_per_dps;
   const float temp_c = ((float)temp_raw / 333.87f) + 21.0f;
 
-  int len = snprintf(line,
-                     sizeof(line),
-                     "%sMPU%s #%-6" PRIu32 " up %02" PRIu32 ":%02" PRIu32
-                     " | %sA[g]%s %+6.3f %+6.3f %+6.3f"
-                     " | %sG[dps]%s %+7.2f %+7.2f %+7.2f"
-                     " | %sT%s %+6.2fC",
-                     APP_MPU_COLOR_HEADER,
-                     APP_MPU_COLOR_RESET,
-                     tick_counter,
-                     uptime_min,
-                     uptime_rem_sec,
-                     APP_MPU_COLOR_ACCEL,
-                     APP_MPU_COLOR_RESET,
-                     (double)ax_g,
-                     (double)ay_g,
-                     (double)az_g,
-                     APP_MPU_COLOR_GYRO,
-                     APP_MPU_COLOR_RESET,
-                     (double)gx_dps,
-                     (double)gy_dps,
-                     (double)gz_dps,
-                     APP_MPU_COLOR_TEMP,
-                     APP_MPU_COLOR_RESET,
-                     (double)temp_c);
+  snprintf(line,
+           sizeof(line),
+           "%sMPU%s #%-6" PRIu32 " up %02" PRIu32 ":%02" PRIu32
+           " | %sA[g]%s %+6.3f %+6.3f %+6.3f"
+           " | %sG[dps]%s %+7.2f %+7.2f %+7.2f"
+           " | %sT%s %+6.2fC",
+           APP_MPU_COLOR_HEADER,
+           APP_MPU_COLOR_RESET,
+           tick_counter,
+           uptime_min,
+           uptime_rem_sec,
+           APP_MPU_COLOR_ACCEL,
+           APP_MPU_COLOR_RESET,
+           (double)ax_g,
+           (double)ay_g,
+           (double)az_g,
+           APP_MPU_COLOR_GYRO,
+           APP_MPU_COLOR_RESET,
+           (double)gx_dps,
+           (double)gy_dps,
+           (double)gz_dps,
+           APP_MPU_COLOR_TEMP,
+           APP_MPU_COLOR_RESET,
+           (double)temp_c);
 
-  if (len < 0) {
-    len = 0;
-  }
-
-  printf("\r%s", line);
-  if (len < APP_MPU_LINE_WIDTH) {
-    printf("%*s", APP_MPU_LINE_WIDTH - len, "");
-  }
+  printf("%s\n", line);
+  app_mpu_emit_telemetry_ready(
+    tick_counter,
+    uptime_min,
+    uptime_rem_sec,
+    s_mpu.whoami,
+    ax_g,
+    ay_g,
+    az_g,
+    gx_dps,
+    gy_dps,
+    gz_dps,
+    temp_c
+  );
   fflush(stdout);
 
   return ESP_OK;

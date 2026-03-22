@@ -1,9 +1,17 @@
 {
-  "terminal.integrated.defaultProfile.linux": "zsh",
+  "terminal.integrated.defaultProfile.linux": "esp-idf-zsh",
   "terminal.integrated.profiles.linux": {
-    "zsh": {
-      "path": "zsh"
+    "esp-idf-zsh": {
+      "path": "/home/goringich/.local/bin/vscode-host-zsh",
+      "args": [
+        "-lc",
+        "export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && exec /usr/bin/zsh -il"
+      ],
+      "overrideName": true
     }
+  },
+  "terminal.integrated.automationProfile.linux": {
+    "path": "/home/goringich/.local/bin/vscode-host-zsh"
   },
   "terminal.integrated.cwd": "${workspaceFolder}",
   "terminal.integrated.scrollback": 10000

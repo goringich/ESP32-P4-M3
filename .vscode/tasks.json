@@ -5,42 +5,44 @@
   },
   "tasks": [
     {
-      "label": "idf: open IDF shell",
-      "type": "shell",
-      "command": "zsh",
+      "label": "idf: build",
+      "type": "process",
+      "command": "/home/goringich/.local/bin/vscode-host-zsh",
       "args": [
         "-lc",
-        "cd \"${workspaceFolder}\" && direnv export zsh > /tmp/hello_p4_idf_env.zsh && source /tmp/hello_p4_idf_env.zsh && exec zsh -l"
+        "cd \"${workspaceFolder}\" && export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && idf.py build"
       ],
-      "problemMatcher": []
-    },
-    {
-      "label": "idf: build",
-      "type": "shell",
-      "command": "direnv",
-      "args": ["exec", ".", "idf.py", "build"],
       "problemMatcher": ["$gcc"],
       "group": "build"
     },
     {
       "label": "idf: flash (/dev/ttyUSB0)",
-      "type": "shell",
-      "command": "direnv",
-      "args": ["exec", ".", "idf.py", "-p", "/dev/ttyUSB0", "-b", "115200", "flash"],
+      "type": "process",
+      "command": "/home/goringich/.local/bin/vscode-host-zsh",
+      "args": [
+        "-lc",
+        "cd \"${workspaceFolder}\" && export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && idf.py -p /dev/ttyUSB0 -b 115200 flash"
+      ],
       "problemMatcher": []
     },
     {
       "label": "idf: monitor (/dev/ttyUSB0)",
-      "type": "shell",
-      "command": "direnv",
-      "args": ["exec", ".", "idf.py", "-p", "/dev/ttyUSB0", "-b", "115200", "monitor"],
+      "type": "process",
+      "command": "/home/goringich/.local/bin/vscode-host-zsh",
+      "args": [
+        "-lc",
+        "cd \"${workspaceFolder}\" && export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && idf.py -p /dev/ttyUSB0 -b 115200 monitor"
+      ],
       "problemMatcher": []
     },
     {
       "label": "idf: flash+monitor (/dev/ttyUSB0)",
-      "type": "shell",
-      "command": "direnv",
-      "args": ["exec", ".", "idf.py", "-p", "/dev/ttyUSB0", "-b", "115200", "flash", "monitor"],
+      "type": "process",
+      "command": "/home/goringich/.local/bin/vscode-host-zsh",
+      "args": [
+        "-lc",
+        "cd \"${workspaceFolder}\" && export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && idf.py -p /dev/ttyUSB0 -b 115200 flash monitor"
+      ],
       "problemMatcher": [],
       "group": {
         "kind": "build",
@@ -49,40 +51,52 @@
     },
     {
       "label": "idf: app-flash fast (/dev/ttyUSB0)",
-      "type": "shell",
-      "command": "direnv",
-      "args": ["exec", ".", "idf.py", "-p", "/dev/ttyUSB0", "-b", "921600", "app-flash"],
+      "type": "process",
+      "command": "/home/goringich/.local/bin/vscode-host-zsh",
+      "args": [
+        "-lc",
+        "cd \"${workspaceFolder}\" && export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && idf.py -p /dev/ttyUSB0 -b 921600 app-flash"
+      ],
       "problemMatcher": []
     },
     {
       "label": "idf: app-flash+monitor fast (/dev/ttyUSB0)",
-      "type": "shell",
-      "command": "zsh",
+      "type": "process",
+      "command": "/home/goringich/.local/bin/vscode-host-zsh",
       "args": [
         "-lc",
-        "cd \"${workspaceFolder}\" && direnv exec . idf.py -p /dev/ttyUSB0 -b 921600 app-flash && direnv exec . idf.py -p /dev/ttyUSB0 -b 115200 monitor"
+        "cd \"${workspaceFolder}\" && export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && idf.py -p /dev/ttyUSB0 -b 921600 app-flash && idf.py -p /dev/ttyUSB0 -b 115200 monitor"
       ],
       "problemMatcher": []
     },
     {
       "label": "idf: flash fast (/dev/ttyUSB0)",
-      "type": "shell",
-      "command": "direnv",
-      "args": ["exec", ".", "idf.py", "-p", "/dev/ttyUSB0", "-b", "921600", "flash"],
+      "type": "process",
+      "command": "/home/goringich/.local/bin/vscode-host-zsh",
+      "args": [
+        "-lc",
+        "cd \"${workspaceFolder}\" && export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && idf.py -p /dev/ttyUSB0 -b 921600 flash"
+      ],
       "problemMatcher": []
     },
     {
       "label": "idf: menuconfig",
-      "type": "shell",
-      "command": "direnv",
-      "args": ["exec", ".", "idf.py", "menuconfig"],
+      "type": "process",
+      "command": "/home/goringich/.local/bin/vscode-host-zsh",
+      "args": [
+        "-lc",
+        "cd \"${workspaceFolder}\" && export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && idf.py menuconfig"
+      ],
       "problemMatcher": []
     },
     {
       "label": "idf: clean",
-      "type": "shell",
-      "command": "direnv",
-      "args": ["exec", ".", "idf.py", "clean"],
+      "type": "process",
+      "command": "/home/goringich/.local/bin/vscode-host-zsh",
+      "args": [
+        "-lc",
+        "cd \"${workspaceFolder}\" && export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && idf.py clean"
+      ],
       "problemMatcher": []
     }
   ]

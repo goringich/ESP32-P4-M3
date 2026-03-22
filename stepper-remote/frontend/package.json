@@ -1,0 +1,27 @@
+{
+  "name": "stepper-remote-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --open",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0 --open",
+    "test": "node --import ../backend/node_modules/tsx/dist/loader.mjs --test test/**/*.test.ts"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.0.0",
+    "@mui/material": "^7.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "^5.8.0",
+    "vite": "^8.0.0"
+  }
+}

@@ -1,5 +1,17 @@
 menu "app"
 
+choice APP_MODE
+  prompt "app mode"
+  default APP_MODE_MPU9250
+
+config APP_MODE_MPU9250
+  bool "MPU9250 / I2C diagnostics"
+
+config APP_MODE_L293D_TEST
+  bool "L293D stepper test"
+
+endchoice
+
 config APP_TICK_LOG
   bool "log app tick"
   default y
@@ -28,5 +40,49 @@ config APP_WIFI_PASSWORD
   string "Wi-Fi password"
   default ""
   depends on APP_WIFI_CONNECT
+
+if APP_MODE_L293D_TEST
+
+config APP_L293D_IN1_GPIO
+  int "L293D IN1 GPIO"
+  range 0 54
+  default 3
+
+config APP_L293D_IN2_GPIO
+  int "L293D IN2 GPIO"
+  range 0 54
+  default 4
+
+config APP_L293D_IN3_GPIO
+  int "L293D IN3 GPIO"
+  range 0 54
+  default 5
+
+config APP_L293D_IN4_GPIO
+  int "L293D IN4 GPIO"
+  range 0 54
+  default 20
+
+config APP_L293D_STEP_DELAY_MS
+  int "L293D step delay (ms)"
+  range 10 5000
+  default 600
+
+config APP_STEPPER_UART_BAUD_RATE
+  int "stepper uart baud rate"
+  range 9600 2000000
+  default 115200
+
+config APP_STEPPER_LED_ENABLE
+  bool "enable stepper activity led"
+  default n
+
+config APP_STEPPER_LED_GPIO
+  int "stepper activity led gpio"
+  range 0 54
+  default 2
+  depends on APP_STEPPER_LED_ENABLE
+
+endif
 
 endmenu
