@@ -1,6 +1,7 @@
 #include "app.h"
 
 #include <inttypes.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -8,6 +9,7 @@
 #include "sdkconfig.h"
 
 #include "app_mpu_pretty.h"
+#include "app_net.h"
 #include "app_stepper.h"
 #include "app_wifi.h"
 #include "i2c_bus.h"
@@ -25,6 +27,7 @@
 #define APP_MPU_LOG_PERIOD_MS 1000U
 
 static const char *TAG = "app";
+static bool s_network_ready;
 
 static void app_log_color_block(const char *label, const char *color);
 static void app_mpu_whoami_check(void);
@@ -95,6 +98,8 @@ void app_init(void) {
   err = app_wifi_smoke_run();
   if (err != ESP_OK) {
     ESP_LOGW(TAG, "wifi smoke result: %s", esp_err_to_name(err));
+  } else {
+    s_network_ready = true;
   }
 #endif
 
@@ -104,11 +109,24 @@ void app_init(void) {
     ESP_LOGE(TAG, "stepper init failed: %s", esp_err_to_name(err));
   }
 #endif
+
+#if CONFIG_APP_NET_ENABLE
+  if (s_network_ready) {
+    err = app_net_start();
+    if (err != ESP_OK) {
+      ESP_LOGW(TAG, "network API disabled: %s", esp_err_to_name(err));
+    }
+  }
+#endif
 }
 
 void app_tick(void) {
 #if CONFIG_APP_MODE_L293D_TEST
   app_stepper_tick();
+#endif
+
+#if CONFIG_APP_NET_ENABLE
+  app_net_tick();
 #endif
 
 #if CONFIG_APP_TICK_LOG

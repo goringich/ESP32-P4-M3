@@ -2,6 +2,7 @@ idf_component_register(
   SRCS
     "src/app.c"
     "src/app_mpu_pretty.c"
+    "src/app_net.c"
     "src/app_stepper.c"
     "src/app_wifi.c"
   INCLUDE_DIRS "include"
@@ -12,6 +13,7 @@ idf_component_register(
     esp_driver_uart
     esp_wifi
     esp_event
+    esp_http_server
     esp_netif
     nvs_flash
 )

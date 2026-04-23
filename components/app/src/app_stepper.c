@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "driver/gpio.h"
 #include "driver/uart.h"
@@ -556,6 +557,40 @@ static void app_stepper_handle_command(uint8_t cmd) {
       ESP_LOGW(TAG, "unknown command: 0x%02X ('%c')", cmd, (cmd >= 32U && cmd <= 126U) ? cmd : '.');
       break;
   }
+}
+
+esp_err_t app_stepper_command_char(char cmd) {
+  app_stepper_handle_command((uint8_t)cmd);
+  return ESP_OK;
+}
+
+void app_stepper_get_snapshot(app_stepper_snapshot_t *snapshot) {
+  if (snapshot == NULL) {
+    return;
+  }
+
+  memset(snapshot, 0, sizeof(*snapshot));
+  snapshot->mode = app_stepper_mode_to_str(s_stepper.mode);
+  snapshot->sweep_state = app_stepper_sweep_state_to_str(s_stepper.sweep_state);
+  snapshot->step_delay_ms = s_stepper.step_delay_ms;
+  snapshot->steps_per_second = app_stepper_steps_per_second(s_stepper.step_delay_ms);
+  snapshot->phase_index = (uint32_t)s_stepper.phase_index;
+  snapshot->total_steps = s_stepper.total_steps;
+  snapshot->sweep_steps = s_stepper.moved_steps_in_leg;
+  snapshot->coils_enabled = s_stepper.coils_enabled;
+  snapshot->uart_ready = s_stepper.uart_ready;
+  strlcpy(snapshot->last_command,
+          app_stepper_cmd_to_str(s_stepper.last_cmd),
+          sizeof(snapshot->last_command));
+  snapshot->in1_gpio = CONFIG_APP_L293D_IN1_GPIO;
+  snapshot->in2_gpio = CONFIG_APP_L293D_IN2_GPIO;
+  snapshot->in3_gpio = CONFIG_APP_L293D_IN3_GPIO;
+  snapshot->in4_gpio = CONFIG_APP_L293D_IN4_GPIO;
+#if CONFIG_APP_STEPPER_LED_ENABLE
+  snapshot->led_gpio = CONFIG_APP_STEPPER_LED_GPIO;
+#else
+  snapshot->led_gpio = -1;
+#endif
 }
 
 static void app_stepper_handle_uart(void) {
