@@ -68,6 +68,23 @@ export type TelemetryWifiState = {
   ip: string | null;
   mac: string | null;
   lastError: string | null;
+  initialized?: boolean | null;
+  apStarted?: boolean | null;
+  staAttempted?: boolean | null;
+  staConnected?: boolean | null;
+  apSsid?: string | null;
+  apIp?: string | null;
+  staIp?: string | null;
+};
+
+export type TransportMode = 'serial' | 'wifi';
+
+export type TransportState = {
+  mode: TransportMode;
+  wifiBaseUrl: string;
+  wifiConnected: boolean;
+  lastError: string | null;
+  lastTelemetryAt: number | null;
 };
 
 export type TelemetryDriverState = {

@@ -1,5 +1,8 @@
 import cors from 'cors';
 import express from 'express';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { WifiBridgeManager } from './remote/wifi-bridge.js';
 import { SerialManager } from './serial/serial-manager.js';
 import { applyToolingTelemetry } from './telemetry/telemetry-parser.js';
 import { ToolingManager } from './tooling/tooling-manager.js';
@@ -7,6 +10,7 @@ import type {
   SerialConnectionState,
   SerialLogEntry,
   TelemetryState,
+  TransportState,
   ToolingState,
 } from './types/serial.js';
 import type {
@@ -36,9 +40,22 @@ type ToolingApi = {
   onState: (listener: (state: ToolingState) => void) => () => void;
 };
 
+type TransportApi = {
+  getState: () => TransportState;
+  getTelemetry: () => TelemetryState;
+  configure: (next: {
+    mode?: 'serial' | 'wifi';
+    wifiBaseUrl?: string;
+  }) => Promise<TransportState>;
+  sendCommand: (command: string) => Promise<void>;
+  onState: (listener: (state: TransportState) => void) => () => void;
+  onTelemetry: (listener: (state: TelemetryState) => void) => () => void;
+};
+
 type AppDependencies = {
   serial?: SerialApi;
   tooling?: ToolingApi;
+  transport?: TransportApi;
 };
 
 type PendingReconnect = {
@@ -50,7 +67,17 @@ export function createApp(deps: AppDependencies = {}) {
   const app = express();
   const serial = deps.serial ?? new SerialManager();
   const tooling = deps.tooling ?? new ToolingManager((line) => serial.pushSystemLog(line));
-  const getTelemetry = () => applyToolingTelemetry(serial.getTelemetry(), tooling.getState());
+  const transport = deps.transport ?? new WifiBridgeManager((line) => serial.pushSystemLog(line));
+  const frontendDistDir = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../frontend/dist'
+  );
+  const getTransportState = () => transport.getState();
+  const getTelemetry = () =>
+    applyToolingTelemetry(
+      getTransportState().mode === 'wifi' ? transport.getTelemetry() : serial.getTelemetry(),
+      tooling.getState()
+    );
   let pendingReconnect: PendingReconnect | null = null;
   let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -103,6 +130,31 @@ export function createApp(deps: AppDependencies = {}) {
 
   app.use(cors());
   app.use(express.json());
+
+  app.get('/api/transport', (_req, res) => {
+    res.json({
+      ok: true,
+      transport: getTransportState(),
+    });
+  });
+
+  app.post('/api/transport', async (req, res) => {
+    try {
+      const nextState = await transport.configure({
+        mode: req.body?.mode,
+        wifiBaseUrl: req.body?.wifiBaseUrl,
+      });
+      res.json({
+        ok: true,
+        transport: nextState,
+      });
+    } catch (error) {
+      res.status(500).json({
+        ok: false,
+        error: error instanceof Error ? error.message : 'unknown error',
+      });
+    }
+  });
 
   app.get('/api/ports', async (_req, res) => {
     try {
@@ -173,7 +225,11 @@ export function createApp(deps: AppDependencies = {}) {
   app.post('/api/command', async (req, res) => {
     try {
       const body = req.body as SendCommandPayload;
-      await serial.send(body.command);
+      if (getTransportState().mode === 'wifi') {
+        await transport.sendCommand(body.command);
+      } else {
+        await serial.send(body.command);
+      }
 
       res.json({
         ok: true,
@@ -263,6 +319,9 @@ export function createApp(deps: AppDependencies = {}) {
     res.write(`event: tooling\n`);
     res.write(`data: ${JSON.stringify(tooling.getState())}\n\n`);
 
+    res.write(`event: transport\n`);
+    res.write(`data: ${JSON.stringify(getTransportState())}\n\n`);
+
     res.write(`event: telemetry\n`);
     res.write(`data: ${JSON.stringify(getTelemetry())}\n\n`);
 
@@ -294,6 +353,25 @@ export function createApp(deps: AppDependencies = {}) {
     });
 
     const unsubscribeTelemetry = serial.onTelemetry((state) => {
+      if (getTransportState().mode === 'wifi') {
+        return;
+      }
+      res.write(`event: telemetry\n`);
+      res.write(`data: ${JSON.stringify(applyToolingTelemetry(state, tooling.getState()))}\n\n`);
+    });
+
+    const unsubscribeTransport = transport.onState((state) => {
+      res.write(`event: transport\n`);
+      res.write(`data: ${JSON.stringify(state)}\n\n`);
+
+      res.write(`event: telemetry\n`);
+      res.write(`data: ${JSON.stringify(getTelemetry())}\n\n`);
+    });
+
+    const unsubscribeTransportTelemetry = transport.onTelemetry((state) => {
+      if (getTransportState().mode !== 'wifi') {
+        return;
+      }
       res.write(`event: telemetry\n`);
       res.write(`data: ${JSON.stringify(applyToolingTelemetry(state, tooling.getState()))}\n\n`);
     });
@@ -304,8 +382,18 @@ export function createApp(deps: AppDependencies = {}) {
       unsubscribeState();
       unsubscribeTooling();
       unsubscribeTelemetry();
+      unsubscribeTransport();
+      unsubscribeTransportTelemetry();
       res.end();
     });
+  });
+
+  app.use(express.static(frontendDistDir));
+  app.get('/pad', (_req, res) => {
+    res.sendFile(path.join(frontendDistDir, 'pad.html'));
+  });
+  app.get(/^(?!\/api).*/, (_req, res) => {
+    res.sendFile(path.join(frontendDistDir, 'index.html'));
   });
 
   return app;

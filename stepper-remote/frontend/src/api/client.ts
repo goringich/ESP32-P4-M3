@@ -5,6 +5,8 @@ import type {
   ToolingState,
   PortInfo,
   StreamStatus,
+  TransportMode,
+  TransportState,
 } from '../types/api';
 
 type ApiSuccess<T> = {
@@ -17,6 +19,25 @@ type ApiError = {
 };
 
 type ApiResponse<T> = ApiSuccess<T> | ApiError;
+
+export async function readJsonOrThrow<T>(response: Response): Promise<T> {
+  let data: ApiResponse<T>;
+  try {
+    data = (await response.json()) as ApiResponse<T>;
+  } catch {
+    throw new Error(`invalid backend response for ${response.url || 'request'}`);
+  }
+
+  if (!response.ok || !data.ok) {
+    const message =
+      'error' in data && typeof data.error === 'string'
+        ? data.error
+        : `request failed: ${response.status}`;
+    throw new Error(message);
+  }
+
+  return data as T;
+}
 
 async function apiRequest<T>(input: string, init?: RequestInit): Promise<T> {
   let response: Response;
@@ -31,23 +52,7 @@ async function apiRequest<T>(input: string, init?: RequestInit): Promise<T> {
     );
   }
 
-  let data: ApiResponse<T>;
-
-  try {
-    data = (await response.json()) as ApiResponse<T>;
-  } catch {
-    throw new Error(`invalid backend response for ${input}`);
-  }
-
-  if (!response.ok || !data.ok) {
-    const message =
-      'error' in data && typeof data.error === 'string'
-        ? data.error
-        : `request failed: ${response.status}`;
-    throw new Error(message);
-  }
-
-  return data as T;
+  return readJsonOrThrow<T>(response);
 }
 
 export async function fetchPorts(): Promise<PortInfo[]> {
@@ -73,6 +78,23 @@ export async function fetchTooling(): Promise<ToolingState> {
 export async function fetchTelemetry(): Promise<TelemetryState> {
   const data = await apiRequest<{ telemetry: TelemetryState }>('/api/telemetry');
   return data.telemetry;
+}
+
+export async function fetchTransport(): Promise<TransportState> {
+  const data = await apiRequest<{ transport: TransportState }>('/api/transport');
+  return data.transport;
+}
+
+export async function updateTransport(mode: TransportMode, wifiBaseUrl?: string) {
+  const data = await apiRequest<{ transport: TransportState }>('/api/transport', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ mode, wifiBaseUrl }),
+  });
+
+  return data.transport;
 }
 
 export async function connectPort(path: string, baudRate: number) {
@@ -117,9 +139,13 @@ export async function startFlash(portPath: string) {
   });
 }
 
-export async function pushDebugLog() {
+export async function pushDebugLog(message?: string) {
   await apiRequest<Record<string, never>>('/api/debug/log', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: message ? JSON.stringify({ message }) : undefined,
   });
 }
 

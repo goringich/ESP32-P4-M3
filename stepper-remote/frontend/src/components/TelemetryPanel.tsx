@@ -333,7 +333,22 @@ export function TelemetryPanel({ telemetry }: Props) {
                   <Grid size={{ xs: 6 }}>
                     <Metric label="IP" value={wifi.ip ?? '-'} />
                   </Grid>
-                  <Grid size={{ xs: 12 }}>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="AP started" value={fmtBool(wifi.apStarted ?? null)} />
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="STA connected" value={fmtBool(wifi.staConnected ?? null)} />
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="AP SSID" value={wifi.apSsid ?? '-'} />
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="AP IP" value={wifi.apIp ?? '-'} />
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="STA IP" value={wifi.staIp ?? '-'} />
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
                     <Metric label="MAC" value={wifi.mac ?? '-'} />
                   </Grid>
                 </Grid>

@@ -27,6 +27,7 @@ static void app_wifi_log_block(const char *title);
 static esp_err_t app_wifi_nvs_init_once(void);
 static void app_wifi_refresh_status_locked(void);
 static void app_wifi_build_ap_ssid(char *ssid, size_t ssid_len, const uint8_t mac[6]);
+static wifi_mode_t app_wifi_pick_mode(void);
 
 #if CONFIG_APP_WIFI_CONNECT
 #define APP_WIFI_MAX_RETRIES 10
@@ -130,6 +131,15 @@ static void app_wifi_refresh_status_locked(void) {
                IP2STR(&ap_ip.ip));
     }
   }
+}
+
+static wifi_mode_t app_wifi_pick_mode(void) {
+#if CONFIG_APP_WIFI_CONNECT
+  if (strlen(CONFIG_APP_WIFI_SSID) > 0) {
+    return WIFI_MODE_APSTA;
+  }
+#endif
+  return WIFI_MODE_AP;
 }
 
 static void app_wifi_log_scan_results(void) {
@@ -322,13 +332,10 @@ esp_err_t app_wifi_smoke_run(void) {
   (void)wifi_any_id;
   (void)ip_any_id;
 
-  ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
+  const wifi_mode_t wifi_mode = app_wifi_pick_mode();
+  ESP_ERROR_CHECK(esp_wifi_set_mode(wifi_mode));
 
-  uint8_t ap_mac[6] = {0};
-  if (esp_wifi_get_mac(WIFI_IF_AP, ap_mac) != ESP_OK) {
-    memset(ap_mac, 0, sizeof(ap_mac));
-  }
-  app_wifi_build_ap_ssid(s_status.ap_ssid, sizeof(s_status.ap_ssid), ap_mac);
+  app_wifi_build_ap_ssid(s_status.ap_ssid, sizeof(s_status.ap_ssid), NULL);
 
   wifi_config_t ap_cfg = {0};
   strlcpy((char *)ap_cfg.ap.ssid, s_status.ap_ssid, sizeof(ap_cfg.ap.ssid));
@@ -351,9 +358,9 @@ esp_err_t app_wifi_smoke_run(void) {
   ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &ap_cfg));
 
 #if CONFIG_APP_WIFI_CONNECT
-  s_status.sta_attempted = true;
   s_wifi_retries = 0;
-  if (strlen(CONFIG_APP_WIFI_SSID) > 0) {
+  if (wifi_mode == WIFI_MODE_APSTA && strlen(CONFIG_APP_WIFI_SSID) > 0) {
+    s_status.sta_attempted = true;
     wifi_config_t sta_cfg = {0};
     strlcpy((char *)sta_cfg.sta.ssid, CONFIG_APP_WIFI_SSID, sizeof(sta_cfg.sta.ssid));
     strlcpy((char *)sta_cfg.sta.password, CONFIG_APP_WIFI_PASSWORD, sizeof(sta_cfg.sta.password));
@@ -361,31 +368,16 @@ esp_err_t app_wifi_smoke_run(void) {
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &sta_cfg));
     ESP_LOGI(TAG, "STA connect configured for '%s'", CONFIG_APP_WIFI_SSID);
   } else {
-    ESP_LOGW(TAG, "APP_WIFI_CONNECT enabled, but APP_WIFI_SSID is empty. Running AP only.");
+    ESP_LOGI(TAG, "Running AP-only Wi-Fi mode");
   }
+#else
+  ESP_LOGI(TAG, "Running AP-only Wi-Fi mode");
 #endif
 
   ESP_ERROR_CHECK(esp_wifi_start());
   ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
 
   app_wifi_refresh_status_locked();
-
-  uint8_t sta_mac[6] = {0};
-  err = esp_wifi_get_mac(WIFI_IF_STA, sta_mac);
-  if (err == ESP_OK) {
-    ESP_LOGI(TAG,
-             "%sSTA MAC%s %02X:%02X:%02X:%02X:%02X:%02X",
-             APP_WIFI_COLOR_OK,
-             APP_WIFI_COLOR_RESET,
-             sta_mac[0],
-             sta_mac[1],
-             sta_mac[2],
-             sta_mac[3],
-             sta_mac[4],
-             sta_mac[5]);
-  } else {
-    ESP_LOGW(TAG, "esp_wifi_get_mac(STA) failed: %s", esp_err_to_name(err));
-  }
 
   ESP_LOGI(TAG,
            "%sAP ready%s ssid='%s' ip='%s' channel=%d auth=%s",
@@ -395,8 +387,6 @@ esp_err_t app_wifi_smoke_run(void) {
            s_status.ap_ip[0] != '\0' ? s_status.ap_ip : "192.168.4.1",
            CONFIG_APP_WIFI_AP_CHANNEL,
            ap_cfg.ap.authmode == WIFI_AUTH_OPEN ? "OPEN" : "WPA2-PSK");
-
-  app_wifi_log_scan_results();
 
   s_status.initialized = true;
   s_status.last_error = ESP_OK;

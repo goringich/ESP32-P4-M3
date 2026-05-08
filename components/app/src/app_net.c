@@ -11,13 +11,15 @@
 #include "esp_log.h"
 #include "sdkconfig.h"
 
+#include "app.h"
+#include "app_mpu_pretty.h"
 #include "app_wifi.h"
 #include "app_stepper.h"
 
 static const char *TAG = "app_net";
 
 #define APP_NET_WS_PUSH_PERIOD_MS 1000U
-#define APP_NET_JSON_MAX 768U
+#define APP_NET_JSON_MAX 2048U
 #define APP_NET_BODY_MAX 128U
 
 typedef struct {
@@ -35,15 +37,71 @@ static void app_net_set_cors(httpd_req_t *req) {
   httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "Content-Type");
 }
 
+static const char *app_net_json_str(const char *value, char *buf, size_t len) {
+  if (value == NULL || value[0] == '\0') {
+    return "null";
+  }
+
+  snprintf(buf, len, "\"%s\"", value);
+  return buf;
+}
+
 static size_t app_net_build_json(char *buf, size_t len) {
   app_stepper_snapshot_t stepper = {0};
   app_stepper_get_snapshot(&stepper);
   app_wifi_status_t wifi = {0};
   app_wifi_get_status(&wifi);
+  app_system_status_t system = {0};
+  app_get_system_status(&system);
+  app_mpu_status_t mpu = {0};
+  app_mpu_get_status(&mpu);
+  app_i2c_status_t i2c = {0};
+  app_get_i2c_status(&i2c);
+
+  char i2c_devices[48] = "[]";
+  if (i2c.device_count > 0 && i2c.devices[0][0] != '\0') {
+    snprintf(i2c_devices, sizeof(i2c_devices), "[\"%s\"]", i2c.devices[0]);
+  }
+
+  char system_error_json[48];
+  char mpu_error_json[48];
+  char mpu_address_json[16];
+  char mpu_whoami_json[16];
+  char mpu_model_json[40];
+  char mpu_uptime_json[16];
+  char i2c_detected_json[16];
+  char i2c_summary_json[64];
+  char i2c_error_json[48];
+  char wifi_error_json[48];
+
+  const char *system_error = app_net_json_str(system.last_error, system_error_json, sizeof(system_error_json));
+  const char *mpu_error = app_net_json_str(mpu.error, mpu_error_json, sizeof(mpu_error_json));
+  const char *mpu_address = app_net_json_str(mpu.address, mpu_address_json, sizeof(mpu_address_json));
+  const char *mpu_whoami = app_net_json_str(mpu.whoami, mpu_whoami_json, sizeof(mpu_whoami_json));
+  const char *mpu_model = app_net_json_str(mpu.model, mpu_model_json, sizeof(mpu_model_json));
+  const char *mpu_uptime = app_net_json_str(mpu.uptime, mpu_uptime_json, sizeof(mpu_uptime_json));
+  const char *i2c_detected = app_net_json_str(i2c.detected_mpu_address, i2c_detected_json, sizeof(i2c_detected_json));
+  const char *i2c_summary = app_net_json_str(i2c.last_scan_summary, i2c_summary_json, sizeof(i2c_summary_json));
+  const char *i2c_error = app_net_json_str(i2c.error, i2c_error_json, sizeof(i2c_error_json));
+  const char *wifi_error = (wifi.last_error == ESP_OK)
+    ? "null"
+    : app_net_json_str(esp_err_to_name(wifi.last_error), wifi_error_json, sizeof(wifi_error_json));
+  const char *wifi_ip = wifi.sta_ip[0] != '\0'
+    ? wifi.sta_ip
+    : (wifi.ap_ip[0] != '\0' ? wifi.ap_ip : "0.0.0.0");
 
   int written = snprintf(buf,
                          len,
-                         "{\"ok\":true,\"telemetry\":{\"stepper\":{"
+                         "{\"ok\":true,\"telemetry\":{\"system\":{"
+                         "\"uptimeMs\":%" PRIu32 ",\"tick\":%" PRIu32 ",\"tickDelayMs\":%" PRIu32 ","
+                         "\"firmware\":\"%s\",\"appMode\":\"%s\",\"lastError\":%s},"
+                         "\"mpu\":{\"ready\":%s,\"error\":%s,\"address\":%s,\"whoAmI\":%s,"
+                         "\"model\":%s,\"uptimeLabel\":%s,"
+                         "\"accel\":{\"x\":%.3f,\"y\":%.3f,\"z\":%.3f},"
+                         "\"gyro\":{\"x\":%.2f,\"y\":%.2f,\"z\":%.2f},\"tempC\":%.2f},"
+                         "\"i2c\":{\"ready\":%s,\"devices\":%s,\"detectedMpuAddress\":%s,"
+                         "\"lastScanSummary\":%s,\"error\":%s},"
+                         "\"stepper\":{"
                          "\"mode\":\"%s\",\"sweepState\":\"%s\",\"delayMs\":%" PRIu32 ","
                          "\"stepsPerSecond\":%.2f,\"phaseIndex\":%" PRIu32 ","
                          "\"totalSteps\":%" PRIu32 ",\"coilsEnabled\":%s,"
@@ -51,9 +109,35 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          "\"lastCommand\":\"%s\","
                          "\"pins\":{\"in1\":%d,\"in2\":%d,\"in3\":%d,\"in4\":%d},"
                          "\"ledGpio\":%d},\"wifi\":{"
+                         "\"enabled\":%s,\"connected\":%s,\"ssid\":\"%s\",\"ip\":\"%s\","
+                         "\"mac\":null,\"lastError\":%s,"
                          "\"initialized\":%s,\"apStarted\":%s,\"staAttempted\":%s,"
                          "\"staConnected\":%s,\"apSsid\":\"%s\",\"apIp\":\"%s\","
-                         "\"staIp\":\"%s\",\"lastError\":\"%s\"}}}",
+                         "\"staIp\":\"%s\"}}}",
+                         system.uptime_ms,
+                         system.tick,
+                         system.tick_delay_ms,
+                         system.firmware,
+                         system.app_mode,
+                         system_error,
+                         mpu.ready ? "true" : "false",
+                         mpu_error,
+                         mpu_address,
+                         mpu_whoami,
+                         mpu_model,
+                         mpu_uptime,
+                         (double)mpu.accel_x_g,
+                         (double)mpu.accel_y_g,
+                         (double)mpu.accel_z_g,
+                         (double)mpu.gyro_x_dps,
+                         (double)mpu.gyro_y_dps,
+                         (double)mpu.gyro_z_dps,
+                         (double)mpu.temp_c,
+                         i2c.ready ? "true" : "false",
+                         i2c_devices,
+                         i2c_detected,
+                         i2c_summary,
+                         i2c_error,
                          stepper.mode,
                          stepper.sweep_state,
                          stepper.step_delay_ms,
@@ -70,13 +154,17 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          stepper.in4_gpio,
                          stepper.led_gpio,
                          wifi.initialized ? "true" : "false",
+                         (wifi.sta_connected || wifi.ap_started) ? "true" : "false",
+                         wifi.ap_ssid,
+                         wifi_ip,
+                         wifi_error,
+                         wifi.initialized ? "true" : "false",
                          wifi.ap_started ? "true" : "false",
                          wifi.sta_attempted ? "true" : "false",
                          wifi.sta_connected ? "true" : "false",
                          wifi.ap_ssid,
                          wifi.ap_ip[0] != '\0' ? wifi.ap_ip : "0.0.0.0",
-                         wifi.sta_ip[0] != '\0' ? wifi.sta_ip : "0.0.0.0",
-                         esp_err_to_name(wifi.last_error));
+                         wifi.sta_ip[0] != '\0' ? wifi.sta_ip : "0.0.0.0");
   if (written < 0) {
     buf[0] = '\0';
     return 0;

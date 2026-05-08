@@ -1,14 +1,20 @@
 import { Box, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
-import type { ConnectionState, StreamStatus, ToolingState } from '../types/api';
+import type {
+  ConnectionState,
+  StreamStatus,
+  ToolingState,
+  TransportState,
+} from '../types/api';
 
 type Props = {
   connection: ConnectionState;
   linesCount: number;
   tooling: ToolingState;
+  transport: TransportState;
   streamStatus: StreamStatus;
 };
 
-export function StatusBar({ connection, linesCount, tooling, streamStatus }: Props) {
+export function StatusBar({ connection, linesCount, tooling, transport, streamStatus }: Props) {
   const streamColor =
     streamStatus === 'live'
       ? 'success'
@@ -34,9 +40,26 @@ export function StatusBar({ connection, linesCount, tooling, streamStatus }: Pro
         >
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
             <Chip
-              label={connection.isOpen ? 'serial connected' : 'serial disconnected'}
-              color={connection.isOpen ? 'success' : 'default'}
+              label={
+                transport.mode === 'wifi'
+                  ? transport.wifiConnected
+                    ? 'wifi bridge connected'
+                    : 'wifi bridge waiting'
+                  : connection.isOpen
+                    ? 'serial connected'
+                    : 'serial disconnected'
+              }
+              color={
+                transport.mode === 'wifi'
+                  ? transport.wifiConnected
+                    ? 'success'
+                    : 'default'
+                  : connection.isOpen
+                    ? 'success'
+                    : 'default'
+              }
             />
+            <Chip label={`transport: ${transport.mode}`} color={transport.mode === 'wifi' ? 'secondary' : 'default'} />
             <Chip label={`port: ${connection.path ?? '-'}`} />
             <Chip label={`baud: ${connection.baudRate ?? '-'}`} />
             <Chip label={`lines: ${linesCount}`} />

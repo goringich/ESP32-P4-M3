@@ -81,6 +81,13 @@ export type TelemetryState = {
     ip: string | null;
     mac: string | null;
     lastError: string | null;
+    initialized?: boolean | null;
+    apStarted?: boolean | null;
+    staAttempted?: boolean | null;
+    staConnected?: boolean | null;
+    apSsid?: string | null;
+    apIp?: string | null;
+    staIp?: string | null;
   };
   driver: {
     serialConnected: boolean;
@@ -95,6 +102,7 @@ export type TelemetryState = {
 };
 
 export type ToolingAction = 'build' | 'flash';
+export type TransportMode = 'serial' | 'wifi';
 
 export type ToolingState = {
   isRunning: boolean;
@@ -109,3 +117,11 @@ export type ToolingState = {
 };
 
 export type StreamStatus = 'connecting' | 'live' | 'reconnecting' | 'offline';
+
+export type TransportState = {
+  mode: TransportMode;
+  wifiBaseUrl: string;
+  wifiConnected: boolean;
+  lastError: string | null;
+  lastTelemetryAt: number | null;
+};

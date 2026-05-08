@@ -23,9 +23,11 @@ export default function App() {
     connection,
     tooling,
     telemetry,
+    transport,
     streamStatus,
     streamError,
     setConnection,
+    setTransport,
   } = useConsoleStream();
 
   return (
@@ -127,6 +129,15 @@ export default function App() {
                   <Typography variant="body2" color="text.secondary">
                     serial: {connection.isOpen ? 'connected' : 'disconnected'}
                   </Typography>
+
+                  <Typography
+                    component="a"
+                    href="/pad"
+                    variant="body2"
+                    sx={{ color: 'primary.light', textDecoration: 'none' }}
+                  >
+                    open minimal Wi-Fi pad
+                  </Typography>
                 </Stack>
               </Stack>
             </Box>
@@ -135,6 +146,7 @@ export default function App() {
               connection={connection}
               linesCount={logs.length}
               tooling={tooling}
+              transport={transport}
               streamStatus={streamStatus}
             />
 
@@ -143,7 +155,9 @@ export default function App() {
                 <Stack spacing={2}>
                   <ConnectionPanel
                     connection={connection}
+                    transport={transport}
                     onConnectionChange={setConnection}
+                    onTransportChange={setTransport}
                   />
                   <ToolingPanel connection={connection} tooling={tooling} />
                   <ControlPanel />

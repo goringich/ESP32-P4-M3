@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "esp_log.h"
 #include "sdkconfig.h"
@@ -28,6 +29,23 @@
 
 static const char *TAG = "app";
 static bool s_network_ready;
+static app_system_status_t s_system_status = {
+  .ready = false,
+  .uptime_ms = 0,
+  .tick = 0,
+  .tick_delay_ms = APP_MAIN_TICK_MS,
+  .firmware = "hello_world_p4",
+  .app_mode = "l293d_test",
+  .last_error = "",
+};
+static app_i2c_status_t s_i2c_status = {
+  .ready = false,
+  .device_count = 0,
+  .devices = {{0}},
+  .detected_mpu_address = "",
+  .last_scan_summary = "",
+  .error = "",
+};
 
 static void app_log_color_block(const char *label, const char *color);
 static void app_mpu_whoami_check(void);
@@ -51,10 +69,28 @@ static void app_mpu_whoami_check(void) {
 
   esp_err_t err = mpu9250_probe_and_read_whoami(&addr, &who);
   if (err == ESP_OK) {
+    s_i2c_status.ready = true;
+    s_i2c_status.device_count = 1;
+    snprintf(s_i2c_status.devices[0], sizeof(s_i2c_status.devices[0]), "0x%02X", addr);
+    snprintf(
+      s_i2c_status.detected_mpu_address,
+      sizeof(s_i2c_status.detected_mpu_address),
+      "0x%02X",
+      addr
+    );
+    strlcpy(s_i2c_status.last_scan_summary, "found=1, timeouts=0, other=0", sizeof(s_i2c_status.last_scan_summary));
+    s_i2c_status.error[0] = '\0';
     ESP_LOGW(TAG, "mpu: addr=0x%02X WHO_AM_I=0x%02X (%s)", addr, who, mpu9250_whoami_name(who));
     return;
   }
 
+  s_i2c_status.ready = false;
+  s_i2c_status.device_count = 0;
+  s_i2c_status.devices[0][0] = '\0';
+  s_i2c_status.devices[1][0] = '\0';
+  s_i2c_status.detected_mpu_address[0] = '\0';
+  strlcpy(s_i2c_status.last_scan_summary, "found=0, timeouts=0, other=1", sizeof(s_i2c_status.last_scan_summary));
+  strlcpy(s_i2c_status.error, esp_err_to_name(err), sizeof(s_i2c_status.error));
   ESP_LOGW(TAG, "mpu: not detected on 0x68/0x69 (%s)", esp_err_to_name(err));
 
   i2c_bus_deinit();
@@ -62,6 +98,10 @@ static void app_mpu_whoami_check(void) {
 }
 
 static void app_emit_system_telemetry(uint32_t tick_counter, uint32_t uptime_ms) {
+  s_system_status.ready = true;
+  s_system_status.tick = tick_counter;
+  s_system_status.uptime_ms = uptime_ms;
+  s_system_status.tick_delay_ms = APP_MAIN_TICK_MS;
   printf("@telemetry {\"kind\":\"system\",\"uptime_ms\":%" PRIu32 ",\"tick\":%" PRIu32
          ",\"tick_delay_ms\":%u,\"firmware\":\"hello_world_p4\",\"app_mode\":\"l293d_test\"}\n",
          uptime_ms,
@@ -88,7 +128,13 @@ void app_init(void) {
 
   err = i2c_bus_scan();
   if (err != ESP_OK) {
+    s_i2c_status.ready = false;
+    strlcpy(s_i2c_status.error, esp_err_to_name(err), sizeof(s_i2c_status.error));
     ESP_LOGE(TAG, "i2c scan failed: %s", esp_err_to_name(err));
+  } else {
+    s_i2c_status.ready = true;
+    strlcpy(s_i2c_status.last_scan_summary, "scan completed", sizeof(s_i2c_status.last_scan_summary));
+    s_i2c_status.error[0] = '\0';
   }
 
   app_mpu_whoami_check();
@@ -142,12 +188,15 @@ void app_tick(void) {
 
     esp_err_t err = app_mpu_pretty_log_line(s_log_counter, now_ms);
     if (err != ESP_OK) {
+      app_set_system_error(esp_err_to_name(err));
       ESP_LOGW(TAG,
                "%s tick %" PRIu32 " (mpu log err: %s)%s",
                APP_LOG_COLOR_BLOCK_TICK,
                s_log_counter,
                esp_err_to_name(err),
                APP_LOG_COLOR_RESET);
+    } else {
+      app_set_system_error(NULL);
     }
   }
 #endif
@@ -155,4 +204,29 @@ void app_tick(void) {
 
 unsigned int app_tick_delay_ms(void) {
   return APP_MAIN_TICK_MS;
+}
+
+void app_get_system_status(app_system_status_t *status) {
+  if (status == NULL) {
+    return;
+  }
+
+  *status = s_system_status;
+}
+
+void app_get_i2c_status(app_i2c_status_t *status) {
+  if (status == NULL) {
+    return;
+  }
+
+  *status = s_i2c_status;
+}
+
+void app_set_system_error(const char *error) {
+  if (error == NULL || error[0] == '\0') {
+    s_system_status.last_error[0] = '\0';
+    return;
+  }
+
+  strlcpy(s_system_status.last_error, error, sizeof(s_system_status.last_error));
 }

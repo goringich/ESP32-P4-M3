@@ -4,6 +4,7 @@ import {
   fetchConnection,
   fetchLogs,
   fetchTelemetry,
+  fetchTransport,
   fetchTooling,
 } from '../api/client';
 import type {
@@ -11,6 +12,7 @@ import type {
   LogEntry,
   StreamStatus,
   TelemetryState,
+  TransportState,
   ToolingState,
 } from '../types/api';
 
@@ -27,10 +29,13 @@ const EMPTY_TOOLING: ToolingState = {
   lastExitCode: null,
   error: null,
   portPath: null,
-  projectDir: null,
+  projectDir: '',
+  startedAt: null,
+  finishedAt: null,
 };
 
 const EMPTY_TELEMETRY: TelemetryState = {
+  updatedAt: null,
   system: {
     uptimeMs: null,
     tick: null,
@@ -44,6 +49,7 @@ const EMPTY_TELEMETRY: TelemetryState = {
     address: null,
     whoAmI: null,
     model: null,
+    uptimeLabel: null,
     tempC: null,
     accel: { x: null, y: null, z: null },
     gyro: { x: null, y: null, z: null },
@@ -58,6 +64,7 @@ const EMPTY_TELEMETRY: TelemetryState = {
     phaseIndex: null,
     totalSteps: null,
     coilsEnabled: null,
+    sweepSteps: null,
     uartReady: null,
     pins: {
       in1: null,
@@ -65,6 +72,7 @@ const EMPTY_TELEMETRY: TelemetryState = {
       in3: null,
       in4: null,
     },
+    ledGpio: null,
   },
   i2c: {
     ready: null,
@@ -93,11 +101,20 @@ const EMPTY_TELEMETRY: TelemetryState = {
   },
 };
 
+const EMPTY_TRANSPORT: TransportState = {
+  mode: 'serial',
+  wifiBaseUrl: 'http://192.168.4.1',
+  wifiConnected: false,
+  lastError: null,
+  lastTelemetryAt: null,
+};
+
 export function useConsoleStream() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [connection, setConnection] = useState<ConnectionState>(EMPTY_CONNECTION);
   const [tooling, setTooling] = useState<ToolingState>(EMPTY_TOOLING);
   const [telemetry, setTelemetry] = useState<TelemetryState>(EMPTY_TELEMETRY);
+  const [transport, setTransport] = useState<TransportState>(EMPTY_TRANSPORT);
   const [streamStatus, setStreamStatus] = useState<StreamStatus>('connecting');
   const [streamError, setStreamError] = useState<string | null>(null);
 
@@ -110,11 +127,12 @@ export function useConsoleStream() {
 
     const syncSnapshot = async () => {
       try {
-        const [nextLogs, nextConnection, nextTooling, nextTelemetry] = await Promise.all([
+        const [nextLogs, nextConnection, nextTooling, nextTelemetry, nextTransport] = await Promise.all([
           fetchLogs(),
           fetchConnection(),
           fetchTooling(),
           fetchTelemetry(),
+          fetchTransport(),
         ]);
 
         if (disposed) {
@@ -125,6 +143,7 @@ export function useConsoleStream() {
         setConnection(nextConnection);
         setTooling(nextTooling);
         setTelemetry(nextTelemetry);
+        setTransport(nextTransport);
         setStreamError(null);
       } catch (error) {
         if (disposed) {
@@ -142,7 +161,7 @@ export function useConsoleStream() {
         return;
       }
 
-      setStreamStatus('fallback');
+      setStreamStatus('offline');
 
       void syncSnapshot();
 
@@ -191,6 +210,21 @@ export function useConsoleStream() {
         setConnection(state);
       });
 
+      source.addEventListener('tooling', (event) => {
+        const state = JSON.parse((event as MessageEvent).data) as ToolingState;
+        setTooling(state);
+      });
+
+      source.addEventListener('transport', (event) => {
+        const state = JSON.parse((event as MessageEvent).data) as TransportState;
+        setTransport(state);
+      });
+
+      source.addEventListener('telemetry', (event) => {
+        const state = JSON.parse((event as MessageEvent).data) as TelemetryState;
+        setTelemetry(state);
+      });
+
       source.onerror = () => {
         if (disposed) {
           return;
@@ -230,8 +264,10 @@ export function useConsoleStream() {
     connection,
     tooling,
     telemetry,
+    transport,
     streamStatus,
     streamError,
     setConnection,
+    setTransport,
   };
 }

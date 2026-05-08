@@ -19,6 +19,15 @@ type TelemetryListener = (state: TelemetryState) => void;
 
 const MAX_LOG_BUFFER = 1000;
 
+function shouldDisplayPort(path: string) {
+  return (
+    path.startsWith('/dev/ttyUSB') ||
+    path.startsWith('/dev/ttyACM') ||
+    path.startsWith('/dev/cu.') ||
+    path.startsWith('/dev/tty.wchusbserial')
+  );
+}
+
 export class SerialManager {
   private port: SerialPort | null = null;
   private parser: ReadlineParser | null = null;
@@ -36,7 +45,7 @@ export class SerialManager {
   async listPorts() {
     const ports = await SerialPort.list();
 
-    return ports.map((port) => ({
+    const normalized = ports.map((port) => ({
       path: port.path,
       manufacturer: port.manufacturer ?? '',
       serialNumber: port.serialNumber ?? '',
@@ -45,6 +54,9 @@ export class SerialManager {
       friendlyName:
         [port.manufacturer, port.path].filter(Boolean).join(' - ') || port.path,
     }));
+
+    const preferred = normalized.filter((port) => shouldDisplayPort(port.path));
+    return preferred.length > 0 ? preferred : normalized;
   }
 
   getLogs() {
@@ -90,10 +102,21 @@ export class SerialManager {
   async open(payload: OpenPortPayload) {
     await this.close();
 
-    const port = new SerialPort({
-      path: payload.path,
-      baudRate: payload.baudRate,
-      autoOpen: true,
+    const port = await new Promise<SerialPort>((resolve, reject) => {
+      const handle = new SerialPort({
+        path: payload.path,
+        baudRate: payload.baudRate,
+        autoOpen: false,
+      });
+
+      handle.open((error) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        resolve(handle);
+      });
     });
 
     const parser = port.pipe(
@@ -106,15 +129,13 @@ export class SerialManager {
     this.port = port;
     this.parser = parser;
 
-    port.on('open', () => {
-      this.state = {
-        isOpen: true,
-        path: payload.path,
-        baudRate: payload.baudRate,
-      };
-      this.emitState();
-      this.pushLog(`[host] port opened: ${payload.path} @ ${payload.baudRate}`);
-    });
+    this.state = {
+      isOpen: true,
+      path: payload.path,
+      baudRate: payload.baudRate,
+    };
+    this.emitState();
+    this.pushLog(`[host] port opened: ${payload.path} @ ${payload.baudRate}`);
 
     port.on('close', () => {
       this.pushLog('[host] port closed');

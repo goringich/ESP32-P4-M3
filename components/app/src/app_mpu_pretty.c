@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "esp_log.h"
 
@@ -38,6 +39,21 @@ static app_mpu_state_t s_mpu = {
   .accel_lsb_per_g = 16384.0f,
   .gyro_lsb_per_dps = 131.0f,
   .ready = false,
+};
+static app_mpu_status_t s_status = {
+  .ready = false,
+  .error = "",
+  .address = "",
+  .whoami = "",
+  .model = "",
+  .uptime = "",
+  .accel_x_g = 0.0f,
+  .accel_y_g = 0.0f,
+  .accel_z_g = 0.0f,
+  .gyro_x_dps = 0.0f,
+  .gyro_y_dps = 0.0f,
+  .gyro_z_dps = 0.0f,
+  .temp_c = 0.0f,
 };
 
 static int16_t app_mpu_i16be(const uint8_t hi, const uint8_t lo);
@@ -103,6 +119,19 @@ static void app_mpu_emit_telemetry_ready(uint32_t tick_counter,
                                          float gy_dps,
                                          float gz_dps,
                                          float temp_c) {
+  s_status.ready = true;
+  s_status.error[0] = '\0';
+  snprintf(s_status.address, sizeof(s_status.address), "0x%02X", s_mpu.addr);
+  snprintf(s_status.whoami, sizeof(s_status.whoami), "0x%02X", who);
+  strlcpy(s_status.model, mpu9250_whoami_name(who), sizeof(s_status.model));
+  snprintf(s_status.uptime, sizeof(s_status.uptime), "%02" PRIu32 ":%02" PRIu32, uptime_min, uptime_rem_sec);
+  s_status.accel_x_g = ax_g;
+  s_status.accel_y_g = ay_g;
+  s_status.accel_z_g = az_g;
+  s_status.gyro_x_dps = gx_dps;
+  s_status.gyro_y_dps = gy_dps;
+  s_status.gyro_z_dps = gz_dps;
+  s_status.temp_c = temp_c;
   printf("@telemetry {\"kind\":\"mpu\",\"ready\":true,\"address\":\"0x%02X\",\"whoami\":\"0x%02X\","
          "\"model\":\"%s\",\"uptime\":\"%02" PRIu32 ":%02" PRIu32 "\","
          "\"tick\":%" PRIu32 ",\"accel\":{\"x_g\":%.3f,\"y_g\":%.3f,\"z_g\":%.3f},"
@@ -123,6 +152,8 @@ static void app_mpu_emit_telemetry_ready(uint32_t tick_counter,
 }
 
 static void app_mpu_emit_telemetry_error(esp_err_t err) {
+  s_status.ready = false;
+  strlcpy(s_status.error, esp_err_to_name(err), sizeof(s_status.error));
   printf("@telemetry {\"kind\":\"mpu\",\"ready\":false,\"error\":\"%s\"}\n", esp_err_to_name(err));
 }
 
@@ -169,6 +200,14 @@ esp_err_t app_mpu_pretty_init(void) {
            (double)s_mpu.gyro_lsb_per_dps);
 
   return ESP_OK;
+}
+
+void app_mpu_get_status(app_mpu_status_t *status) {
+  if (status == NULL) {
+    return;
+  }
+
+  *status = s_status;
 }
 
 esp_err_t app_mpu_pretty_log_line(uint32_t tick_counter, uint32_t uptime_ms) {
