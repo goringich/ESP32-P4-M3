@@ -1,0 +1,13 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - heading "Wi-Fi motor pad" [level=4] [ref=e6]
+    - paragraph [ref=e7]: Up/down hold the motor in motion. Left/right send one discrete step.
+    - generic [ref=e8]: "transport: wifi · wifi bridge: waiting"
+  - alert [ref=e9]:
+    - img [ref=e11]
+    - generic [ref=e13]: "backend transport warning: The operation was aborted due to timeout"
+  - generic [ref=e14]:
+    - button "UP" [ref=e16] [cursor=pointer]
+    - button "LEFT" [ref=e18] [cursor=pointer]
+    - button "RIGHT" [ref=e20] [cursor=pointer]
+    - button "DOWN" [ref=e22] [cursor=pointer]

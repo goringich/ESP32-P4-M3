@@ -1,0 +1,323 @@
+- generic [ref=e5]:
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - heading "ESP32 control station" [level=3] [ref=e9]
+      - paragraph [ref=e10]: Full serial console, firmware pipeline, live telemetry, and motor control in one interface. This panel is designed for fast diagnostics from desktop or phone, with the MCU stream always visible.
+    - generic [ref=e11]:
+      - generic [ref=e12]: live workspace
+      - paragraph [ref=e13]: "stream: live"
+      - paragraph [ref=e14]: "console lines: 1"
+      - paragraph [ref=e15]: "serial: disconnected"
+      - link "open minimal Wi-Fi pad" [ref=e16] [cursor=pointer]:
+        - /url: /pad
+  - generic [ref=e19]:
+    - generic [ref=e20]:
+      - generic [ref=e22]: wifi bridge waiting
+      - generic [ref=e24]: "transport: wifi"
+      - generic [ref=e26]: "port: -"
+      - generic [ref=e28]: "baud: -"
+      - generic [ref=e30]: "lines: 1"
+      - generic [ref=e32]: "stream: live"
+      - generic [ref=e34]: tooling idle
+    - paragraph [ref=e36]: live serial workspace mirrored to the UI
+  - generic [ref=e37]:
+    - generic [ref=e39]:
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - heading "Transport gateway" [level=6] [ref=e44]
+          - paragraph [ref=e45]: Run the dashboard either over direct UART or through the MCU Wi-Fi API when the board is on battery power.
+        - group [ref=e46]:
+          - button "Serial" [ref=e47] [cursor=pointer]
+          - button "Wi-Fi" [pressed] [ref=e48] [cursor=pointer]
+        - generic [ref=e49]:
+          - generic [ref=e51]: mode wifi
+          - generic [ref=e53]: wifi bridge idle
+          - generic [ref=e55]: scanning ports
+          - generic [ref=e57]: baud 115200
+        - generic [ref=e58]:
+          - generic [ref=e59]: MCU Wi-Fi URL
+          - generic [ref=e60]:
+            - textbox "MCU Wi-Fi URL" [ref=e61]:
+              - /placeholder: http://192.168.4.1
+              - text: http://192.168.4.1
+            - group:
+              - generic: MCU Wi-Fi URL
+        - paragraph [ref=e62]: Connect the computer to the ESP Wi-Fi network, then point this URL to the board API.
+        - generic [ref=e63]:
+          - button "Activate Wi-Fi bridge" [ref=e64] [cursor=pointer]
+          - button "Return to serial" [ref=e65] [cursor=pointer]
+        - generic [ref=e67]:
+          - heading "Wi-Fi bridge details" [level=6] [ref=e68]
+          - paragraph [ref=e69]: "base URL: http://192.168.4.1"
+          - paragraph [ref=e70]: "last telemetry: -"
+          - paragraph [ref=e71]: "state: waiting for MCU API"
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - heading "Firmware pipeline" [level=6] [ref=e76]
+          - paragraph [ref=e77]: "Build and flash `hello_world_p4` from the same control surface. This keeps the serial workflow and firmware operations in one place."
+        - generic [ref=e78]:
+          - generic: Flash port
+          - generic [ref=e79]:
+            - textbox "Flash port" [ref=e80]:
+              - /placeholder: /dev/ttyUSB0
+            - group:
+              - generic: Flash port
+        - generic [ref=e81]:
+          - button "Build firmware" [ref=e82] [cursor=pointer]
+          - button "Flash board" [disabled]
+        - generic [ref=e84]:
+          - heading "Pipeline state" [level=6] [ref=e85]
+          - paragraph [ref=e86]: "project: /home/goringich/esp/hello_world_p4"
+          - paragraph [ref=e87]: "state: idle"
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - heading "Drive console" [level=6] [ref=e92]
+          - paragraph [ref=e93]: Send direct commands into the live firmware session. Controls are grouped by motion, timing, phase diagnostics, and console actions.
+        - generic [ref=e94]:
+          - generic [ref=e95]:
+            - heading "Motion" [level=6] [ref=e96]
+            - paragraph [ref=e97]: Primary drive states for the stepper.
+          - generic [ref=e98]:
+            - button "Stop" [ref=e100] [cursor=pointer]
+            - button "Sweep" [ref=e102] [cursor=pointer]
+            - button "Forward" [ref=e104] [cursor=pointer]
+            - button "Reverse" [ref=e106] [cursor=pointer]
+        - separator [ref=e107]
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - heading "Manual stepping" [level=6] [ref=e110]
+            - paragraph [ref=e111]: Short impulses for safe testing and fine positioning.
+          - generic [ref=e112]:
+            - button "Step +" [ref=e114] [cursor=pointer]
+            - button "Step -" [ref=e116] [cursor=pointer]
+        - separator [ref=e117]
+        - generic [ref=e118]:
+          - generic [ref=e119]:
+            - heading "Timing" [level=6] [ref=e120]
+            - paragraph [ref=e121]: Tune motion delay directly from the panel.
+          - generic [ref=e122]:
+            - button "Faster" [ref=e124] [cursor=pointer]
+            - button "Slower" [ref=e126] [cursor=pointer]
+        - separator [ref=e127]
+        - generic [ref=e128]:
+          - generic [ref=e129]:
+            - heading "Phase diagnostics" [level=6] [ref=e130]
+            - paragraph [ref=e131]: Force a specific phase and inspect driver behavior.
+          - generic [ref=e132]:
+            - button "A" [ref=e134] [cursor=pointer]
+            - button "B" [ref=e136] [cursor=pointer]
+            - button "C" [ref=e138] [cursor=pointer]
+            - button "D" [ref=e140] [cursor=pointer]
+        - separator [ref=e141]
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - heading "Console actions" [level=6] [ref=e144]
+            - paragraph [ref=e145]: MCU status request and raw log injection.
+          - generic [ref=e146]:
+            - button "Release coils" [ref=e148] [cursor=pointer]
+            - button "Request status" [ref=e150] [cursor=pointer]
+            - button "Push test console line" [ref=e152] [cursor=pointer]
+    - generic [ref=e154]:
+      - generic [ref=e157]:
+        - generic [ref=e158]:
+          - generic [ref=e159]:
+            - heading "MCU telemetry deck" [level=6] [ref=e160]
+            - paragraph [ref=e161]: Parsed runtime state from firmware, serial link, sensors, and driver logic.
+          - generic [ref=e162]:
+            - generic [ref=e164]: MPU waiting
+            - generic [ref=e166]: Serial offline
+            - generic [ref=e168]: Tooling idle
+        - generic [ref=e169]:
+          - generic [ref=e171]:
+            - heading "Runtime" [level=6] [ref=e172]
+            - generic [ref=e173]:
+              - generic [ref=e175]:
+                - generic [ref=e176]: Uptime
+                - paragraph [ref=e177]: "-"
+              - generic [ref=e179]:
+                - generic [ref=e180]: Tick
+                - paragraph [ref=e181]: "-"
+              - generic [ref=e183]:
+                - generic [ref=e184]: Tick delay
+                - paragraph [ref=e185]: "-"
+              - generic [ref=e187]:
+                - generic [ref=e188]: Firmware
+                - paragraph [ref=e189]: "-"
+              - generic [ref=e191]:
+                - generic [ref=e192]: App mode
+                - paragraph [ref=e193]: "-"
+          - generic [ref=e195]:
+            - heading "Serial and tooling" [level=6] [ref=e196]
+            - generic [ref=e197]:
+              - generic [ref=e199]:
+                - generic [ref=e200]: Port
+                - paragraph [ref=e201]: "-"
+              - generic [ref=e203]:
+                - generic [ref=e204]: Baud
+                - paragraph [ref=e205]: "-"
+              - generic [ref=e207]:
+                - generic [ref=e208]: Flashing port
+                - paragraph [ref=e209]: "-"
+              - generic [ref=e211]:
+                - generic [ref=e212]: Tool action
+                - paragraph [ref=e213]: "-"
+              - generic [ref=e215]:
+                - generic [ref=e216]: Last exit
+                - paragraph [ref=e217]: "-"
+              - generic [ref=e219]:
+                - generic [ref=e220]: Serial connected
+                - paragraph [ref=e221]: "no"
+        - separator [ref=e222]
+        - generic [ref=e223]:
+          - generic [ref=e225]:
+            - heading "MPU / IMU" [level=6] [ref=e226]
+            - generic [ref=e227]:
+              - generic [ref=e229]:
+                - generic [ref=e230]: Address
+                - paragraph [ref=e231]: "-"
+              - generic [ref=e233]:
+                - generic [ref=e234]: WHO_AM_I
+                - paragraph [ref=e235]: "-"
+              - generic [ref=e237]:
+                - generic [ref=e238]: Model
+                - paragraph [ref=e239]: "-"
+              - generic [ref=e241]:
+                - generic [ref=e242]: Temp
+                - paragraph [ref=e243]: "-"
+              - generic [ref=e245]:
+                - generic [ref=e246]: Accel X
+                - paragraph [ref=e247]: "-"
+              - generic [ref=e249]:
+                - generic [ref=e250]: Accel Y
+                - paragraph [ref=e251]: "-"
+              - generic [ref=e253]:
+                - generic [ref=e254]: Accel Z
+                - paragraph [ref=e255]: "-"
+              - generic [ref=e257]:
+                - generic [ref=e258]: Gyro X
+                - paragraph [ref=e259]: "-"
+              - generic [ref=e261]:
+                - generic [ref=e262]: Gyro Y
+                - paragraph [ref=e263]: "-"
+              - generic [ref=e265]:
+                - generic [ref=e266]: Gyro Z
+                - paragraph [ref=e267]: "-"
+          - generic [ref=e269]:
+            - heading "Stepper / driver" [level=6] [ref=e270]
+            - generic [ref=e271]:
+              - generic [ref=e273]:
+                - generic [ref=e274]: Mode
+                - paragraph [ref=e275]: "-"
+              - generic [ref=e277]:
+                - generic [ref=e278]: Sweep
+                - paragraph [ref=e279]: "-"
+              - generic [ref=e281]:
+                - generic [ref=e282]: Last cmd
+                - paragraph [ref=e283]: "-"
+              - generic [ref=e285]:
+                - generic [ref=e286]: Delay
+                - paragraph [ref=e287]: "-"
+              - generic [ref=e289]:
+                - generic [ref=e290]: Speed
+                - paragraph [ref=e291]: "-"
+              - generic [ref=e293]:
+                - generic [ref=e294]: Phase
+                - paragraph [ref=e295]: "-"
+              - generic [ref=e297]:
+                - generic [ref=e298]: Total steps
+                - paragraph [ref=e299]: "-"
+              - generic [ref=e301]:
+                - generic [ref=e302]: Coils
+                - paragraph [ref=e303]: unknown
+              - generic [ref=e305]:
+                - generic [ref=e306]: UART ready
+                - paragraph [ref=e307]: unknown
+            - generic [ref=e308]:
+              - generic [ref=e310]:
+                - generic [ref=e312]: IN1
+                - paragraph [ref=e313]: "-"
+              - generic [ref=e315]:
+                - generic [ref=e317]: IN2
+                - paragraph [ref=e318]: "-"
+              - generic [ref=e320]:
+                - generic [ref=e322]: IN3
+                - paragraph [ref=e323]: "-"
+              - generic [ref=e325]:
+                - generic [ref=e327]: IN4
+                - paragraph [ref=e328]: "-"
+        - separator [ref=e329]
+        - generic [ref=e330]:
+          - generic [ref=e332]:
+            - heading "I2C bus" [level=6] [ref=e333]
+            - generic [ref=e334]:
+              - generic [ref=e336]:
+                - generic [ref=e337]: Ready
+                - paragraph [ref=e338]: unknown
+              - generic [ref=e340]:
+                - generic [ref=e341]: MPU addr
+                - paragraph [ref=e342]: "-"
+              - generic [ref=e344]:
+                - generic [ref=e345]: Devices
+                - paragraph [ref=e346]: "-"
+              - generic [ref=e348]:
+                - generic [ref=e349]: Scan summary
+                - paragraph [ref=e350]: "-"
+          - generic [ref=e352]:
+            - heading "Wi-Fi" [level=6] [ref=e353]
+            - generic [ref=e354]:
+              - generic [ref=e356]:
+                - generic [ref=e357]: Enabled
+                - paragraph [ref=e358]: unknown
+              - generic [ref=e360]:
+                - generic [ref=e361]: Connected
+                - paragraph [ref=e362]: unknown
+              - generic [ref=e364]:
+                - generic [ref=e365]: SSID
+                - paragraph [ref=e366]: "-"
+              - generic [ref=e368]:
+                - generic [ref=e369]: IP
+                - paragraph [ref=e370]: "-"
+              - generic [ref=e372]:
+                - generic [ref=e373]: AP started
+                - paragraph [ref=e374]: unknown
+              - generic [ref=e376]:
+                - generic [ref=e377]: STA connected
+                - paragraph [ref=e378]: unknown
+              - generic [ref=e380]:
+                - generic [ref=e381]: AP SSID
+                - paragraph [ref=e382]: "-"
+              - generic [ref=e384]:
+                - generic [ref=e385]: AP IP
+                - paragraph [ref=e386]: "-"
+              - generic [ref=e388]:
+                - generic [ref=e389]: STA IP
+                - paragraph [ref=e390]: "-"
+              - generic [ref=e392]:
+                - generic [ref=e393]: MAC
+                - paragraph [ref=e394]: "-"
+      - generic [ref=e397]:
+        - generic [ref=e398]:
+          - generic [ref=e399]:
+            - heading "Raw MCU console" [level=6] [ref=e400]
+            - paragraph [ref=e401]: Full serial stream from the board, including firmware logs, MPU output, Wi-Fi messages, and manual actions.
+          - generic [ref=e402]:
+            - generic [ref=e404]: 1 lines
+            - generic [ref=e406]: 0 warnings
+            - generic [ref=e408]: 1 errors
+            - generic [ref=e410]: live stream
+        - generic [ref=e411]:
+          - generic [ref=e412]:
+            - generic: Filter
+            - generic [ref=e413]:
+              - textbox "Filter" [ref=e414]:
+                - /placeholder: stepper, MPU, wifi, error...
+              - group:
+                - generic: Filter
+          - generic [ref=e415]:
+            - switch [checked] [ref=e418] [cursor=pointer]
+            - paragraph [ref=e421]: auto scroll
+        - generic [ref=e422]:
+          - generic [ref=e427]: serial-monitor://esp32/live-console
+          - generic [ref=e429]:
+            - generic [ref=e430]: 4:00:21 PM
+            - generic [ref=e431]: "[wifi] bridge error: The operation was aborted due to timeout"

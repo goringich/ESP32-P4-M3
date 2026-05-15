@@ -1,2 +1,2 @@
-source /home/goringich/hello_p4/build/gdbinit/symbols
-source /home/goringich/hello_p4/build/gdbinit/connect
+source /home/goringich/esp/build/gdbinit/symbols
+source /home/goringich/esp/build/gdbinit/connect

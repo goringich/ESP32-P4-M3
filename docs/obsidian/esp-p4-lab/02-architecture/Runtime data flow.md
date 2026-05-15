@@ -1,19 +1,179 @@
 # Runtime data flow
 
-Основные потоки данных:
+Этот раздел описывает, как реальные данные и команды проходят через систему во время выполнения.
 
-- UART byte -> `app_stepper_handle_uart()` -> `app_stepper_handle_command()`.
-- HTTP POST body -> `app_net_command_handler()` -> `app_stepper_command_char()` -> `app_stepper_handle_command()`.
-- WebSocket text frame -> `app_net_ws_handler()` -> `app_stepper_command_char()` -> `app_stepper_handle_command()`.
-- Stepper state -> `app_stepper_get_snapshot()` -> `app_net_build_json()` -> HTTP/WebSocket JSON.
-- Wi-Fi state -> `app_wifi_get_status()` -> `app_net_build_json()` -> HTTP/WebSocket JSON.
-- I2C bus -> `mpu9250_*` -> `app_mpu_pretty_*` -> UART/log telemetry text.
+## 1. Поток запуска системы
 
-Это важная развязка:
+После загрузки микроконтроллера выполняется следующий сценарий:
 
-- `app_net` не знает внутренних enum stepper;
-- `app_net` не дергает GPIO напрямую;
-- `app_wifi` не знает про мотор;
-- `app_stepper` не знает про HTTP/WebSocket;
-- `app.c` собирает подсистемы вместе.
+1. `app_main()` пишет лог `boot`.
+2. `app_main()` вызывает `app_init()`.
+3. `app_init()` по очереди поднимает:
+	- I2C;
+	- I2C scan;
+	- MPU WHO_AM_I check;
+	- Wi‑Fi smoke run, если включен;
+	- stepper subsystem, если включен режим `L293D_TEST`;
+	- HTTP/WebSocket API, если включена сеть и Wi‑Fi успешно поднят.
+4. Затем `app_main()` переходит в бесконечный цикл `app_tick()`.
+
+Идея в том, что тяжелая инициализация выполняется один раз, а дальше система живет за счет коротких периодических вызовов.
+
+## 2. Поток управления шаговым двигателем
+
+### Через UART
+
+Путь данных:
+
+`UART0` → `app_stepper_handle_uart()` → `app_stepper_handle_command()` → изменение `s_stepper`
+
+Подробно:
+
+- `app_stepper_tick()` опрашивает UART, если `uart_ready == true`;
+- считанные байты перебираются по одному;
+- каждый символ интерпретируется как команда (`f`, `r`, `s`, `w`, `+`, `-`, и т.д.);
+- обработчик обновляет внутренний state machine двигателя.
+
+### Через HTTP
+
+Путь данных:
+
+HTTP `POST /api/command` → `app_net_command_handler()` → `app_net_extract_command()` → `app_stepper_command_char()` → `app_stepper_handle_command()`
+
+Сетевой слой не знает, как именно устроены фазы двигателя. Он только выделяет символ команды и передает его вниз.
+
+### Через WebSocket
+
+Путь данных:
+
+WebSocket text frame → `app_net_ws_handler()` → `app_net_extract_command()` → `app_stepper_command_char()` → `app_stepper_handle_command()`
+
+Это тот же самый исполнительный путь, что и в HTTP. Разница только в транспорте.
+
+## 3. Поток вычисления шага двигателя
+
+Даже если новых команд нет, `app_stepper_tick()` продолжает обслуживать state machine.
+
+### В режиме `sweep`
+
+Алгоритм такой:
+
+- двигатель идет вперед до `APP_STEPPER_SWEEP_STEPS`;
+- затем делается пауза `APP_STEPPER_EDGE_PAUSE_MS`;
+- после этого двигатель идет назад;
+- потом снова пауза;
+- цикл повторяется.
+
+Внутри этого механизма используются:
+
+- `s_stepper.mode`;
+- `s_stepper.sweep_state`;
+- `s_stepper.last_step_ms`;
+- `s_stepper.pause_started_ms`;
+- `s_stepper.moved_steps_in_leg`.
+
+Физическое движение реализуется через последовательное включение фаз из массива `s_phases`.
+
+## 4. Поток получения телеметрии MPU
+
+Путь данных:
+
+`app_tick()` → `app_mpu_pretty_log_line()` → `app_mpu_pretty_init()` → `i2c_bus_read()` → вычисление физических значений → лог + status + telemetry line
+
+Что происходит по шагам:
+
+1. Раз в секунду `app.c` решает, что пора вывести телеметрию.
+2. Если MPU еще не инициализирован, вызывается `app_mpu_pretty_init()`.
+3. Через `mpu9250_probe_and_read_whoami()` определяется адрес и код `WHO_AM_I`.
+4. Через `i2c_bus_read()` читаются `GYRO_CONFIG`, `ACCEL_CONFIG`, а затем блок данных с `ACCEL_XOUT_H`.
+5. Сырые 16-битные значения переводятся в:
+	- ускорения в `g`;
+	- угловые скорости в `dps`;
+	- температуру в `°C`.
+6. Результат одновременно:
+	- печатается в красивом текстовом виде;
+	- сохраняется в `app_mpu_status_t`;
+	- публикуется как строка `@telemetry {...}`.
+
+## 5. Поток системной телеметрии
+
+Раз в секунду `app.c` также обновляет общий статус системы:
+
+- `ready`;
+- `uptime_ms`;
+- `tick`;
+- `tick_delay_ms`;
+- `firmware`;
+- `app_mode`;
+- `last_error`.
+
+Затем печатается отдельная telemetry-строка вида:
+
+```text
+@telemetry {"kind":"system", ...}
+```
+
+Это важно, потому что системная телеметрия и сенсорная телеметрия формируются независимо, но на одинаковой идее — выдавать машинно-читаемый JSON в лог.
+
+## 6. Поток сборки JSON для сети
+
+Путь данных:
+
+`app_net_build_json()` ← `app_stepper_get_snapshot()`
+`app_net_build_json()` ← `app_wifi_get_status()`
+`app_net_build_json()` ← `app_get_system_status()`
+`app_net_build_json()` ← `app_mpu_get_status()`
+`app_net_build_json()` ← `app_get_i2c_status()`
+
+Это один из самых важных архитектурных моментов.
+
+`app_net` ничего не "вытаскивает" из чужих внутренних static-переменных. Он получает готовые слепки состояния через публичный API. В результате:
+
+- связи между компонентами слабее;
+- сетевой слой проще менять;
+- состояние удобно сериализовать;
+- документация на API становится понятнее.
+
+## 7. Поток отдачи данных наружу
+
+### HTTP pull-модель
+
+- `GET /api/telemetry` → возвращает полный JSON состояния;
+- `GET /api/wifi` → возвращает Wi‑Fi статус.
+
+### WebSocket push-модель
+
+Раз в секунду `app_net_tick()`:
+
+- получает список клиентских сокетов;
+- проверяет, какие из них являются WebSocket-клиентами;
+- собирает единый JSON;
+- ставит асинхронную отправку через `httpd_queue_work()`.
+
+Эта схема удобна для web-dashboard: клиент не обязан постоянно опрашивать REST endpoint.
+
+## 8. Поток ошибок и деградации
+
+В проекте предусмотрена мягкая деградация, а не только "успех или аварийный стоп".
+
+Примеры:
+
+- если I2C init не удался, `app_init()` пишет ошибку и прекращает дальнейшую инициализацию;
+- если MPU не найден, выполняется дополнительная диагностика пар GPIO;
+- если Wi‑Fi поднять не удалось, сетевой API не стартует;
+- если UART driver не поднялся, логика двигателя все равно остается доступной внутри прошивки и через сетевой слой;
+- ошибки MPU записываются в `last_error` и публикуются в телеметрии.
+
+## 9. Главная архитектурная развязка
+
+В текущем проекте особенно важно следующее разделение:
+
+- `app_net` не знает внутренних enum и state machine двигателя;
+- `app_net` не трогает GPIO напрямую;
+- `app_wifi` не знает про шаговый двигатель;
+- `app_stepper` не знает ничего про HTTP server и WebSocket;
+- `app_mpu_pretty` не знает ничего про HTTP, но публикует состояние, которое сеть потом читает;
+- `app.c` выступает единственным orchestration-слоем.
+
+Именно это делает проект пригодным для масштабирования и хорошим примером для пояснения в курсовой работе.
 

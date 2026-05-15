@@ -1,0 +1,496 @@
+- generic [ref=e5]:
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - heading "ESP32 control station" [level=3] [ref=e9]
+      - paragraph [ref=e10]: Full serial console, firmware pipeline, live telemetry, and motor control in one interface. This panel is designed for fast diagnostics from desktop or phone, with the MCU stream always visible.
+    - generic [ref=e11]:
+      - generic [ref=e12]: live workspace
+      - paragraph [ref=e13]: "stream: live"
+      - paragraph [ref=e14]: "console lines: 253"
+      - paragraph [ref=e15]: "serial: connected"
+  - generic [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e21]: serial connected
+      - generic [ref=e23]: "port: /dev/ttyUSB0"
+      - generic [ref=e25]: "baud: 115200"
+      - generic [ref=e27]: "lines: 253"
+      - generic [ref=e29]: "stream: live"
+      - generic [ref=e31]: tooling idle
+    - paragraph [ref=e33]: live serial workspace mirrored to the UI
+  - generic [ref=e34]:
+    - generic [ref=e36]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - heading "Serial gateway" [level=6] [ref=e41]
+          - paragraph [ref=e42]: Select the board port, open the UART stream, and route the full MCU console into the UI.
+        - generic [ref=e43]:
+          - generic [ref=e45]: link open
+          - generic [ref=e47]: scanning ports
+          - generic [ref=e49]: baud 115200
+        - generic [ref=e50]:
+          - generic: Port path
+          - generic [ref=e51]:
+            - textbox "Port path" [ref=e52]:
+              - /placeholder: /dev/ttyUSB0
+            - group:
+              - generic: Port path
+        - paragraph [ref=e53]: Scanning for ports...
+        - generic [ref=e54]:
+          - generic [ref=e55]: Baud rate
+          - generic [ref=e56]:
+            - textbox "Baud rate" [ref=e57]: "115200"
+            - group:
+              - generic: Baud rate
+        - generic [ref=e58]:
+          - button "Connect" [disabled]
+          - button "Refreshing..." [ref=e59] [cursor=pointer]
+          - button "Disconnect" [ref=e60] [cursor=pointer]
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - heading "Firmware pipeline" [level=6] [ref=e65]
+          - paragraph [ref=e66]: "Build and flash `hello_world_p4` from the same control surface. This keeps the serial workflow and firmware operations in one place."
+        - alert [ref=e67]:
+          - img [ref=e69]
+          - generic [ref=e71]: "Flash auto-closes the active serial session before running `idf.py flash`."
+        - generic [ref=e72]:
+          - generic [ref=e73]: Flash port
+          - generic [ref=e74]:
+            - textbox "Flash port" [ref=e75]:
+              - /placeholder: /dev/ttyUSB0
+              - text: /dev/ttyUSB0
+            - group:
+              - generic: Flash port
+        - generic [ref=e76]:
+          - button "Build firmware" [ref=e77] [cursor=pointer]
+          - button "Flash board" [ref=e78] [cursor=pointer]
+        - generic [ref=e80]:
+          - heading "Pipeline state" [level=6] [ref=e81]
+          - paragraph [ref=e82]: "project: /home/goringich/esp/hello_world_p4"
+          - paragraph [ref=e83]: "state: idle"
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - heading "Drive console" [level=6] [ref=e88]
+          - paragraph [ref=e89]: Send direct commands into the live firmware session. Controls are grouped by motion, timing, phase diagnostics, and console actions.
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - heading "Motion" [level=6] [ref=e92]
+            - paragraph [ref=e93]: Primary drive states for the stepper.
+          - generic [ref=e94]:
+            - button "Stop" [ref=e96] [cursor=pointer]
+            - button "Sweep" [ref=e98] [cursor=pointer]
+            - button "Forward" [ref=e100] [cursor=pointer]
+            - button "Reverse" [ref=e102] [cursor=pointer]
+        - separator [ref=e103]
+        - generic [ref=e104]:
+          - generic [ref=e105]:
+            - heading "Manual stepping" [level=6] [ref=e106]
+            - paragraph [ref=e107]: Short impulses for safe testing and fine positioning.
+          - generic [ref=e108]:
+            - button "Step +" [ref=e110] [cursor=pointer]
+            - button "Step -" [ref=e112] [cursor=pointer]
+        - separator [ref=e113]
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - heading "Timing" [level=6] [ref=e116]
+            - paragraph [ref=e117]: Tune motion delay directly from the panel.
+          - generic [ref=e118]:
+            - button "Faster" [ref=e120] [cursor=pointer]
+            - button "Slower" [ref=e122] [cursor=pointer]
+        - separator [ref=e123]
+        - generic [ref=e124]:
+          - generic [ref=e125]:
+            - heading "Phase diagnostics" [level=6] [ref=e126]
+            - paragraph [ref=e127]: Force a specific phase and inspect driver behavior.
+          - generic [ref=e128]:
+            - button "A" [ref=e130] [cursor=pointer]
+            - button "B" [ref=e132] [cursor=pointer]
+            - button "C" [ref=e134] [cursor=pointer]
+            - button "D" [ref=e136] [cursor=pointer]
+        - separator [ref=e137]
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - heading "Console actions" [level=6] [ref=e140]
+            - paragraph [ref=e141]: MCU status request and raw log injection.
+          - generic [ref=e142]:
+            - button "Release coils" [ref=e144] [cursor=pointer]
+            - button "Request status" [ref=e146] [cursor=pointer]
+            - button "Push test console line" [ref=e148] [cursor=pointer]
+    - generic [ref=e150]:
+      - generic [ref=e153]:
+        - generic [ref=e154]:
+          - generic [ref=e155]:
+            - heading "MCU telemetry deck" [level=6] [ref=e156]
+            - paragraph [ref=e157]: Parsed runtime state from firmware, serial link, sensors, and driver logic.
+          - generic [ref=e158]:
+            - generic [ref=e160]: MPU ready
+            - generic [ref=e162]: Serial live
+            - generic [ref=e164]: Tooling idle
+        - generic [ref=e165]:
+          - generic [ref=e167]:
+            - heading "Runtime" [level=6] [ref=e168]
+            - generic [ref=e169]:
+              - generic [ref=e171]:
+                - generic [ref=e172]: Uptime
+                - paragraph [ref=e173]: 2441 s
+              - generic [ref=e175]:
+                - generic [ref=e176]: Tick
+                - paragraph [ref=e177]: "2439"
+              - generic [ref=e179]:
+                - generic [ref=e180]: Tick delay
+                - paragraph [ref=e181]: 5 ms
+              - generic [ref=e183]:
+                - generic [ref=e184]: Firmware
+                - paragraph [ref=e185]: hello_world_p4
+              - generic [ref=e187]:
+                - generic [ref=e188]: App mode
+                - paragraph [ref=e189]: l293d_test
+          - generic [ref=e191]:
+            - heading "Serial and tooling" [level=6] [ref=e192]
+            - generic [ref=e193]:
+              - generic [ref=e195]:
+                - generic [ref=e196]: Port
+                - paragraph [ref=e197]: /dev/ttyUSB0
+              - generic [ref=e199]:
+                - generic [ref=e200]: Baud
+                - paragraph [ref=e201]: "115200"
+              - generic [ref=e203]:
+                - generic [ref=e204]: Flashing port
+                - paragraph [ref=e205]: "-"
+              - generic [ref=e207]:
+                - generic [ref=e208]: Tool action
+                - paragraph [ref=e209]: "-"
+              - generic [ref=e211]:
+                - generic [ref=e212]: Last exit
+                - paragraph [ref=e213]: "-"
+              - generic [ref=e215]:
+                - generic [ref=e216]: Serial connected
+                - paragraph [ref=e217]: "yes"
+        - separator [ref=e218]
+        - generic [ref=e219]:
+          - generic [ref=e221]:
+            - heading "MPU / IMU" [level=6] [ref=e222]
+            - generic [ref=e223]:
+              - generic [ref=e225]:
+                - generic [ref=e226]: Address
+                - paragraph [ref=e227]: "0x68"
+              - generic [ref=e229]:
+                - generic [ref=e230]: WHO_AM_I
+                - paragraph [ref=e231]: "0x71"
+              - generic [ref=e233]:
+                - generic [ref=e234]: Model
+                - paragraph [ref=e235]: MPU-9250
+              - generic [ref=e237]:
+                - generic [ref=e238]: Temp
+                - paragraph [ref=e239]: 32.26 C
+              - generic [ref=e241]:
+                - generic [ref=e242]: Accel X
+                - paragraph [ref=e243]: 0.035 g
+              - generic [ref=e245]:
+                - generic [ref=e246]: Accel Y
+                - paragraph [ref=e247]: 0.000 g
+              - generic [ref=e249]:
+                - generic [ref=e250]: Accel Z
+                - paragraph [ref=e251]: "-1.015 g"
+              - generic [ref=e253]:
+                - generic [ref=e254]: Gyro X
+                - paragraph [ref=e255]: 0.05 dps
+              - generic [ref=e257]:
+                - generic [ref=e258]: Gyro Y
+                - paragraph [ref=e259]: 0.95 dps
+              - generic [ref=e261]:
+                - generic [ref=e262]: Gyro Z
+                - paragraph [ref=e263]: "-0.27 dps"
+          - generic [ref=e265]:
+            - heading "Stepper / driver" [level=6] [ref=e266]
+            - generic [ref=e267]:
+              - generic [ref=e269]:
+                - generic [ref=e270]: Mode
+                - paragraph [ref=e271]: reverse
+              - generic [ref=e273]:
+                - generic [ref=e274]: Sweep
+                - paragraph [ref=e275]: reverse
+              - generic [ref=e277]:
+                - generic [ref=e278]: Last cmd
+                - paragraph [ref=e279]: �
+              - generic [ref=e281]:
+                - generic [ref=e282]: Delay
+                - paragraph [ref=e283]: 600 ms
+              - generic [ref=e285]:
+                - generic [ref=e286]: Speed
+                - paragraph [ref=e287]: 1.67 step/s
+              - generic [ref=e289]:
+                - generic [ref=e290]: Phase
+                - paragraph [ref=e291]: "0"
+              - generic [ref=e293]:
+                - generic [ref=e294]: Total steps
+                - paragraph [ref=e295]: "4067"
+              - generic [ref=e297]:
+                - generic [ref=e298]: Coils
+                - paragraph [ref=e299]: "yes"
+              - generic [ref=e301]:
+                - generic [ref=e302]: UART ready
+                - paragraph [ref=e303]: "yes"
+            - generic [ref=e304]:
+              - generic [ref=e306]:
+                - generic [ref=e308]: IN1
+                - paragraph [ref=e309]: "3"
+              - generic [ref=e311]:
+                - generic [ref=e313]: IN2
+                - paragraph [ref=e314]: "4"
+              - generic [ref=e316]:
+                - generic [ref=e318]: IN3
+                - paragraph [ref=e319]: "5"
+              - generic [ref=e321]:
+                - generic [ref=e323]: IN4
+                - paragraph [ref=e324]: "20"
+        - separator [ref=e325]
+        - generic [ref=e326]:
+          - generic [ref=e328]:
+            - heading "I2C bus" [level=6] [ref=e329]
+            - generic [ref=e330]:
+              - generic [ref=e332]:
+                - generic [ref=e333]: Ready
+                - paragraph [ref=e334]: unknown
+              - generic [ref=e336]:
+                - generic [ref=e337]: MPU addr
+                - paragraph [ref=e338]: "-"
+              - generic [ref=e340]:
+                - generic [ref=e341]: Devices
+                - paragraph [ref=e342]: "-"
+              - generic [ref=e344]:
+                - generic [ref=e345]: Scan summary
+                - paragraph [ref=e346]: "-"
+          - generic [ref=e348]:
+            - heading "Wi-Fi" [level=6] [ref=e349]
+            - generic [ref=e350]:
+              - generic [ref=e352]:
+                - generic [ref=e353]: Enabled
+                - paragraph [ref=e354]: unknown
+              - generic [ref=e356]:
+                - generic [ref=e357]: Connected
+                - paragraph [ref=e358]: unknown
+              - generic [ref=e360]:
+                - generic [ref=e361]: SSID
+                - paragraph [ref=e362]: "-"
+              - generic [ref=e364]:
+                - generic [ref=e365]: IP
+                - paragraph [ref=e366]: "-"
+              - generic [ref=e368]:
+                - generic [ref=e369]: MAC
+                - paragraph [ref=e370]: "-"
+      - generic [ref=e373]:
+        - generic [ref=e374]:
+          - generic [ref=e375]:
+            - heading "Raw MCU console" [level=6] [ref=e376]
+            - paragraph [ref=e377]: Full serial stream from the board, including firmware logs, MPU output, Wi-Fi messages, and manual actions.
+          - generic [ref=e378]:
+            - generic [ref=e380]: 64 lines
+            - generic [ref=e382]: 0 warnings
+            - generic [ref=e384]: 0 errors
+            - generic [ref=e386]: live stream
+        - generic [ref=e387]:
+          - generic [ref=e388]:
+            - generic: Filter
+            - generic [ref=e389]:
+              - textbox "Filter" [ref=e390]:
+                - /placeholder: stepper, MPU, wifi, error...
+              - group:
+                - generic: Filter
+          - generic [ref=e391]:
+            - switch [checked] [ref=e394] [cursor=pointer]
+            - paragraph [ref=e397]: auto scroll
+        - generic [ref=e398]:
+          - generic [ref=e403]: serial-monitor://esp32/live-console
+          - generic [ref=e404]:
+            - generic [ref=e405]:
+              - generic [ref=e406]: 3:36:11 PM
+              - generic [ref=e407]: "[host] port opened: /dev/ttyUSB0 @ 115200"
+            - generic [ref=e408]:
+              - generic [ref=e409]: 3:36:12 PM
+              - generic [ref=e410]: "\x1b[38;5;178mMPU\x1b[0m #2377 up 39:39 | \x1b[38;5;51mA[g]\x1b[0m +0.053 +0.009 -1.028 | \x1b[38;5;213mG[dps]\x1b[0m +0.21 +0.20 -0.36 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e411]:
+              - generic [ref=e412]: 3:36:13 PM
+              - generic [ref=e413]: "\x1b[38;5;178mMPU\x1b[0m #2378 up 39:40 | \x1b[38;5;51mA[g]\x1b[0m +0.032 -0.002 -1.010 | \x1b[38;5;213mG[dps]\x1b[0m -0.20 +1.87 -0.56 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e414]:
+              - generic [ref=e415]: 3:36:14 PM
+              - generic [ref=e416]: "\x1b[38;5;178mMPU\x1b[0m #2379 up 39:41 | \x1b[38;5;51mA[g]\x1b[0m +0.035 -0.005 -1.031 | \x1b[38;5;213mG[dps]\x1b[0m -0.24 +1.36 -0.72 | \x1b[38;5;220mT\x1b[0m +32.45C"
+            - generic [ref=e417]:
+              - generic [ref=e418]: 3:36:15 PM
+              - generic [ref=e419]: "\x1b[38;5;178mMPU\x1b[0m #2380 up 39:42 | \x1b[38;5;51mA[g]\x1b[0m +0.036 +0.003 -1.023 | \x1b[38;5;213mG[dps]\x1b[0m +0.11 +0.57 -0.40 | \x1b[38;5;220mT\x1b[0m +32.12C"
+            - generic [ref=e420]:
+              - generic [ref=e421]: 3:36:16 PM
+              - generic [ref=e422]: "\x1b[38;5;178mMPU\x1b[0m #2381 up 39:43 | \x1b[38;5;51mA[g]\x1b[0m +0.044 +0.003 -1.002 | \x1b[38;5;213mG[dps]\x1b[0m +0.21 +0.69 +0.01 | \x1b[38;5;220mT\x1b[0m +32.12C"
+            - generic [ref=e423]:
+              - generic [ref=e424]: 3:36:17 PM
+              - generic [ref=e425]: "\x1b[38;5;178mMPU\x1b[0m #2382 up 39:44 | \x1b[38;5;51mA[g]\x1b[0m +0.037 -0.001 -1.032 | \x1b[38;5;213mG[dps]\x1b[0m +0.15 +0.18 -0.38 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e426]:
+              - generic [ref=e427]: 3:36:18 PM
+              - generic [ref=e428]: "\x1b[38;5;178mMPU\x1b[0m #2383 up 39:45 | \x1b[38;5;51mA[g]\x1b[0m +0.043 +0.004 -1.007 | \x1b[38;5;213mG[dps]\x1b[0m -0.06 +0.89 -0.44 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e429]:
+              - generic [ref=e430]: 3:36:19 PM
+              - generic [ref=e431]: "\x1b[38;5;178mMPU\x1b[0m #2384 up 39:46 | \x1b[38;5;51mA[g]\x1b[0m +0.029 -0.013 -1.034 | \x1b[38;5;213mG[dps]\x1b[0m +0.20 +0.70 -0.78 | \x1b[38;5;220mT\x1b[0m +32.31C"
+            - generic [ref=e432]:
+              - generic [ref=e433]: 3:36:20 PM
+              - generic [ref=e434]: "\x1b[38;5;178mMPU\x1b[0m #2385 up 39:47 | \x1b[38;5;51mA[g]\x1b[0m +0.051 -0.005 -1.017 | \x1b[38;5;213mG[dps]\x1b[0m +0.26 +0.22 -0.31 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e435]:
+              - generic [ref=e436]: 3:36:21 PM
+              - generic [ref=e437]: "\x1b[38;5;178mMPU\x1b[0m #2386 up 39:48 | \x1b[38;5;51mA[g]\x1b[0m +0.028 -0.001 -1.041 | \x1b[38;5;213mG[dps]\x1b[0m -0.04 +1.31 -0.60 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e438]:
+              - generic [ref=e439]: 3:36:22 PM
+              - generic [ref=e440]: "\x1b[38;5;178mMPU\x1b[0m #2387 up 39:49 | \x1b[38;5;51mA[g]\x1b[0m +0.032 -0.014 -1.032 | \x1b[38;5;213mG[dps]\x1b[0m +0.17 +0.90 -0.95 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e441]:
+              - generic [ref=e442]: 3:36:23 PM
+              - generic [ref=e443]: "\x1b[38;5;178mMPU\x1b[0m #2388 up 39:50 | \x1b[38;5;51mA[g]\x1b[0m +0.053 +0.001 -0.994 | \x1b[38;5;213mG[dps]\x1b[0m +0.02 +0.27 -0.07 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e444]:
+              - generic [ref=e445]: 3:36:24 PM
+              - generic [ref=e446]: "\x1b[38;5;178mMPU\x1b[0m #2389 up 39:51 | \x1b[38;5;51mA[g]\x1b[0m +0.029 -0.002 -1.018 | \x1b[38;5;213mG[dps]\x1b[0m +0.05 +0.88 -0.60 | \x1b[38;5;220mT\x1b[0m +32.26C"
+            - generic [ref=e447]:
+              - generic [ref=e448]: 3:36:25 PM
+              - generic [ref=e449]: "\x1b[38;5;178mMPU\x1b[0m #2390 up 39:52 | \x1b[38;5;51mA[g]\x1b[0m +0.024 +0.000 -1.028 | \x1b[38;5;213mG[dps]\x1b[0m -0.22 +1.51 -0.36 | \x1b[38;5;220mT\x1b[0m +32.07C"
+            - generic [ref=e450]:
+              - generic [ref=e451]: 3:36:26 PM
+              - generic [ref=e452]: "\x1b[38;5;178mMPU\x1b[0m #2391 up 39:53 | \x1b[38;5;51mA[g]\x1b[0m +0.049 +0.003 -1.016 | \x1b[38;5;213mG[dps]\x1b[0m +0.08 +1.74 -0.83 | \x1b[38;5;220mT\x1b[0m +31.73C"
+            - generic [ref=e453]:
+              - generic [ref=e454]: 3:36:27 PM
+              - generic [ref=e455]: "\x1b[38;5;178mMPU\x1b[0m #2392 up 39:54 | \x1b[38;5;51mA[g]\x1b[0m +0.028 -0.004 -1.023 | \x1b[38;5;213mG[dps]\x1b[0m +0.04 +0.95 -0.29 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e456]:
+              - generic [ref=e457]: 3:36:28 PM
+              - generic [ref=e458]: "\x1b[38;5;178mMPU\x1b[0m #2393 up 39:55 | \x1b[38;5;51mA[g]\x1b[0m +0.030 -0.004 -1.034 | \x1b[38;5;213mG[dps]\x1b[0m +0.30 +1.03 -0.58 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e459]:
+              - generic [ref=e460]: 3:36:29 PM
+              - generic [ref=e461]: "\x1b[38;5;178mMPU\x1b[0m #2394 up 39:56 | \x1b[38;5;51mA[g]\x1b[0m +0.036 -0.007 -1.038 | \x1b[38;5;213mG[dps]\x1b[0m +0.43 +0.67 -0.41 | \x1b[38;5;220mT\x1b[0m +32.26C"
+            - generic [ref=e462]:
+              - generic [ref=e463]: 3:36:30 PM
+              - generic [ref=e464]: "\x1b[38;5;178mMPU\x1b[0m #2395 up 39:57 | \x1b[38;5;51mA[g]\x1b[0m +0.028 -0.010 -1.029 | \x1b[38;5;213mG[dps]\x1b[0m +0.02 +1.09 -0.71 | \x1b[38;5;220mT\x1b[0m +32.31C"
+            - generic [ref=e465]:
+              - generic [ref=e466]: 3:36:31 PM
+              - generic [ref=e467]: "\x1b[38;5;178mMPU\x1b[0m #2396 up 39:58 | \x1b[38;5;51mA[g]\x1b[0m +0.051 +0.011 -1.007 | \x1b[38;5;213mG[dps]\x1b[0m +0.19 +0.70 -0.08 | \x1b[38;5;220mT\x1b[0m +32.07C"
+            - generic [ref=e468]:
+              - generic [ref=e469]: 3:36:32 PM
+              - generic [ref=e470]: "\x1b[38;5;178mMPU\x1b[0m #2397 up 39:59 | \x1b[38;5;51mA[g]\x1b[0m +0.033 +0.004 -1.012 | \x1b[38;5;213mG[dps]\x1b[0m +0.08 +0.84 -0.65 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e471]:
+              - generic [ref=e472]: 3:36:33 PM
+              - generic [ref=e473]: "\x1b[38;5;178mMPU\x1b[0m #2398 up 40:00 | \x1b[38;5;51mA[g]\x1b[0m +0.033 -0.006 -1.027 | \x1b[38;5;213mG[dps]\x1b[0m -0.10 +1.05 -1.01 | \x1b[38;5;220mT\x1b[0m +31.93C"
+            - generic [ref=e474]:
+              - generic [ref=e475]: 3:36:34 PM
+              - generic [ref=e476]: "\x1b[38;5;178mMPU\x1b[0m #2399 up 40:01 | \x1b[38;5;51mA[g]\x1b[0m +0.053 +0.017 -1.014 | \x1b[38;5;213mG[dps]\x1b[0m -0.19 +0.98 -0.50 | \x1b[38;5;220mT\x1b[0m +31.73C"
+            - generic [ref=e477]:
+              - generic [ref=e478]: 3:36:35 PM
+              - generic [ref=e479]: "\x1b[38;5;178mMPU\x1b[0m #2400 up 40:02 | \x1b[38;5;51mA[g]\x1b[0m +0.030 +0.001 -1.026 | \x1b[38;5;213mG[dps]\x1b[0m +0.11 +0.79 +0.21 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e480]:
+              - generic [ref=e481]: 3:36:36 PM
+              - generic [ref=e482]: "\x1b[38;5;178mMPU\x1b[0m #2401 up 40:03 | \x1b[38;5;51mA[g]\x1b[0m +0.046 +0.012 -0.995 | \x1b[38;5;213mG[dps]\x1b[0m +0.27 +0.73 -0.40 | \x1b[38;5;220mT\x1b[0m +31.93C"
+            - generic [ref=e483]:
+              - generic [ref=e484]: 3:36:37 PM
+              - generic [ref=e485]: "\x1b[38;5;178mMPU\x1b[0m #2402 up 40:04 | \x1b[38;5;51mA[g]\x1b[0m +0.056 +0.018 -1.005 | \x1b[38;5;213mG[dps]\x1b[0m +0.02 +1.41 -0.52 | \x1b[38;5;220mT\x1b[0m +32.26C"
+            - generic [ref=e486]:
+              - generic [ref=e487]: 3:36:38 PM
+              - generic [ref=e488]: "\x1b[38;5;178mMPU\x1b[0m #2403 up 40:05 | \x1b[38;5;51mA[g]\x1b[0m +0.045 +0.012 -1.004 | \x1b[38;5;213mG[dps]\x1b[0m +0.34 +0.82 -0.05 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e489]:
+              - generic [ref=e490]: 3:36:39 PM
+              - generic [ref=e491]: "\x1b[38;5;178mMPU\x1b[0m #2404 up 40:06 | \x1b[38;5;51mA[g]\x1b[0m +0.031 -0.001 -1.025 | \x1b[38;5;213mG[dps]\x1b[0m -0.24 +1.12 +0.09 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e492]:
+              - generic [ref=e493]: 3:36:40 PM
+              - generic [ref=e494]: "\x1b[38;5;178mMPU\x1b[0m #2405 up 40:07 | \x1b[38;5;51mA[g]\x1b[0m +0.057 +0.020 -0.990 | \x1b[38;5;213mG[dps]\x1b[0m +0.15 +0.68 -0.50 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e495]:
+              - generic [ref=e496]: 3:36:41 PM
+              - generic [ref=e497]: "\x1b[38;5;178mMPU\x1b[0m #2406 up 40:08 | \x1b[38;5;51mA[g]\x1b[0m +0.047 -0.001 -1.031 | \x1b[38;5;213mG[dps]\x1b[0m +0.21 +1.21 -0.27 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e498]:
+              - generic [ref=e499]: 3:36:42 PM
+              - generic [ref=e500]: "\x1b[38;5;178mMPU\x1b[0m #2407 up 40:09 | \x1b[38;5;51mA[g]\x1b[0m +0.046 +0.012 -0.994 | \x1b[38;5;213mG[dps]\x1b[0m -0.18 +1.17 -0.97 | \x1b[38;5;220mT\x1b[0m +32.07C"
+            - generic [ref=e501]:
+              - generic [ref=e502]: 3:36:43 PM
+              - generic [ref=e503]: "\x1b[38;5;178mMPU\x1b[0m #2408 up 40:10 | \x1b[38;5;51mA[g]\x1b[0m +0.034 +0.002 -1.002 | \x1b[38;5;213mG[dps]\x1b[0m -0.02 +0.91 -0.57 | \x1b[38;5;220mT\x1b[0m +32.26C"
+            - generic [ref=e504]:
+              - generic [ref=e505]: 3:36:44 PM
+              - generic [ref=e506]: "\x1b[38;5;178mMPU\x1b[0m #2409 up 40:11 | \x1b[38;5;51mA[g]\x1b[0m +0.039 -0.003 -1.017 | \x1b[38;5;213mG[dps]\x1b[0m -0.04 +1.28 -0.53 | \x1b[38;5;220mT\x1b[0m +32.07C"
+            - generic [ref=e507]:
+              - generic [ref=e508]: 3:36:45 PM
+              - generic [ref=e509]: "\x1b[38;5;178mMPU\x1b[0m #2410 up 40:12 | \x1b[38;5;51mA[g]\x1b[0m +0.042 +0.020 -0.992 | \x1b[38;5;213mG[dps]\x1b[0m -0.16 +1.48 -0.35 | \x1b[38;5;220mT\x1b[0m +31.78C"
+            - generic [ref=e510]:
+              - generic [ref=e511]: 3:36:46 PM
+              - generic [ref=e512]: "\x1b[38;5;178mMPU\x1b[0m #2411 up 40:13 | \x1b[38;5;51mA[g]\x1b[0m +0.030 +0.001 -1.036 | \x1b[38;5;213mG[dps]\x1b[0m +0.08 +1.04 -0.32 | \x1b[38;5;220mT\x1b[0m +32.31C"
+            - generic [ref=e513]:
+              - generic [ref=e514]: 3:36:47 PM
+              - generic [ref=e515]: "\x1b[38;5;178mMPU\x1b[0m #2412 up 40:14 | \x1b[38;5;51mA[g]\x1b[0m +0.028 +0.002 -1.025 | \x1b[38;5;213mG[dps]\x1b[0m -0.12 +1.18 -0.28 | \x1b[38;5;220mT\x1b[0m +32.26C"
+            - generic [ref=e516]:
+              - generic [ref=e517]: 3:36:48 PM
+              - generic [ref=e518]: "\x1b[38;5;178mMPU\x1b[0m #2413 up 40:15 | \x1b[38;5;51mA[g]\x1b[0m +0.051 +0.013 -0.989 | \x1b[38;5;213mG[dps]\x1b[0m +0.08 +0.79 -0.37 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e519]:
+              - generic [ref=e520]: 3:36:49 PM
+              - generic [ref=e521]: "\x1b[38;5;178mMPU\x1b[0m #2414 up 40:16 | \x1b[38;5;51mA[g]\x1b[0m +0.050 +0.009 -1.008 | \x1b[38;5;213mG[dps]\x1b[0m +0.15 +0.87 -0.10 | \x1b[38;5;220mT\x1b[0m +32.26C"
+            - generic [ref=e522]:
+              - generic [ref=e523]: 3:36:50 PM
+              - generic [ref=e524]: "\x1b[38;5;178mMPU\x1b[0m #2415 up 40:17 | \x1b[38;5;51mA[g]\x1b[0m +0.044 +0.009 -1.003 | \x1b[38;5;213mG[dps]\x1b[0m +0.08 +0.97 +0.18 | \x1b[38;5;220mT\x1b[0m +31.83C"
+            - generic [ref=e525]:
+              - generic [ref=e526]: 3:36:51 PM
+              - generic [ref=e527]: "\x1b[38;5;178mMPU\x1b[0m #2416 up 40:18 | \x1b[38;5;51mA[g]\x1b[0m +0.052 +0.003 -1.006 | \x1b[38;5;213mG[dps]\x1b[0m +0.24 +1.11 -0.38 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e528]:
+              - generic [ref=e529]: 3:36:52 PM
+              - generic [ref=e530]: "\x1b[38;5;178mMPU\x1b[0m #2417 up 40:19 | \x1b[38;5;51mA[g]\x1b[0m +0.036 +0.005 -1.003 | \x1b[38;5;213mG[dps]\x1b[0m -0.03 +0.66 -0.30 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e531]:
+              - generic [ref=e532]: 3:36:53 PM
+              - generic [ref=e533]: "\x1b[38;5;178mMPU\x1b[0m #2418 up 40:20 | \x1b[38;5;51mA[g]\x1b[0m +0.053 +0.010 -0.997 | \x1b[38;5;213mG[dps]\x1b[0m +0.28 +0.56 -0.20 | \x1b[38;5;220mT\x1b[0m +32.26C"
+            - generic [ref=e534]:
+              - generic [ref=e535]: 3:36:54 PM
+              - generic [ref=e536]: "\x1b[38;5;178mMPU\x1b[0m #2419 up 40:21 | \x1b[38;5;51mA[g]\x1b[0m +0.038 +0.002 -1.015 | \x1b[38;5;213mG[dps]\x1b[0m -0.15 +0.79 -0.31 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e537]:
+              - generic [ref=e538]: 3:36:55 PM
+              - generic [ref=e539]: "\x1b[38;5;178mMPU\x1b[0m #2420 up 40:22 | \x1b[38;5;51mA[g]\x1b[0m +0.035 -0.013 -1.011 | \x1b[38;5;213mG[dps]\x1b[0m +0.23 +0.88 -1.09 | \x1b[38;5;220mT\x1b[0m +32.07C"
+            - generic [ref=e540]:
+              - generic [ref=e541]: 3:36:56 PM
+              - generic [ref=e542]: "\x1b[38;5;178mMPU\x1b[0m #2421 up 40:23 | \x1b[38;5;51mA[g]\x1b[0m +0.045 +0.006 -1.014 | \x1b[38;5;213mG[dps]\x1b[0m +0.17 +0.81 -0.18 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e543]:
+              - generic [ref=e544]: 3:36:57 PM
+              - generic [ref=e545]: "\x1b[38;5;178mMPU\x1b[0m #2422 up 40:24 | \x1b[38;5;51mA[g]\x1b[0m +0.030 -0.000 -1.038 | \x1b[38;5;213mG[dps]\x1b[0m +0.12 +1.11 -0.82 | \x1b[38;5;220mT\x1b[0m +32.12C"
+            - generic [ref=e546]:
+              - generic [ref=e547]: 3:36:58 PM
+              - generic [ref=e548]: "\x1b[38;5;178mMPU\x1b[0m #2423 up 40:25 | \x1b[38;5;51mA[g]\x1b[0m +0.045 -0.003 -1.023 | \x1b[38;5;213mG[dps]\x1b[0m +0.38 +0.85 -0.44 | \x1b[38;5;220mT\x1b[0m +32.12C"
+            - generic [ref=e549]:
+              - generic [ref=e550]: 3:36:59 PM
+              - generic [ref=e551]: "\x1b[38;5;178mMPU\x1b[0m #2424 up 40:26 | \x1b[38;5;51mA[g]\x1b[0m +0.052 +0.003 -1.011 | \x1b[38;5;213mG[dps]\x1b[0m +0.24 +1.18 -0.89 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e552]:
+              - generic [ref=e553]: 3:37:00 PM
+              - generic [ref=e554]: "\x1b[38;5;178mMPU\x1b[0m #2425 up 40:27 | \x1b[38;5;51mA[g]\x1b[0m +0.036 -0.005 -1.024 | \x1b[38;5;213mG[dps]\x1b[0m +0.34 +0.92 -0.82 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e555]:
+              - generic [ref=e556]: 3:37:01 PM
+              - generic [ref=e557]: "\x1b[38;5;178mMPU\x1b[0m #2426 up 40:28 | \x1b[38;5;51mA[g]\x1b[0m +0.034 -0.005 -1.020 | \x1b[38;5;213mG[dps]\x1b[0m +0.01 +1.08 -0.69 | \x1b[38;5;220mT\x1b[0m +32.31C"
+            - generic [ref=e558]:
+              - generic [ref=e559]: 3:37:02 PM
+              - generic [ref=e560]: "\x1b[38;5;178mMPU\x1b[0m #2427 up 40:29 | \x1b[38;5;51mA[g]\x1b[0m +0.046 +0.001 -1.023 | \x1b[38;5;213mG[dps]\x1b[0m +0.17 +1.21 -0.55 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e561]:
+              - generic [ref=e562]: 3:37:03 PM
+              - generic [ref=e563]: "\x1b[38;5;178mMPU\x1b[0m #2428 up 40:30 | \x1b[38;5;51mA[g]\x1b[0m +0.044 +0.004 -1.011 | \x1b[38;5;213mG[dps]\x1b[0m +0.03 +1.41 -0.45 | \x1b[38;5;220mT\x1b[0m +32.12C"
+            - generic [ref=e564]:
+              - generic [ref=e565]: 3:37:04 PM
+              - generic [ref=e566]: "\x1b[38;5;178mMPU\x1b[0m #2429 up 40:31 | \x1b[38;5;51mA[g]\x1b[0m +0.036 +0.004 -1.038 | \x1b[38;5;213mG[dps]\x1b[0m +0.05 +1.01 -0.31 | \x1b[38;5;220mT\x1b[0m +31.93C"
+            - generic [ref=e567]:
+              - generic [ref=e568]: 3:37:05 PM
+              - generic [ref=e569]: "\x1b[38;5;178mMPU\x1b[0m #2430 up 40:32 | \x1b[38;5;51mA[g]\x1b[0m +0.040 +0.009 -1.011 | \x1b[38;5;213mG[dps]\x1b[0m +0.11 +0.63 -0.45 | \x1b[38;5;220mT\x1b[0m +31.78C"
+            - generic [ref=e570]:
+              - generic [ref=e571]: 3:37:06 PM
+              - generic [ref=e572]: "\x1b[38;5;178mMPU\x1b[0m #2431 up 40:33 | \x1b[38;5;51mA[g]\x1b[0m +0.036 +0.001 -1.025 | \x1b[38;5;213mG[dps]\x1b[0m +0.20 +1.64 -0.49 | \x1b[38;5;220mT\x1b[0m +32.31C"
+            - generic [ref=e573]:
+              - generic [ref=e574]: 3:37:07 PM
+              - generic [ref=e575]: "\x1b[38;5;178mMPU\x1b[0m #2432 up 40:34 | \x1b[38;5;51mA[g]\x1b[0m +0.027 +0.006 -1.010 | \x1b[38;5;213mG[dps]\x1b[0m +0.10 +0.87 -0.47 | \x1b[38;5;220mT\x1b[0m +32.26C"
+            - generic [ref=e576]:
+              - generic [ref=e577]: 3:37:08 PM
+              - generic [ref=e578]: "\x1b[38;5;178mMPU\x1b[0m #2433 up 40:35 | \x1b[38;5;51mA[g]\x1b[0m +0.042 +0.004 -1.007 | \x1b[38;5;213mG[dps]\x1b[0m +0.27 +0.92 -0.36 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e579]:
+              - generic [ref=e580]: 3:37:09 PM
+              - generic [ref=e581]: "\x1b[38;5;178mMPU\x1b[0m #2434 up 40:36 | \x1b[38;5;51mA[g]\x1b[0m +0.040 +0.004 -1.006 | \x1b[38;5;213mG[dps]\x1b[0m +0.06 +1.25 -0.46 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e582]:
+              - generic [ref=e583]: 3:37:10 PM
+              - generic [ref=e584]: "\x1b[38;5;178mMPU\x1b[0m #2435 up 40:37 | \x1b[38;5;51mA[g]\x1b[0m +0.047 -0.006 -1.018 | \x1b[38;5;213mG[dps]\x1b[0m +0.15 +1.09 -0.73 | \x1b[38;5;220mT\x1b[0m +32.17C"
+            - generic [ref=e585]:
+              - generic [ref=e586]: 3:37:11 PM
+              - generic [ref=e587]: "\x1b[38;5;178mMPU\x1b[0m #2436 up 40:38 | \x1b[38;5;51mA[g]\x1b[0m +0.063 +0.021 -0.991 | \x1b[38;5;213mG[dps]\x1b[0m +0.09 +0.57 -0.11 | \x1b[38;5;220mT\x1b[0m +31.97C"
+            - generic [ref=e588]:
+              - generic [ref=e589]: 3:37:12 PM
+              - generic [ref=e590]: "\x1b[38;5;178mMPU\x1b[0m #2437 up 40:39 | \x1b[38;5;51mA[g]\x1b[0m +0.038 -0.009 -1.010 | \x1b[38;5;213mG[dps]\x1b[0m +0.13 +0.90 -0.23 | \x1b[38;5;220mT\x1b[0m +32.07C"
+            - generic [ref=e591]:
+              - generic [ref=e592]: 3:37:13 PM
+              - generic [ref=e593]: "\x1b[38;5;178mMPU\x1b[0m #2438 up 40:40 | \x1b[38;5;51mA[g]\x1b[0m +0.049 +0.014 -0.993 | \x1b[38;5;213mG[dps]\x1b[0m -0.06 +0.98 -0.05 | \x1b[38;5;220mT\x1b[0m +32.07C"
+            - generic [ref=e594]:
+              - generic [ref=e595]: 3:37:14 PM
+              - generic [ref=e596]: "\x1b[38;5;178mMPU\x1b[0m #2439 up 40:41 | \x1b[38;5;51mA[g]\x1b[0m +0.035 +0.000 -1.015 | \x1b[38;5;213mG[dps]\x1b[0m +0.05 +0.95 -0.27 | \x1b[38;5;220mT\x1b[0m +32.26C"

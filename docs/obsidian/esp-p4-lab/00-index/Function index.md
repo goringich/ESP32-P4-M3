@@ -1,19 +1,25 @@
 # Function index
 
-Entry points:
+Это навигационный индекс по функциям проекта. Он полезен, когда архитектура уже понятна и нужно быстро перейти к конкретному поведению в коде.
+
+## Entry points
 
 - [[04-functions/app_main]]
 - [[04-functions/app_init]]
 - [[04-functions/app_tick]]
 - [[04-functions/app_tick_delay_ms]]
 
-App helpers:
+Эти функции задают жизненный цикл всей прошивки.
+
+## App helpers
 
 - [[04-functions/app_log_color_block]]
 - [[04-functions/app_mpu_whoami_check]]
 - [[04-functions/app_emit_system_telemetry]]
 
-Wi-Fi:
+Это внутренние вспомогательные функции orchestration-слоя `app.c`.
+
+## Wi-Fi
 
 - [[04-functions/app_wifi_smoke_run]]
 - [[04-functions/app_wifi_get_status]]
@@ -26,7 +32,9 @@ Wi-Fi:
 - [[04-functions/app_wifi_auth_to_str]]
 - [[04-functions/app_wifi_log_block]]
 
-HTTP/WebSocket:
+Используй этот блок, если нужно понять bringup сети, AP/STA-режим, статус Wi‑Fi и событийную модель.
+
+## HTTP/WebSocket
 
 - [[04-functions/app_net_start]]
 - [[04-functions/app_net_tick]]
@@ -41,7 +49,9 @@ HTTP/WebSocket:
 - [[04-functions/app_net_options_handler]]
 - [[04-functions/app_net_set_cors]]
 
-Stepper:
+Это ключевой набор функций для удаленного API, JSON и WebSocket push.
+
+## Stepper
 
 - [[04-functions/app_stepper_init]]
 - [[04-functions/app_stepper_tick]]
@@ -71,7 +81,9 @@ Stepper:
 - [[04-functions/app_stepper_led_set]]
 - [[04-functions/app_stepper_led_toggle]]
 
-MPU:
+Этот блок покрывает двигатель, UART-управление, автоматический sweep и snapshot API для сети.
+
+## MPU
 
 - [[04-functions/app_mpu_pretty_init]]
 - [[04-functions/app_mpu_pretty_log_line]]
@@ -85,7 +97,9 @@ MPU:
 - [[04-functions/mpu9250_probe_and_read_whoami]]
 - [[04-functions/mpu9250_whoami_name]]
 
-I2C:
+Здесь собраны функции инициализации MPU, пересчета сырых данных и базового sensor-discovery слоя.
+
+## I2C
 
 - [[04-functions/i2c_bus_init]]
 - [[04-functions/i2c_bus_deinit]]
@@ -100,4 +114,22 @@ I2C:
 - [[04-functions/i2c_bus_selfcheck_gpio]]
 - [[04-functions/i2c_bus_diag_sweep_mpu_pairs]]
 - [[04-functions/i2c_bus_diag_probe_pair]]
+
+Это базовый low-level индекс по I2C и диагностике шины.
+
+## Самые важные страницы, если времени мало
+
+Если нужен короткий список самых полезных function docs, начни с них:
+
+- [[04-functions/app_main]]
+- [[04-functions/app_init]]
+- [[04-functions/app_tick]]
+- [[04-functions/app_wifi_smoke_run]]
+- [[04-functions/app_net_build_json]]
+- [[04-functions/app_stepper_tick]]
+- [[04-functions/i2c_bus_init]]
+- [[04-functions/mpu9250_probe_and_read_whoami]]
+- [[04-functions/app_mpu_pretty_init]]
+
+Этот набор почти полностью раскрывает жизненный цикл, сеть, stepper, I2C и MPU.
 

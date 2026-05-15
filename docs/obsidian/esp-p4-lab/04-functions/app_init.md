@@ -12,11 +12,13 @@
 - вызывает `i2c_bus_scan()`;
 - вызывает `app_mpu_whoami_check()`;
 - если включен `CONFIG_APP_WIFI_SMOKE`, вызывает `app_wifi_smoke_run()`;
-- если Wi-Fi успешно поднят, ставит `s_network_ready = true`;
+- если `app_wifi_smoke_run()` вернул `ESP_OK`, ставит `s_network_ready = true`;
 - если включен `CONFIG_APP_MODE_L293D_TEST`, вызывает `app_stepper_init()`;
 - если включен `CONFIG_APP_NET_ENABLE` и сеть готова, вызывает `app_net_start()`.
 
 Важная деталь: сетевой сервер не стартует сам по себе. Он стартует только после успешного Wi-Fi bringup.
+
+Еще одна важная деталь: если `i2c_bus_init()` завершается ошибкой, `app_init()` логирует проблему и завершает работу раньше, без продолжения общей цепочки инициализации.
 
 Связи:
 
