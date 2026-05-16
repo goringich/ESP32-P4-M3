@@ -98,6 +98,93 @@
         "cd \"${workspaceFolder}\" && export IDF_PATH=\"$HOME/esp/esp-idf\" && source \"$IDF_PATH/export.sh\" >/dev/null 2>&1 && idf.py clean"
       ],
       "problemMatcher": []
+    },
+    {
+      "label": "web: backend dev",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/stepper-remote/backend"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "tsx",
+        "pattern": {
+          "regexp": "^(.*)$",
+          "file": 1,
+          "line": 1,
+          "message": 1
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^",
+          "endsPattern": "listening on"
+        }
+      },
+      "presentation": {
+        "group": "web",
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "web: frontend dev",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/stepper-remote/frontend"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": "^(.*)$",
+          "file": 1,
+          "line": 1,
+          "message": 1
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^",
+          "endsPattern": "ready in"
+        }
+      },
+      "presentation": {
+        "group": "web",
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "web: start all",
+      "dependsOn": ["web: backend dev", "web: frontend dev"],
+      "dependsOrder": "parallel",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "web: backend build",
+      "type": "shell",
+      "command": "npm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/stepper-remote/backend"
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "web: frontend build",
+      "type": "shell",
+      "command": "npm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/stepper-remote/frontend"
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "web: build all",
+      "dependsOn": ["web: backend build", "web: frontend build"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
     }
   ]
 }

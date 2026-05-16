@@ -28,7 +28,8 @@ export function StatusBar({ connection, linesCount, tooling, transport, streamSt
     <Card
       sx={{
         borderRadius: 5,
-        background: 'rgba(8, 14, 24, 0.88)',
+        background:
+          'linear-gradient(135deg, rgba(99,230,255,0.08), rgba(255,255,255,0.025) 36%, rgba(255,155,84,0.08) 100%)',
       }}
     >
       <CardContent sx={{ py: '14px !important', px: { xs: 1.5, md: 2 } }}>
@@ -82,11 +83,11 @@ export function StatusBar({ connection, linesCount, tooling, transport, streamSt
               py: 0.75,
               borderRadius: 3,
               border: '1px solid rgba(255,255,255,0.06)',
-              background: 'rgba(255,255,255,0.025)',
+              background: 'rgba(7, 16, 27, 0.45)',
             }}
           >
             <Typography variant="body2" color="text.secondary">
-              live serial workspace mirrored to the UI
+              UART power and Wi-Fi control can run in parallel
             </Typography>
           </Box>
         </Stack>

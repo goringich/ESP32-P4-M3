@@ -275,6 +275,12 @@ export class WifiBridgeManager {
           in3: remote.stepper.pins?.in3 ?? null,
           in4: remote.stepper.pins?.in4 ?? null,
         },
+        gpioPins: {
+          in1: remote.stepper.gpioPins?.in1 ?? null,
+          in2: remote.stepper.gpioPins?.in2 ?? null,
+          in3: remote.stepper.gpioPins?.in3 ?? null,
+          in4: remote.stepper.gpioPins?.in4 ?? null,
+        },
       };
     }
 

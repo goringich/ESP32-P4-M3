@@ -6,24 +6,27 @@ export const appTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#7cdfff',
-      light: '#b6f0ff',
+      main: '#63e6ff',
+      light: '#bff6ff',
+      dark: '#1c99b2',
     },
     secondary: {
-      main: '#f6a85d',
-      light: '#ffd3a8',
+      main: '#ff9b54',
+      light: '#ffd4b2',
+      dark: '#c56722',
     },
-    success: { main: '#60d394' },
-    warning: { main: '#ffb347' },
-    error: { main: '#ff6b7a' },
+    success: { main: '#58d68d' },
+    warning: { main: '#ffbf69' },
+    error: { main: '#ff6f91' },
+    info: { main: '#7aa2ff' },
     background: {
-      default: '#050913',
-      paper: '#0b1320',
+      default: '#06111a',
+      paper: '#0c1723',
     },
     divider: 'rgba(255,255,255,0.08)',
     text: {
-      primary: '#edf4ff',
-      secondary: 'rgba(237,244,255,0.72)',
+      primary: '#eef7ff',
+      secondary: 'rgba(238,247,255,0.7)',
     },
   },
 
@@ -32,7 +35,23 @@ export const appTheme = createTheme({
   },
 
   typography: {
-    fontFamily: '"IBM Plex Sans", "Inter", "Segoe UI", sans-serif',
+    fontFamily: '"Space Grotesk", "IBM Plex Sans", "Segoe UI", sans-serif',
+    h3: {
+      fontWeight: 700,
+      letterSpacing: '-0.03em',
+    },
+    h4: {
+      fontWeight: 700,
+      letterSpacing: '-0.025em',
+    },
+    h6: {
+      fontWeight: 700,
+      letterSpacing: '-0.01em',
+    },
+    overline: {
+      letterSpacing: '0.18em',
+      fontWeight: 700,
+    },
   },
 
   components: {
@@ -40,6 +59,8 @@ export const appTheme = createTheme({
       styleOverrides: {
         body: {
           overflowX: 'hidden',
+          background:
+            'radial-gradient(circle at top, rgba(99,230,255,0.08), transparent 28%), #06111a',
         },
       },
     },
@@ -53,10 +74,11 @@ export const appTheme = createTheme({
           borderRadius: R * 1.5, // 24px
           overflow: 'hidden',
           background:
-            'linear-gradient(180deg, rgba(11,19,32,0.92), rgba(7,12,22,0.98))',
-          border: '1px solid rgba(255,255,255,0.08)',
+            'linear-gradient(180deg, rgba(12,23,35,0.9), rgba(7,15,24,0.98))',
+          border: '1px solid rgba(255,255,255,0.07)',
           boxShadow:
-            '0 20px 60px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.03)',
+            '0 24px 70px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.04)',
+          backdropFilter: 'blur(14px)',
         },
       },
     },
@@ -86,6 +108,9 @@ export const appTheme = createTheme({
         root: {
           borderRadius: R, // 16px
           minHeight: 46,
+          fontWeight: 700,
+          textTransform: 'none',
+          boxShadow: 'none',
         },
       },
     },
@@ -98,7 +123,7 @@ export const appTheme = createTheme({
         root: {
           '& .MuiOutlinedInput-root': {
             borderRadius: R,
-            background: 'rgba(255,255,255,0.02)',
+            background: 'rgba(255,255,255,0.03)',
           },
         },
       },
@@ -119,6 +144,7 @@ export const appTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: R * 0.75, // 12px
+          fontWeight: 600,
         },
       },
     },

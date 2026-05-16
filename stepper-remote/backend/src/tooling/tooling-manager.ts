@@ -19,7 +19,7 @@ type ToolingManagerOptions = {
   spawnFn?: SpawnFn;
 };
 
-const DEFAULT_PROJECT_DIR = process.env.IDF_PROJECT_DIR ?? '/home/goringich/esp/hello_world_p4';
+const DEFAULT_PROJECT_DIR = process.env.IDF_PROJECT_DIR ?? '/home/goringich/esp';
 const DEFAULT_IDF_PATH = process.env.IDF_PATH ?? '/home/goringich/esp/esp-idf';
 const DEFAULT_EXPORT_SCRIPT = process.env.IDF_EXPORT_SCRIPT ?? `${DEFAULT_IDF_PATH}/export.sh`;
 

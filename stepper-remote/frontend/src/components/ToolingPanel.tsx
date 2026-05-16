@@ -60,7 +60,7 @@ export function ToolingPanel({ connection, tooling }: Props) {
           <Stack spacing={0.5}>
             <Typography variant="h6">Firmware pipeline</Typography>
             <Typography variant="body2" color="text.secondary">
-              Build and flash `hello_world_p4` from the same control surface. This keeps
+              Build and flash the current `esp` firmware from the same control surface. This keeps
               the serial workflow and firmware operations in one place.
             </Typography>
           </Stack>
@@ -116,7 +116,7 @@ export function ToolingPanel({ connection, tooling }: Props) {
             <Stack spacing={0.75}>
               <Typography variant="subtitle2">Pipeline state</Typography>
               <Typography variant="body2" color="text.secondary">
-                project: {tooling.projectDir || '/home/goringich/esp/hello_world_p4'}
+                project: {tooling.projectDir || '/home/goringich/esp'}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 state: {tooling.isRunning ? `running ${tooling.currentAction}` : 'idle'}

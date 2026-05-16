@@ -273,16 +273,28 @@ export function TelemetryPanel({ telemetry }: Props) {
 
                 <Grid container spacing={1.25}>
                   <Grid size={{ xs: 3, sm: 3 }}>
-                    <PhaseLamp label="IN1" value={stepper.pins.in1} />
+                    <PhaseLamp
+                      label={`IN1 / GPIO ${stepper.gpioPins.in1 ?? '-'}`}
+                      value={stepper.pins.in1}
+                    />
                   </Grid>
                   <Grid size={{ xs: 3, sm: 3 }}>
-                    <PhaseLamp label="IN2" value={stepper.pins.in2} />
+                    <PhaseLamp
+                      label={`IN2 / GPIO ${stepper.gpioPins.in2 ?? '-'}`}
+                      value={stepper.pins.in2}
+                    />
                   </Grid>
                   <Grid size={{ xs: 3, sm: 3 }}>
-                    <PhaseLamp label="IN3" value={stepper.pins.in3} />
+                    <PhaseLamp
+                      label={`IN3 / GPIO ${stepper.gpioPins.in3 ?? '-'}`}
+                      value={stepper.pins.in3}
+                    />
                   </Grid>
                   <Grid size={{ xs: 3, sm: 3 }}>
-                    <PhaseLamp label="IN4" value={stepper.pins.in4} />
+                    <PhaseLamp
+                      label={`IN4 / GPIO ${stepper.gpioPins.in4 ?? '-'}`}
+                      value={stepper.pins.in4}
+                    />
                   </Grid>
                 </Grid>
               </Stack>

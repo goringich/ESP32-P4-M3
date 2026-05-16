@@ -22,7 +22,7 @@ test('telemetry parser ingests structured MCU lines', () => {
   );
   state = applyLogTelemetry(
     state,
-    '@telemetry {"kind":"stepper","mode":"forward","sweep_state":"forward","step_delay_ms":80,"steps_per_second":12.5,"phase_index":2,"total_steps":99,"coils_enabled":true,"sweep_steps":17,"uart_ready":true,"last_command":"f","pins":{"in1":18,"in2":19,"in3":21,"in4":22},"led_gpio":2}',
+    '@telemetry {"kind":"stepper","mode":"forward","sweep_state":"forward","step_delay_ms":80,"steps_per_second":12.5,"phase_index":2,"total_steps":99,"coils_enabled":true,"sweep_steps":17,"uart_ready":true,"last_command":"f","pins":{"in1":1,"in2":0,"in3":1,"in4":0},"gpio_pins":{"in1":18,"in2":19,"in3":21,"in4":22},"led_gpio":2}',
     30
   );
 
@@ -32,7 +32,8 @@ test('telemetry parser ingests structured MCU lines', () => {
   assert.equal(state.mpu.accel.z, 0.3);
   assert.equal(state.stepper.mode, 'forward');
   assert.equal(state.stepper.totalSteps, 99);
-  assert.equal(state.stepper.pins.in4, 22);
+  assert.equal(state.stepper.pins.in1, 1);
+  assert.equal(state.stepper.gpioPins.in4, 22);
 });
 
 test('telemetry parser derives i2c and wifi state from plain logs', () => {

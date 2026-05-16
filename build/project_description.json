@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "p4_lab",
-    "project_version":    "3c1f111-dirty",
+    "project_version":    "963f973-dirty",
     "project_path":       "/home/goringich/esp",
     "idf_path":           "/home/goringich/esp/esp-idf",
     "build_dir":          "/home/goringich/esp/build",
@@ -1120,7 +1120,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [ "espressif__esp_hosted", "espressif__wifi_remote_over_eppp" ],
             "file": "/home/goringich/esp/build/esp-idf/espressif__esp_wifi_remote/libespressif__esp_wifi_remote.a",
-            "sources": [ "/home/goringich/esp/managed_components/espressif__esp_wifi_remote/esp_wifi_remote.c", "/home/goringich/esp/managed_components/espressif__esp_wifi_remote/esp_wifi_remote_net.c", "/home/goringich/esp/managed_components/espressif__esp_wifi_remote/idf_v5.5/esp_wifi_remote_weak.c", "/home/goringich/esp/managed_components/espressif__esp_wifi_remote/idf_v5.5/esp_wifi_with_remote.c", "/home/goringich/esp/esp-idf/components/esp_wifi/src/wifi_default.c", "/home/goringich/esp/esp-idf/components/esp_wifi/src/wifi_netif.c", "/home/goringich/esp/esp-idf/components/esp_wifi/src/wifi_default_ap.c" ],
+            "sources": [ "/home/goringich/esp/managed_components/espressif__esp_wifi_remote/esp_wifi_remote.c", "/home/goringich/esp/managed_components/espressif__esp_wifi_remote/esp_wifi_remote_net.c", "/home/goringich/esp/managed_components/espressif__esp_wifi_remote/idf_v5.5/esp_wifi_remote_weak.c", "/home/goringich/esp/managed_components/espressif__esp_wifi_remote/idf_v5.5/esp_eap_client_remote_weak.c", "/home/goringich/esp/managed_components/espressif__esp_wifi_remote/idf_v5.5/esp_wifi_with_remote.c", "/home/goringich/esp/managed_components/espressif__esp_wifi_remote/idf_v5.5/esp_eap_client_with_remote.c", "/home/goringich/esp/esp-idf/components/esp_wifi/src/wifi_default.c", "/home/goringich/esp/esp-idf/components/esp_wifi/src/wifi_netif.c", "/home/goringich/esp/esp-idf/components/esp_wifi/src/wifi_default_ap.c" ],
             "include_dirs": [ "include" ]
         },
         "espressif__wifi_remote_over_eppp": {

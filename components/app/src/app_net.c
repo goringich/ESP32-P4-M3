@@ -107,7 +107,8 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          "\"totalSteps\":%" PRIu32 ",\"coilsEnabled\":%s,"
                          "\"sweepSteps\":%" PRIu32 ",\"uartReady\":%s,"
                          "\"lastCommand\":\"%s\","
-                         "\"pins\":{\"in1\":%d,\"in2\":%d,\"in3\":%d,\"in4\":%d},"
+                         "\"pins\":{\"in1\":%u,\"in2\":%u,\"in3\":%u,\"in4\":%u},"
+                         "\"gpioPins\":{\"in1\":%d,\"in2\":%d,\"in3\":%d,\"in4\":%d},"
                          "\"ledGpio\":%d},\"wifi\":{"
                          "\"enabled\":%s,\"connected\":%s,\"ssid\":\"%s\",\"ip\":\"%s\","
                          "\"mac\":null,\"lastError\":%s,"
@@ -148,6 +149,10 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          stepper.sweep_steps,
                          stepper.uart_ready ? "true" : "false",
                          stepper.last_command,
+                         (unsigned)stepper.in1_level,
+                         (unsigned)stepper.in2_level,
+                         (unsigned)stepper.in3_level,
+                         (unsigned)stepper.in4_level,
                          stepper.in1_gpio,
                          stepper.in2_gpio,
                          stepper.in3_gpio,

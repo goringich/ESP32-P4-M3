@@ -1,13 +1,17 @@
 import {
   alpha,
   Box,
+  Chip,
   Container,
   CssBaseline,
   Grid,
   Stack,
+  Tab,
+  Tabs,
   ThemeProvider,
   Typography,
 } from '@mui/material';
+import { useState } from 'react';
 import { ConsolePanel } from './components/ConsolePanel';
 import { ConnectionPanel } from './components/ConnectionPanel';
 import { ControlPanel } from './components/ControlPanel';
@@ -17,7 +21,23 @@ import { ToolingPanel } from './components/ToolingPanel';
 import { useConsoleStream } from './hooks/useConsoleStream';
 import { appTheme } from './theme/theme';
 
+type WorkspaceView = 'overview' | 'control' | 'console';
+
+function getInitialWorkspaceView(): WorkspaceView {
+  if (typeof window === 'undefined') {
+    return 'overview';
+  }
+
+  const view = new URLSearchParams(window.location.search).get('view');
+  if (view === 'control' || view === 'console' || view === 'overview') {
+    return view;
+  }
+
+  return 'overview';
+}
+
 export default function App() {
+  const [workspaceView, setWorkspaceView] = useState<WorkspaceView>(getInitialWorkspaceView);
   const {
     logs,
     connection,
@@ -85,8 +105,12 @@ export default function App() {
                 alignItems={{ xs: 'flex-start', lg: 'center' }}
               >
                 <Stack spacing={1}>
+                  <Typography variant="overline" color="primary.light">
+                    gyro platform command center
+                  </Typography>
+
                   <Typography variant="h3">
-                    ESP32 control station
+                    ESP32-P4 flight deck
                   </Typography>
 
                   <Typography
@@ -97,9 +121,9 @@ export default function App() {
                       lineHeight: 1.7,
                     }}
                   >
-                    Full serial console, firmware pipeline, live telemetry, and motor control
-                    in one interface. This panel is designed for fast diagnostics from desktop
-                    or phone, with the MCU stream always visible.
+                    One surface for firmware operations, Wi-Fi command relay, live telemetry,
+                    and console evidence. Keep the board powered from USB/UART, switch control
+                    to Wi-Fi, and watch the full chain without changing tools.
                   </Typography>
                 </Stack>
 
@@ -130,6 +154,10 @@ export default function App() {
                     serial: {connection.isOpen ? 'connected' : 'disconnected'}
                   </Typography>
 
+                  <Typography variant="body2" color="text.secondary">
+                    wifi: {transport.wifiConnected ? 'bridge live' : 'bridge idle'}
+                  </Typography>
+
                   <Typography
                     component="a"
                     href="/pad"
@@ -150,31 +178,118 @@ export default function App() {
               streamStatus={streamStatus}
             />
 
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 12, xl: 4 }} sx={{ minWidth: 0 }}>
-                <Stack spacing={2}>
-                  <ConnectionPanel
-                    connection={connection}
-                    transport={transport}
-                    onConnectionChange={setConnection}
-                    onTransportChange={setTransport}
-                  />
-                  <ToolingPanel connection={connection} tooling={tooling} />
-                  <ControlPanel />
-                </Stack>
-              </Grid>
+            <Box
+              sx={{
+                borderRadius: 5,
+                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'rgba(6,10,18,0.74)',
+                backdropFilter: 'blur(22px)',
+                overflow: 'hidden',
+              }}
+            >
+              <Stack
+                direction={{ xs: 'column', lg: 'row' }}
+                spacing={1.5}
+                justifyContent="space-between"
+                alignItems={{ xs: 'flex-start', lg: 'center' }}
+                sx={{
+                  px: { xs: 1.5, md: 2.25 },
+                  pt: 1.5,
+                }}
+              >
+                <Tabs
+                  value={workspaceView}
+                  onChange={(_event, next: WorkspaceView) => setWorkspaceView(next)}
+                  variant="scrollable"
+                  allowScrollButtonsMobile
+                >
+                  <Tab value="overview" label="Overview" />
+                  <Tab value="control" label="Control" />
+                  <Tab value="console" label="Console" />
+                </Tabs>
 
-              <Grid size={{ xs: 12, xl: 8 }} sx={{ minWidth: 0 }}>
-                <Stack spacing={2}>
-                  <TelemetryPanel telemetry={telemetry} />
-                  <ConsolePanel
-                    logs={logs}
-                    streamError={streamError}
-                    streamMode={streamStatus === 'live' ? 'live' : 'fallback'}
-                  />
+                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ px: { xs: 1, lg: 0 }, pb: { xs: 1, lg: 0 } }}>
+                  <Chip label={`transport ${transport.mode}`} color={transport.mode === 'wifi' ? 'secondary' : 'primary'} />
+                  <Chip label={transport.wifiConnected ? 'wifi relay live' : 'wifi relay idle'} color={transport.wifiConnected ? 'success' : 'default'} />
+                  <Chip label={connection.isOpen ? connection.path ?? 'serial connected' : 'serial disconnected'} color={connection.isOpen ? 'success' : 'default'} />
                 </Stack>
-              </Grid>
-            </Grid>
+              </Stack>
+
+              <Box sx={{ p: { xs: 1.5, md: 2.25 } }}>
+                {workspaceView === 'overview' ? (
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 12, xl: 8 }} sx={{ minWidth: 0 }}>
+                      <TelemetryPanel telemetry={telemetry} />
+                    </Grid>
+                    <Grid size={{ xs: 12, xl: 4 }} sx={{ minWidth: 0 }}>
+                      <Stack spacing={2}>
+                        <ConnectionPanel
+                          connection={connection}
+                          transport={transport}
+                          onConnectionChange={setConnection}
+                          onTransportChange={setTransport}
+                        />
+                        <ToolingPanel connection={connection} tooling={tooling} />
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                ) : null}
+
+                {workspaceView === 'control' ? (
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 12, lg: 5, xl: 4 }} sx={{ minWidth: 0 }}>
+                      <Stack spacing={2}>
+                        <ConnectionPanel
+                          connection={connection}
+                          transport={transport}
+                          onConnectionChange={setConnection}
+                          onTransportChange={setTransport}
+                        />
+                        <Box
+                          sx={{
+                            p: 1.5,
+                            borderRadius: 4,
+                            border: '1px solid rgba(255,255,255,0.08)',
+                            background: 'rgba(255,255,255,0.025)',
+                          }}
+                        >
+                          <Stack spacing={0.6}>
+                            <Typography variant="subtitle2">Operator workflow</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              1. Power the board over UART or battery.
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              2. Switch transport to Wi-Fi when the API is reachable.
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              3. Use the 4-button pad for motion, then fall back to console commands only for diagnostics.
+                            </Typography>
+                          </Stack>
+                        </Box>
+                      </Stack>
+                    </Grid>
+                    <Grid size={{ xs: 12, lg: 7, xl: 8 }} sx={{ minWidth: 0 }}>
+                      <ControlPanel />
+                    </Grid>
+                  </Grid>
+                ) : null}
+
+                {workspaceView === 'console' ? (
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 12, xl: 4 }} sx={{ minWidth: 0 }}>
+                      <ToolingPanel connection={connection} tooling={tooling} />
+                    </Grid>
+                    <Grid size={{ xs: 12, xl: 8 }} sx={{ minWidth: 0 }}>
+                      <ConsolePanel
+                        logs={logs}
+                        streamError={streamError}
+                        streamMode={streamStatus === 'live' ? 'live' : 'fallback'}
+                      />
+                    </Grid>
+                  </Grid>
+                ) : null}
+              </Box>
+            </Box>
           </Stack>
         </Container>
       </Box>

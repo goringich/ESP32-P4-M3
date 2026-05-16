@@ -16,6 +16,10 @@ typedef struct {
   bool coils_enabled;
   bool uart_ready;
   char last_command[3];
+  uint8_t in1_level;
+  uint8_t in2_level;
+  uint8_t in3_level;
+  uint8_t in4_level;
   int in1_gpio;
   int in2_gpio;
   int in3_gpio;

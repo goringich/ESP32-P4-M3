@@ -65,6 +65,12 @@ export type TelemetryState = {
       in3: number | null;
       in4: number | null;
     };
+    gpioPins: {
+      in1: number | null;
+      in2: number | null;
+      in3: number | null;
+      in4: number | null;
+    };
     ledGpio: number | null;
   };
   i2c: {

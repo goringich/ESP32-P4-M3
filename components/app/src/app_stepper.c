@@ -56,6 +56,7 @@ typedef struct {
   app_stepper_mode_t mode;
   app_stepper_sweep_state_t sweep_state;
   size_t phase_index;
+  size_t active_phase_index;
   uint32_t step_delay_ms;
   uint32_t last_step_ms;
   uint32_t pause_started_ms;
@@ -64,6 +65,10 @@ typedef struct {
   bool coils_enabled;
   bool uart_ready;
   bool led_state;
+  uint8_t in1_level;
+  uint8_t in2_level;
+  uint8_t in3_level;
+  uint8_t in4_level;
   uint8_t last_cmd;
   uint32_t last_cmd_ms;
   uint32_t last_telemetry_ms;
@@ -106,6 +111,7 @@ static app_stepper_state_t s_stepper = {
   .mode = APP_STEPPER_MODE_STOP,
   .sweep_state = APP_STEPPER_SWEEP_FORWARD,
   .phase_index = 0,
+  .active_phase_index = 0,
   .step_delay_ms = CONFIG_APP_L293D_STEP_DELAY_MS,
   .last_step_ms = 0,
   .pause_started_ms = 0,
@@ -114,6 +120,10 @@ static app_stepper_state_t s_stepper = {
   .coils_enabled = false,
   .uart_ready = false,
   .led_state = false,
+  .in1_level = 0,
+  .in2_level = 0,
+  .in3_level = 0,
+  .in4_level = 0,
   .last_cmd = 0,
   .last_cmd_ms = 0,
   .last_telemetry_ms = 0,
@@ -204,18 +214,23 @@ static void app_stepper_emit_telemetry(const char *reason) {
          "\"sweep_state\":\"%s\",\"step_delay_ms\":%" PRIu32 ",\"steps_per_second\":%.2f,"
          "\"phase_index\":%u,\"total_steps\":%" PRIu32 ",\"coils_enabled\":%s,"
          "\"sweep_steps\":%" PRIu32 ",\"uart_ready\":%s,\"last_command\":\"%s\","
-         "\"pins\":{\"in1\":%d,\"in2\":%d,\"in3\":%d,\"in4\":%d},\"led_gpio\":%d}\n",
+         "\"pins\":{\"in1\":%u,\"in2\":%u,\"in3\":%u,\"in4\":%u},"
+         "\"gpio_pins\":{\"in1\":%d,\"in2\":%d,\"in3\":%d,\"in4\":%d},\"led_gpio\":%d}\n",
          reason != NULL ? reason : "update",
          app_stepper_mode_to_str(s_stepper.mode),
          app_stepper_sweep_state_to_str(s_stepper.sweep_state),
          s_stepper.step_delay_ms,
          (double)app_stepper_steps_per_second(s_stepper.step_delay_ms),
-         (unsigned)s_stepper.phase_index,
+         (unsigned)s_stepper.active_phase_index,
          s_stepper.total_steps,
          s_stepper.coils_enabled ? "true" : "false",
          s_stepper.moved_steps_in_leg,
          s_stepper.uart_ready ? "true" : "false",
          app_stepper_cmd_to_str(s_stepper.last_cmd),
+         (unsigned)s_stepper.in1_level,
+         (unsigned)s_stepper.in2_level,
+         (unsigned)s_stepper.in3_level,
+         (unsigned)s_stepper.in4_level,
          CONFIG_APP_L293D_IN1_GPIO,
          CONFIG_APP_L293D_IN2_GPIO,
          CONFIG_APP_L293D_IN3_GPIO,
@@ -364,6 +379,10 @@ static void app_stepper_apply_phase(const app_stepper_phase_t *phase) {
   gpio_set_level((gpio_num_t)CONFIG_APP_L293D_IN4_GPIO, phase->in4);
 
   s_stepper.coils_enabled = true;
+  s_stepper.in1_level = phase->in1;
+  s_stepper.in2_level = phase->in2;
+  s_stepper.in3_level = phase->in3;
+  s_stepper.in4_level = phase->in4;
   app_stepper_led_toggle();
 }
 
@@ -375,6 +394,10 @@ static void app_stepper_release(void) {
 
   s_stepper.coils_enabled = false;
   s_stepper.led_state = false;
+  s_stepper.in1_level = 0;
+  s_stepper.in2_level = 0;
+  s_stepper.in3_level = 0;
+  s_stepper.in4_level = 0;
   app_stepper_led_set(false);
 }
 
@@ -382,6 +405,7 @@ static void app_stepper_step_forward_once(void) {
   const size_t phase_count = sizeof(s_phases) / sizeof(s_phases[0]);
 
   app_stepper_apply_phase(&s_phases[s_stepper.phase_index]);
+  s_stepper.active_phase_index = s_stepper.phase_index;
   s_stepper.phase_index = (s_stepper.phase_index + 1U) % phase_count;
   s_stepper.total_steps++;
 }
@@ -396,6 +420,7 @@ static void app_stepper_step_reverse_once(void) {
   }
 
   app_stepper_apply_phase(&s_phases[s_stepper.phase_index]);
+  s_stepper.active_phase_index = s_stepper.phase_index;
   s_stepper.total_steps++;
 }
 
@@ -408,6 +433,7 @@ static void app_stepper_apply_named_phase(size_t phase_index) {
 
   app_stepper_set_mode(APP_STEPPER_MODE_STOP);
   s_stepper.phase_index = phase_index;
+  s_stepper.active_phase_index = phase_index;
   app_stepper_apply_phase(&s_phases[phase_index]);
 
   ESP_LOGI(TAG,
@@ -574,7 +600,7 @@ void app_stepper_get_snapshot(app_stepper_snapshot_t *snapshot) {
   snapshot->sweep_state = app_stepper_sweep_state_to_str(s_stepper.sweep_state);
   snapshot->step_delay_ms = s_stepper.step_delay_ms;
   snapshot->steps_per_second = app_stepper_steps_per_second(s_stepper.step_delay_ms);
-  snapshot->phase_index = (uint32_t)s_stepper.phase_index;
+  snapshot->phase_index = (uint32_t)s_stepper.active_phase_index;
   snapshot->total_steps = s_stepper.total_steps;
   snapshot->sweep_steps = s_stepper.moved_steps_in_leg;
   snapshot->coils_enabled = s_stepper.coils_enabled;
@@ -582,6 +608,10 @@ void app_stepper_get_snapshot(app_stepper_snapshot_t *snapshot) {
   strlcpy(snapshot->last_command,
           app_stepper_cmd_to_str(s_stepper.last_cmd),
           sizeof(snapshot->last_command));
+  snapshot->in1_level = s_stepper.in1_level;
+  snapshot->in2_level = s_stepper.in2_level;
+  snapshot->in3_level = s_stepper.in3_level;
+  snapshot->in4_level = s_stepper.in4_level;
   snapshot->in1_gpio = CONFIG_APP_L293D_IN1_GPIO;
   snapshot->in2_gpio = CONFIG_APP_L293D_IN2_GPIO;
   snapshot->in3_gpio = CONFIG_APP_L293D_IN3_GPIO;
@@ -644,8 +674,8 @@ esp_err_t app_stepper_init(void) {
   app_stepper_print_help();
 
   s_stepper.sweep_state = APP_STEPPER_SWEEP_FORWARD;
-  app_stepper_set_mode(APP_STEPPER_MODE_SWEEP);
-  app_stepper_emit_telemetry("init");
+  app_stepper_set_mode(APP_STEPPER_MODE_STOP);
+  app_stepper_emit_telemetry("init_idle");
 
   return ESP_OK;
 }

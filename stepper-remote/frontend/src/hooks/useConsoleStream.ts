@@ -72,6 +72,12 @@ const EMPTY_TELEMETRY: TelemetryState = {
       in3: null,
       in4: null,
     },
+    gpioPins: {
+      in1: null,
+      in2: null,
+      in3: null,
+      in4: null,
+    },
     ledGpio: null,
   },
   i2c: {
@@ -109,6 +115,29 @@ const EMPTY_TRANSPORT: TransportState = {
   lastTelemetryAt: null,
 };
 
+function mergeUniqueLogs(logs: LogEntry[]) {
+  const seen = new Set<string>();
+  const deduped: LogEntry[] = [];
+
+  for (let index = logs.length - 1; index >= 0; index -= 1) {
+    const entry = logs[index];
+    if (seen.has(entry.id)) {
+      continue;
+    }
+
+    seen.add(entry.id);
+    deduped.push(entry);
+  }
+
+  deduped.reverse();
+
+  if (deduped.length > 1200) {
+    return deduped.slice(deduped.length - 1200);
+  }
+
+  return deduped;
+}
+
 export function useConsoleStream() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [connection, setConnection] = useState<ConnectionState>(EMPTY_CONNECTION);
@@ -139,7 +168,7 @@ export function useConsoleStream() {
           return;
         }
 
-        setLogs(nextLogs);
+        setLogs((prev) => mergeUniqueLogs([...prev, ...nextLogs]));
         setConnection(nextConnection);
         setTooling(nextTooling);
         setTelemetry(nextTelemetry);
@@ -197,11 +226,7 @@ export function useConsoleStream() {
         const message = JSON.parse((event as MessageEvent).data) as LogEntry;
 
         setLogs((prev) => {
-          const next = [...prev, message];
-          if (next.length > 1200) {
-            return next.slice(next.length - 1200);
-          }
-          return next;
+          return mergeUniqueLogs([...prev, message]);
         });
       });
 

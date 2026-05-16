@@ -152,7 +152,8 @@ export function ConnectionPanel({
           <Stack spacing={0.5}>
             <Typography variant="h6">Transport gateway</Typography>
             <Typography variant="body2" color="text.secondary">
-              Run the dashboard either over direct UART or through the MCU Wi-Fi API when the board is on battery power.
+              Switch transport independently from the power path. The board may stay powered
+              from USB/UART while commands and telemetry move through the MCU Wi-Fi API.
             </Typography>
           </Stack>
 
@@ -260,6 +261,7 @@ export function ConnectionPanel({
             <Box
               sx={{
                 p: 1.5,
+                borderRadius: 3,
                 border: '1px solid rgba(255,255,255,0.06)',
                 background: 'rgba(255,255,255,0.025)',
               }}
@@ -274,6 +276,31 @@ export function ConnectionPanel({
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   manufacturer: {selectedPort.manufacturer || '-'}
+                </Typography>
+              </Stack>
+            </Box>
+          ) : null}
+
+          {transport.mode === 'wifi' ? (
+            <Box
+              sx={{
+                p: 1.5,
+                borderRadius: 3,
+                border: '1px solid rgba(99,230,255,0.14)',
+                background:
+                  'linear-gradient(180deg, rgba(99,230,255,0.08), rgba(255,255,255,0.02))',
+              }}
+            >
+              <Stack spacing={0.75}>
+                <Typography variant="subtitle2">Bench workflow</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  1. Keep USB/UART connected for power and optional logs.
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  2. Join the ESP Wi-Fi network and point the panel to its API URL.
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  3. Activate the Wi-Fi bridge and confirm telemetry before motion commands.
                 </Typography>
               </Stack>
             </Box>
@@ -316,6 +343,7 @@ export function ConnectionPanel({
             <Box
               sx={{
                 p: 1.5,
+                borderRadius: 3,
                 border: '1px solid rgba(255,255,255,0.06)',
                 background: 'rgba(255,255,255,0.025)',
               }}

@@ -41,6 +41,7 @@ type TelemetryEnvelope =
       uart_ready?: boolean | null;
       last_command?: string | null;
       pins?: { in1: number; in2: number; in3: number; in4: number };
+      gpio_pins?: { in1: number; in2: number; in3: number; in4: number };
       led_gpio?: number | null;
     };
 
@@ -56,6 +57,7 @@ function cloneTelemetry(state: TelemetryState): TelemetryState {
     stepper: {
       ...state.stepper,
       pins: { ...state.stepper.pins },
+      gpioPins: { ...state.stepper.gpioPins },
     },
     i2c: {
       ...state.i2c,
@@ -108,6 +110,12 @@ export function createInitialTelemetryState(): TelemetryState {
       uartReady: null,
       lastCommand: null,
       pins: {
+        in1: null,
+        in2: null,
+        in3: null,
+        in4: null,
+      },
+      gpioPins: {
         in1: null,
         in2: null,
         in3: null,
@@ -210,6 +218,12 @@ function applyTelemetryEnvelope(
     in2: envelope.pins?.in2 ?? null,
     in3: envelope.pins?.in3 ?? null,
     in4: envelope.pins?.in4 ?? null,
+  };
+  next.stepper.gpioPins = {
+    in1: envelope.gpio_pins?.in1 ?? null,
+    in2: envelope.gpio_pins?.in2 ?? null,
+    in3: envelope.gpio_pins?.in3 ?? null,
+    in4: envelope.gpio_pins?.in4 ?? null,
   };
   next.stepper.ledGpio = envelope.led_gpio ?? null;
   return next;
