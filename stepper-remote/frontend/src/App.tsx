@@ -36,6 +36,22 @@ function getInitialWorkspaceView(): WorkspaceView {
   return 'overview';
 }
 
+function streamLabel(status: string) {
+  if (status === 'live') {
+    return 'живой';
+  }
+  if (status === 'connecting') {
+    return 'подключение';
+  }
+  if (status === 'reconnecting') {
+    return 'переподключение';
+  }
+  if (status === 'offline') {
+    return 'офлайн';
+  }
+  return status;
+}
+
 export default function App() {
   const [workspaceView, setWorkspaceView] = useState<WorkspaceView>(getInitialWorkspaceView);
   const {
@@ -106,11 +122,11 @@ export default function App() {
               >
                 <Stack spacing={1}>
                   <Typography variant="overline" color="primary.light">
-                    gyro platform command center
+                    стенд гироплатформы
                   </Typography>
 
                   <Typography variant="h3">
-                    ESP32-P4 flight deck
+                    ESP32-P4: управление и телеметрия
                   </Typography>
 
                   <Typography
@@ -121,9 +137,9 @@ export default function App() {
                       lineHeight: 1.7,
                     }}
                   >
-                    One surface for firmware operations, Wi-Fi command relay, live telemetry,
-                    and console evidence. Keep the board powered from USB/UART, switch control
-                    to Wi-Fi, and watch the full chain without changing tools.
+                    Здесь показаны состояние платы, датчика, привода, UART и Wi-Fi.
+                    Можно держать плату на питании по USB/UART, а команды и телеметрию
+                    переводить на Wi-Fi, когда сетевой контур реально поднялся.
                   </Typography>
                 </Stack>
 
@@ -139,23 +155,23 @@ export default function App() {
                   spacing={0.75}
                 >
                   <Typography variant="overline" color="primary.light">
-                    live workspace
+                    текущее состояние
                   </Typography>
 
                   <Typography variant="body2" color="text.secondary">
-                    stream: {streamStatus}
+                    поток: {streamLabel(streamStatus)}
                   </Typography>
 
                   <Typography variant="body2" color="text.secondary">
-                    console lines: {logs.length}
+                    строк в консоли: {logs.length}
                   </Typography>
 
                   <Typography variant="body2" color="text.secondary">
-                    serial: {connection.isOpen ? 'connected' : 'disconnected'}
+                    UART: {connection.isOpen ? 'подключен' : 'не подключен'}
                   </Typography>
 
                   <Typography variant="body2" color="text.secondary">
-                    wifi: {transport.wifiConnected ? 'bridge live' : 'bridge idle'}
+                    Wi-Fi: {transport.wifiConnected ? 'мост активен' : 'мост не поднят'}
                   </Typography>
 
                   <Typography
@@ -164,7 +180,7 @@ export default function App() {
                     variant="body2"
                     sx={{ color: 'primary.light', textDecoration: 'none' }}
                   >
-                    open minimal Wi-Fi pad
+                    открыть простой Wi-Fi пульт
                   </Typography>
                 </Stack>
               </Stack>
@@ -203,15 +219,15 @@ export default function App() {
                   variant="scrollable"
                   allowScrollButtonsMobile
                 >
-                  <Tab value="overview" label="Overview" />
-                  <Tab value="control" label="Control" />
-                  <Tab value="console" label="Console" />
+                  <Tab value="overview" label="Обзор" />
+                  <Tab value="control" label="Управление" />
+                  <Tab value="console" label="Консоль" />
                 </Tabs>
 
                 <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ px: { xs: 1, lg: 0 }, pb: { xs: 1, lg: 0 } }}>
-                  <Chip label={`transport ${transport.mode}`} color={transport.mode === 'wifi' ? 'secondary' : 'primary'} />
-                  <Chip label={transport.wifiConnected ? 'wifi relay live' : 'wifi relay idle'} color={transport.wifiConnected ? 'success' : 'default'} />
-                  <Chip label={connection.isOpen ? connection.path ?? 'serial connected' : 'serial disconnected'} color={connection.isOpen ? 'success' : 'default'} />
+                  <Chip label={`транспорт: ${transport.mode === 'wifi' ? 'wifi' : 'serial'}`} color={transport.mode === 'wifi' ? 'secondary' : 'primary'} />
+                  <Chip label={transport.wifiConnected ? 'Wi-Fi активен' : 'Wi-Fi не активен'} color={transport.wifiConnected ? 'success' : 'default'} />
+                  <Chip label={connection.isOpen ? connection.path ?? 'UART подключен' : 'UART отключен'} color={connection.isOpen ? 'success' : 'default'} />
                 </Stack>
               </Stack>
 
@@ -254,15 +270,15 @@ export default function App() {
                           }}
                         >
                           <Stack spacing={0.6}>
-                            <Typography variant="subtitle2">Operator workflow</Typography>
+                            <Typography variant="subtitle2">Порядок работы</Typography>
                             <Typography variant="body2" color="text.secondary">
-                              1. Power the board over UART or battery.
+                              1. Подайте питание на плату по UART или от батареи.
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                              2. Switch transport to Wi-Fi when the API is reachable.
+                              2. Переключайте транспорт на Wi-Fi только когда API реально доступен.
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                              3. Use the 4-button pad for motion, then fall back to console commands only for diagnostics.
+                              3. Для движения используйте 4-кнопочный пульт, а консоль оставляйте для диагностики.
                             </Typography>
                           </Stack>
                         </Box>

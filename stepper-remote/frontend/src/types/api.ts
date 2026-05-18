@@ -95,6 +95,16 @@ export type TelemetryState = {
     apIp?: string | null;
     staIp?: string | null;
   };
+  ble: {
+    initialized: boolean | null;
+    controllerEnabled: boolean | null;
+    advertising: boolean | null;
+    connected: boolean | null;
+    notifyEnabled: boolean | null;
+    deviceName: string | null;
+    address: string | null;
+    lastError: string | null;
+  };
   driver: {
     serialConnected: boolean;
     serialPort: string | null;

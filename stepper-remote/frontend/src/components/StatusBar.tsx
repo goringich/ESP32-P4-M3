@@ -14,6 +14,19 @@ type Props = {
   streamStatus: StreamStatus;
 };
 
+function streamLabel(status: StreamStatus) {
+  if (status === 'live') {
+    return 'живой';
+  }
+  if (status === 'connecting') {
+    return 'подключение';
+  }
+  if (status === 'reconnecting') {
+    return 'переподключение';
+  }
+  return 'офлайн';
+}
+
 export function StatusBar({ connection, linesCount, tooling, transport, streamStatus }: Props) {
   const streamColor =
     streamStatus === 'live'
@@ -44,11 +57,11 @@ export function StatusBar({ connection, linesCount, tooling, transport, streamSt
               label={
                 transport.mode === 'wifi'
                   ? transport.wifiConnected
-                    ? 'wifi bridge connected'
-                    : 'wifi bridge waiting'
+                    ? 'Wi-Fi мост подключен'
+                    : 'Wi-Fi мост ожидает'
                   : connection.isOpen
-                    ? 'serial connected'
-                    : 'serial disconnected'
+                    ? 'UART подключен'
+                    : 'UART отключен'
               }
               color={
                 transport.mode === 'wifi'
@@ -60,18 +73,18 @@ export function StatusBar({ connection, linesCount, tooling, transport, streamSt
                     : 'default'
               }
             />
-            <Chip label={`transport: ${transport.mode}`} color={transport.mode === 'wifi' ? 'secondary' : 'default'} />
-            <Chip label={`port: ${connection.path ?? '-'}`} />
+            <Chip label={`транспорт: ${transport.mode}`} color={transport.mode === 'wifi' ? 'secondary' : 'default'} />
+            <Chip label={`порт: ${connection.path ?? '-'}`} />
             <Chip label={`baud: ${connection.baudRate ?? '-'}`} />
-            <Chip label={`lines: ${linesCount}`} />
-            <Chip label={`stream: ${streamStatus}`} color={streamColor} />
+            <Chip label={`строк: ${linesCount}`} />
+            <Chip label={`поток: ${streamLabel(streamStatus)}`} color={streamColor} />
             <Chip
               label={
                 tooling.isRunning
-                  ? `tooling: ${tooling.currentAction}`
+                  ? `задача: ${tooling.currentAction}`
                   : tooling.lastAction
-                    ? `last: ${tooling.lastAction}${tooling.lastExitCode !== null ? ` (${tooling.lastExitCode})` : ''}`
-                    : 'tooling idle'
+                    ? `последняя: ${tooling.lastAction}${tooling.lastExitCode !== null ? ` (${tooling.lastExitCode})` : ''}`
+                    : 'задач нет'
               }
               color={tooling.isRunning ? 'warning' : tooling.lastExitCode === 0 ? 'success' : 'default'}
             />
@@ -87,7 +100,7 @@ export function StatusBar({ connection, linesCount, tooling, transport, streamSt
             }}
           >
             <Typography variant="body2" color="text.secondary">
-              UART power and Wi-Fi control can run in parallel
+              Питание по UART и управление по Wi-Fi могут работать параллельно
             </Typography>
           </Box>
         </Stack>

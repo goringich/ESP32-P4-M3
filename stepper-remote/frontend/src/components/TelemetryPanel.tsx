@@ -23,9 +23,9 @@ function fmtNumber(value: number | null | undefined, digits = 2) {
 
 function fmtBool(value: boolean | null) {
   if (value === null) {
-    return 'unknown';
+    return 'неизвестно';
   }
-  return value ? 'yes' : 'no';
+  return value ? 'да' : 'нет';
 }
 
 function Metric({
@@ -96,7 +96,7 @@ function PhaseLamp({
 }
 
 export function TelemetryPanel({ telemetry }: Props) {
-  const { system, mpu, stepper, i2c, wifi, driver } = telemetry;
+  const { system, mpu, stepper, i2c, wifi, ble, driver } = telemetry;
 
   return (
     <Card sx={{ borderRadius: 5 }}>
@@ -109,23 +109,23 @@ export function TelemetryPanel({ telemetry }: Props) {
             alignItems={{ xs: 'flex-start', lg: 'center' }}
           >
             <Stack spacing={0.5}>
-              <Typography variant="h6">MCU telemetry deck</Typography>
+              <Typography variant="h6">Телеметрия платы</Typography>
               <Typography variant="body2" color="text.secondary">
-                Parsed runtime state from firmware, serial link, sensors, and driver logic.
+                Здесь показано текущее состояние прошивки, датчика, Wi-Fi, UART и привода.
               </Typography>
             </Stack>
 
             <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
               <Chip
-                label={mpu.ready ? 'MPU ready' : mpu.ready === false ? 'MPU error' : 'MPU waiting'}
+                label={mpu.ready ? 'MPU готов' : mpu.ready === false ? 'MPU ошибка' : 'MPU ожидание'}
                 color={mpu.ready ? 'success' : mpu.ready === false ? 'error' : 'default'}
               />
               <Chip
-                label={driver.serialConnected ? 'Serial live' : 'Serial offline'}
+                label={driver.serialConnected ? 'UART активен' : 'UART не активен'}
                 color={driver.serialConnected ? 'success' : 'default'}
               />
               <Chip
-                label={driver.toolingRunning ? `Tooling ${driver.toolingAction}` : 'Tooling idle'}
+                label={driver.toolingRunning ? `Задача ${driver.toolingAction}` : 'Задач нет'}
                 color={driver.toolingRunning ? 'warning' : 'default'}
               />
             </Stack>
@@ -134,27 +134,27 @@ export function TelemetryPanel({ telemetry }: Props) {
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1.25}>
-                <Typography variant="subtitle1">Runtime</Typography>
+                <Typography variant="subtitle1">Общее состояние</Typography>
                 <Grid container spacing={1.25}>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Uptime" value={system.uptimeMs !== null ? `${Math.round(system.uptimeMs / 1000)} s` : '-'} />
+                    <Metric label="Время работы" value={system.uptimeMs !== null ? `${Math.round(system.uptimeMs / 1000)} c` : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Tick" value={system.tick !== null ? String(system.tick) : '-'} />
+                    <Metric label="Тик" value={system.tick !== null ? String(system.tick) : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Tick delay" value={system.tickDelayMs !== null ? `${system.tickDelayMs} ms` : '-'} />
+                    <Metric label="Задержка тика" value={system.tickDelayMs !== null ? `${system.tickDelayMs} ms` : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 6 }}>
-                    <Metric label="Firmware" value={system.firmware ?? '-'} />
+                    <Metric label="Прошивка" value={system.firmware ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 6 }}>
-                    <Metric label="App mode" value={system.appMode ?? '-'} />
+                    <Metric label="Режим приложения" value={system.appMode ?? '-'} />
                   </Grid>
                 </Grid>
                 {system.lastError ? (
                   <Typography variant="body2" color="warning.main">
-                    runtime error: {system.lastError}
+                    ошибка runtime: {system.lastError}
                   </Typography>
                 ) : null}
               </Stack>
@@ -162,30 +162,30 @@ export function TelemetryPanel({ telemetry }: Props) {
 
             <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1.25}>
-                <Typography variant="subtitle1">Serial and tooling</Typography>
+                <Typography variant="subtitle1">UART и задачи</Typography>
                 <Grid container spacing={1.25}>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Port" value={driver.serialPort ?? '-'} />
+                    <Metric label="Порт" value={driver.serialPort ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Baud" value={driver.baudRate !== null ? String(driver.baudRate) : '-'} />
+                    <Metric label="Скорость" value={driver.baudRate !== null ? String(driver.baudRate) : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Flashing port" value={driver.toolingPort ?? '-'} />
+                    <Metric label="Порт прошивки" value={driver.toolingPort ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Tool action" value={driver.toolingAction ?? '-'} />
+                    <Metric label="Текущая задача" value={driver.toolingAction ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Last exit" value={driver.lastToolExitCode !== null ? String(driver.lastToolExitCode) : '-'} />
+                    <Metric label="Последний код" value={driver.lastToolExitCode !== null ? String(driver.lastToolExitCode) : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Serial connected" value={fmtBool(driver.serialConnected)} />
+                    <Metric label="UART подключен" value={fmtBool(driver.serialConnected)} />
                   </Grid>
                 </Grid>
                 {driver.toolingError ? (
                   <Typography variant="body2" color="warning.main">
-                    tooling error: {driver.toolingError}
+                    ошибка задачи: {driver.toolingError}
                   </Typography>
                 ) : null}
               </Stack>
@@ -197,42 +197,42 @@ export function TelemetryPanel({ telemetry }: Props) {
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, lg: 6 }}>
               <Stack spacing={1.25}>
-                <Typography variant="subtitle1">MPU / IMU</Typography>
+                <Typography variant="subtitle1">IMU / MPU</Typography>
                 <Grid container spacing={1.25}>
                   <Grid size={{ xs: 6, sm: 3 }}>
-                    <Metric label="Address" value={mpu.address ?? '-'} />
+                    <Metric label="Адрес" value={mpu.address ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 3 }}>
                     <Metric label="WHO_AM_I" value={mpu.whoAmI ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 3 }}>
-                    <Metric label="Model" value={mpu.model ?? '-'} />
+                    <Metric label="Модель" value={mpu.model ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 3 }}>
-                    <Metric label="Temp" value={mpu.tempC !== null ? `${fmtNumber(mpu.tempC)} C` : '-'} />
+                    <Metric label="Температура" value={mpu.tempC !== null ? `${fmtNumber(mpu.tempC)} C` : '-'} />
                   </Grid>
                   <Grid size={{ xs: 4, sm: 4 }}>
-                    <Metric label="Accel X" value={mpu.accel.x !== null ? `${fmtNumber(mpu.accel.x, 3)} g` : '-'} />
+                    <Metric label="Ускорение X" value={mpu.accel.x !== null ? `${fmtNumber(mpu.accel.x, 3)} g` : '-'} />
                   </Grid>
                   <Grid size={{ xs: 4, sm: 4 }}>
-                    <Metric label="Accel Y" value={mpu.accel.y !== null ? `${fmtNumber(mpu.accel.y, 3)} g` : '-'} />
+                    <Metric label="Ускорение Y" value={mpu.accel.y !== null ? `${fmtNumber(mpu.accel.y, 3)} g` : '-'} />
                   </Grid>
                   <Grid size={{ xs: 4, sm: 4 }}>
-                    <Metric label="Accel Z" value={mpu.accel.z !== null ? `${fmtNumber(mpu.accel.z, 3)} g` : '-'} />
+                    <Metric label="Ускорение Z" value={mpu.accel.z !== null ? `${fmtNumber(mpu.accel.z, 3)} g` : '-'} />
                   </Grid>
                   <Grid size={{ xs: 4, sm: 4 }}>
-                    <Metric label="Gyro X" value={mpu.gyro.x !== null ? `${fmtNumber(mpu.gyro.x)} dps` : '-'} />
+                    <Metric label="Гироскоп X" value={mpu.gyro.x !== null ? `${fmtNumber(mpu.gyro.x)} dps` : '-'} />
                   </Grid>
                   <Grid size={{ xs: 4, sm: 4 }}>
-                    <Metric label="Gyro Y" value={mpu.gyro.y !== null ? `${fmtNumber(mpu.gyro.y)} dps` : '-'} />
+                    <Metric label="Гироскоп Y" value={mpu.gyro.y !== null ? `${fmtNumber(mpu.gyro.y)} dps` : '-'} />
                   </Grid>
                   <Grid size={{ xs: 4, sm: 4 }}>
-                    <Metric label="Gyro Z" value={mpu.gyro.z !== null ? `${fmtNumber(mpu.gyro.z)} dps` : '-'} />
+                    <Metric label="Гироскоп Z" value={mpu.gyro.z !== null ? `${fmtNumber(mpu.gyro.z)} dps` : '-'} />
                   </Grid>
                 </Grid>
                 {mpu.error ? (
                   <Typography variant="body2" color="warning.main">
-                    mpu error: {mpu.error}
+                    ошибка MPU: {mpu.error}
                   </Typography>
                 ) : null}
               </Stack>
@@ -240,34 +240,34 @@ export function TelemetryPanel({ telemetry }: Props) {
 
             <Grid size={{ xs: 12, lg: 6 }}>
               <Stack spacing={1.25}>
-                <Typography variant="subtitle1">Stepper / driver</Typography>
+                <Typography variant="subtitle1">Привод</Typography>
                 <Grid container spacing={1.25}>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Mode" value={stepper.mode ?? '-'} />
+                    <Metric label="Режим" value={stepper.mode ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Sweep" value={stepper.sweepState ?? '-'} />
+                    <Metric label="Качание" value={stepper.sweepState ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Last cmd" value={stepper.lastCommand ?? '-'} />
+                    <Metric label="Последняя команда" value={stepper.lastCommand ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Delay" value={stepper.delayMs !== null ? `${stepper.delayMs} ms` : '-'} />
+                    <Metric label="Задержка" value={stepper.delayMs !== null ? `${stepper.delayMs} ms` : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Speed" value={stepper.stepsPerSecond !== null ? `${fmtNumber(stepper.stepsPerSecond)} step/s` : '-'} />
+                    <Metric label="Скорость" value={stepper.stepsPerSecond !== null ? `${fmtNumber(stepper.stepsPerSecond)} шаг/с` : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Phase" value={stepper.phaseIndex !== null ? String(stepper.phaseIndex) : '-'} />
+                    <Metric label="Фаза" value={stepper.phaseIndex !== null ? String(stepper.phaseIndex) : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Total steps" value={stepper.totalSteps !== null ? String(stepper.totalSteps) : '-'} />
+                    <Metric label="Всего шагов" value={stepper.totalSteps !== null ? String(stepper.totalSteps) : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Coils" value={fmtBool(stepper.coilsEnabled)} />
+                    <Metric label="Катушки" value={fmtBool(stepper.coilsEnabled)} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="UART ready" value={fmtBool(stepper.uartReady)} />
+                    <Metric label="UART готов" value={fmtBool(stepper.uartReady)} />
                   </Grid>
                 </Grid>
 
@@ -306,24 +306,24 @@ export function TelemetryPanel({ telemetry }: Props) {
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1.25}>
-                <Typography variant="subtitle1">I2C bus</Typography>
+                <Typography variant="subtitle1">Шина I2C</Typography>
                 <Grid container spacing={1.25}>
                   <Grid size={{ xs: 6 }}>
-                    <Metric label="Ready" value={fmtBool(i2c.ready)} />
+                    <Metric label="Готовность" value={fmtBool(i2c.ready)} />
                   </Grid>
                   <Grid size={{ xs: 6 }}>
-                    <Metric label="MPU addr" value={i2c.detectedMpuAddress ?? '-'} />
+                    <Metric label="Адрес MPU" value={i2c.detectedMpuAddress ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 12 }}>
-                    <Metric label="Devices" value={i2c.devices.length > 0 ? i2c.devices.join(', ') : '-'} />
+                    <Metric label="Устройства" value={i2c.devices.length > 0 ? i2c.devices.join(', ') : '-'} />
                   </Grid>
                   <Grid size={{ xs: 12 }}>
-                    <Metric label="Scan summary" value={i2c.lastScanSummary ?? '-'} />
+                    <Metric label="Итог сканирования" value={i2c.lastScanSummary ?? '-'} />
                   </Grid>
                 </Grid>
                 {i2c.error ? (
                   <Typography variant="body2" color="warning.main">
-                    i2c error: {i2c.error}
+                    ошибка I2C: {i2c.error}
                   </Typography>
                 ) : null}
               </Stack>
@@ -334,10 +334,10 @@ export function TelemetryPanel({ telemetry }: Props) {
                 <Typography variant="subtitle1">Wi-Fi</Typography>
                 <Grid container spacing={1.25}>
                   <Grid size={{ xs: 6 }}>
-                    <Metric label="Enabled" value={fmtBool(wifi.enabled)} />
+                    <Metric label="Включен" value={fmtBool(wifi.enabled)} />
                   </Grid>
                   <Grid size={{ xs: 6 }}>
-                    <Metric label="Connected" value={fmtBool(wifi.connected)} />
+                    <Metric label="Подключен" value={fmtBool(wifi.connected)} />
                   </Grid>
                   <Grid size={{ xs: 6 }}>
                     <Metric label="SSID" value={wifi.ssid ?? '-'} />
@@ -346,10 +346,10 @@ export function TelemetryPanel({ telemetry }: Props) {
                     <Metric label="IP" value={wifi.ip ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6 }}>
-                    <Metric label="AP started" value={fmtBool(wifi.apStarted ?? null)} />
+                    <Metric label="AP запущен" value={fmtBool(wifi.apStarted ?? null)} />
                   </Grid>
                   <Grid size={{ xs: 6 }}>
-                    <Metric label="STA connected" value={fmtBool(wifi.staConnected ?? null)} />
+                    <Metric label="STA подключен" value={fmtBool(wifi.staConnected ?? null)} />
                   </Grid>
                   <Grid size={{ xs: 6 }}>
                     <Metric label="AP SSID" value={wifi.apSsid ?? '-'} />
@@ -366,7 +366,41 @@ export function TelemetryPanel({ telemetry }: Props) {
                 </Grid>
                 {wifi.lastError ? (
                   <Typography variant="body2" color="warning.main">
-                    wifi error: {wifi.lastError}
+                    ошибка Wi-Fi: {wifi.lastError}
+                  </Typography>
+                ) : null}
+              </Stack>
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Stack spacing={1.25}>
+                <Typography variant="subtitle1">Bluetooth LE</Typography>
+                <Grid container spacing={1.25}>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="Инициализирован" value={fmtBool(ble.initialized)} />
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="Контроллер включен" value={fmtBool(ble.controllerEnabled)} />
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="Реклама" value={fmtBool(ble.advertising)} />
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="Подключение" value={fmtBool(ble.connected)} />
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="Notify" value={fmtBool(ble.notifyEnabled)} />
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Metric label="Имя" value={ble.deviceName ?? '-'} />
+                  </Grid>
+                  <Grid size={{ xs: 12 }}>
+                    <Metric label="BT-адрес" value={ble.address ?? '-'} />
+                  </Grid>
+                </Grid>
+                {ble.lastError ? (
+                  <Typography variant="body2" color="warning.main">
+                    ошибка BLE: {ble.lastError}
                   </Typography>
                 ) : null}
               </Stack>

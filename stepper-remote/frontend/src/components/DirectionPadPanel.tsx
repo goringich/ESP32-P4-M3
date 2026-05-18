@@ -77,8 +77,8 @@ function DirectionButton({
 }
 
 export function DirectionPadPanel({
-  title = '4-button drive',
-  subtitle = 'Hold up/down for continuous motion. Left/right send one safe discrete step.',
+  title = '4-кнопочное управление',
+  subtitle = 'Вверх и вниз удерживают движение, влево и вправо отправляют одиночный шаг.',
   caption,
   embedded = false,
 }: DirectionPadPanelProps) {
@@ -92,7 +92,7 @@ export function DirectionPadPanel({
     try {
       await sendCommand(command);
     } catch (sendError) {
-      setError(sendError instanceof Error ? sendError.message : 'Unable to send command');
+      setError(sendError instanceof Error ? sendError.message : 'Не удалось отправить команду');
     } finally {
       setBusy(false);
     }
@@ -134,7 +134,7 @@ export function DirectionPadPanel({
       >
         <Box sx={{ gridArea: 'up' }}>
           <DirectionButton
-            label="UP"
+            label="ВВЕРХ"
             color="primary"
             onPress={() => run('f')}
             onRelease={() => run('s')}
@@ -143,7 +143,7 @@ export function DirectionPadPanel({
         </Box>
         <Box sx={{ gridArea: 'left' }}>
           <DirectionButton
-            label="LEFT"
+            label="ВЛЕВО"
             color="secondary"
             onPress={() => run('2')}
             disabled={busy}
@@ -151,7 +151,7 @@ export function DirectionPadPanel({
         </Box>
         <Box sx={{ gridArea: 'right' }}>
           <DirectionButton
-            label="RIGHT"
+            label="ВПРАВО"
             color="secondary"
             onPress={() => run('1')}
             disabled={busy}
@@ -159,7 +159,7 @@ export function DirectionPadPanel({
         </Box>
         <Box sx={{ gridArea: 'down' }}>
           <DirectionButton
-            label="DOWN"
+            label="ВНИЗ"
             color="primary"
             onPress={() => run('r')}
             onRelease={() => run('s')}
@@ -170,13 +170,13 @@ export function DirectionPadPanel({
 
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
         <Button fullWidth variant="outlined" color="error" onClick={() => void run('s')} disabled={busy}>
-          Stop
+          Стоп
         </Button>
         <Button fullWidth variant="outlined" color="warning" onClick={() => void run('z')} disabled={busy}>
-          Release coils
+          Отпустить катушки
         </Button>
         <Button fullWidth variant="text" onClick={() => void run('p')} disabled={busy}>
-          Status ping
+          Статус
         </Button>
       </Stack>
     </Stack>

@@ -72,18 +72,17 @@ export function ConsolePanel({ logs, streamError, streamMode = 'live' }: Props) 
             alignItems={{ xs: 'flex-start', md: 'center' }}
           >
             <Stack spacing={0.5}>
-              <Typography variant="h6">Raw MCU console</Typography>
+              <Typography variant="h6">Живая консоль платы</Typography>
               <Typography variant="body2" color="text.secondary">
-                Full serial stream from the board, including firmware logs, MPU output,
-                Wi-Fi messages, and manual actions.
+                Полный поток сообщений с платы: прошивка, IMU, Wi-Fi, UART и ручные команды.
               </Typography>
             </Stack>
 
             <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-              <Chip label={`${visibleLogs.length} lines`} />
-              <Chip label={`${counters.warnings} warnings`} color={counters.warnings > 0 ? 'warning' : 'default'} />
-              <Chip label={`${counters.errors} errors`} color={counters.errors > 0 ? 'error' : 'default'} />
-              <Chip label={streamMode === 'live' ? 'live stream' : 'polling fallback'} color={streamMode === 'live' ? 'success' : 'info'} />
+              <Chip label={`${visibleLogs.length} строк`} />
+              <Chip label={`${counters.warnings} предупреждений`} color={counters.warnings > 0 ? 'warning' : 'default'} />
+              <Chip label={`${counters.errors} ошибок`} color={counters.errors > 0 ? 'error' : 'default'} />
+              <Chip label={streamMode === 'live' ? 'живой поток' : 'резервный опрос'} color={streamMode === 'live' ? 'success' : 'info'} />
             </Stack>
           </Stack>
 
@@ -95,13 +94,13 @@ export function ConsolePanel({ logs, streamError, streamMode = 'live' }: Props) 
 
           {streamMode === 'fallback' ? (
             <Alert severity="info" variant="outlined">
-              Live stream is unstable, console is using snapshot polling fallback.
+              Живой поток нестабилен, поэтому консоль перешла на резервный режим опроса.
             </Alert>
           ) : null}
 
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5}>
             <TextField
-              label="Filter"
+              label="Фильтр"
               value={filter}
               onChange={(event) => setFilter(event.target.value)}
               fullWidth
@@ -122,7 +121,7 @@ export function ConsolePanel({ logs, streamError, streamMode = 'live' }: Props) 
             >
               <Switch checked={autoScroll} onChange={(event) => setAutoScroll(event.target.checked)} />
               <Typography variant="body2" color="text.secondary">
-                auto scroll
+                автопрокрутка
               </Typography>
             </Stack>
           </Stack>
@@ -188,13 +187,13 @@ export function ConsolePanel({ logs, streamError, streamMode = 'live' }: Props) 
                 >
                   <Typography variant="subtitle2" sx={{ color: 'inherit' }}>
                     {filter.trim()
-                      ? 'No console lines match the current filter.'
-                      : 'Waiting for serial output.'}
+                      ? 'По текущему фильтру ничего не найдено.'
+                      : 'Ожидание вывода с платы.'}
                   </Typography>
                   <Typography variant="body2" sx={{ color: 'inherit', maxWidth: 460 }}>
                     {filter.trim()
-                      ? 'Clear the filter or search with a broader keyword.'
-                      : 'Connect the board and the full MCU stream will appear here.'}
+                      ? 'Очистите фильтр или используйте более общее слово.'
+                      : 'Подключите плату, и здесь появится полный поток сообщений.'}
                   </Typography>
                 </Box>
               ) : (

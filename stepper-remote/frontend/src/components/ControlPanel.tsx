@@ -46,7 +46,7 @@ export function ControlPanel() {
     try {
       await sendCommand(command);
     } catch (sendError) {
-      setError(sendError instanceof Error ? sendError.message : 'Unable to send command');
+      setError(sendError instanceof Error ? sendError.message : 'Не удалось отправить команду');
     } finally {
       setPendingCommand(null);
     }
@@ -59,7 +59,7 @@ export function ControlPanel() {
     try {
       await pushDebugLog();
     } catch (sendError) {
-      setError(sendError instanceof Error ? sendError.message : 'Unable to push debug log');
+      setError(sendError instanceof Error ? sendError.message : 'Не удалось добавить тестовую строку в лог');
     } finally {
       setPendingCommand(null);
     }
@@ -70,10 +70,10 @@ export function ControlPanel() {
       <CardContent>
         <Stack spacing={2.25}>
           <Stack spacing={0.5}>
-            <Typography variant="h6">Drive console</Typography>
+            <Typography variant="h6">Управление приводом</Typography>
             <Typography variant="body2" color="text.secondary">
-              Switch between the operator pad and the engineering console. The pad is the fastest
-              way to drive the stand; the console view exposes the full firmware command surface.
+              Здесь можно выбрать простой пульт или полный инженерный режим.
+              Пульт нужен для обычного движения, а полный режим открывает все команды прошивки.
             </Typography>
           </Stack>
 
@@ -88,8 +88,8 @@ export function ControlPanel() {
             }}
             size="small"
           >
-            <ToggleButton value="pad">4-button pad</ToggleButton>
-            <ToggleButton value="console">Console drive</ToggleButton>
+            <ToggleButton value="pad">4 кнопки</ToggleButton>
+            <ToggleButton value="console">Полный режим</ToggleButton>
           </ToggleButtonGroup>
 
           {error ? (
@@ -101,7 +101,7 @@ export function ControlPanel() {
           {view === 'pad' ? (
             <DirectionPadPanel
               embedded
-              subtitle="Four direct commands for safe bench control. Use this when you just need left/right/up/down without the full engineering console."
+              subtitle="Быстрое управление без лишних кнопок. Подходит для движения вперёд, назад и одиночных шагов."
             />
           ) : null}
 
@@ -117,28 +117,28 @@ export function ControlPanel() {
                 }}
               >
                 <GroupTitle
-                  title="Motion"
-                  subtitle="Primary drive states for the stepper."
+                  title="Движение"
+                  subtitle="Основные режимы работы шагового привода."
                 />
                 <Grid container spacing={1} sx={{ mt: 1 }}>
                   <Grid size={{ xs: 6, md: 6, lg: 6 }}>
                     <Button fullWidth variant="contained" color="error" onClick={() => send('s')} disabled={pendingCommand !== null}>
-                      Stop
+                      Стоп
                     </Button>
                   </Grid>
                   <Grid size={{ xs: 6, md: 6, lg: 6 }}>
                     <Button fullWidth variant="contained" onClick={() => send('w')} disabled={pendingCommand !== null}>
-                      Sweep
+                      Качание
                     </Button>
                   </Grid>
                   <Grid size={{ xs: 6, md: 6, lg: 6 }}>
                     <Button fullWidth variant="outlined" onClick={() => send('f')} disabled={pendingCommand !== null}>
-                      Forward
+                      Вперёд
                     </Button>
                   </Grid>
                   <Grid size={{ xs: 6, md: 6, lg: 6 }}>
                     <Button fullWidth variant="outlined" onClick={() => send('r')} disabled={pendingCommand !== null}>
-                      Reverse
+                      Назад
                     </Button>
                   </Grid>
                 </Grid>
@@ -148,18 +148,18 @@ export function ControlPanel() {
 
               <Stack spacing={1.25}>
                 <GroupTitle
-                  title="Manual stepping"
-                  subtitle="Short impulses for safe testing and fine positioning."
+                  title="Одиночные шаги"
+                  subtitle="Короткие импульсы для точной подстройки."
                 />
                 <Grid container spacing={1}>
                   <Grid size={{ xs: 6, md: 6, lg: 6 }}>
                     <Button fullWidth variant="outlined" onClick={() => send('1')} disabled={pendingCommand !== null}>
-                      Step +
+                      Шаг +
                     </Button>
                   </Grid>
                   <Grid size={{ xs: 6, md: 6, lg: 6 }}>
                     <Button fullWidth variant="outlined" onClick={() => send('2')} disabled={pendingCommand !== null}>
-                      Step -
+                      Шаг -
                     </Button>
                   </Grid>
                 </Grid>
@@ -169,18 +169,18 @@ export function ControlPanel() {
 
               <Stack spacing={1.25}>
                 <GroupTitle
-                  title="Timing"
-                  subtitle="Tune motion delay directly from the panel."
+                  title="Скорость"
+                  subtitle="Изменение задержки шага прямо из веб-интерфейса."
                 />
                 <Grid container spacing={1}>
                   <Grid size={{ xs: 6, md: 6, lg: 6 }}>
                     <Button fullWidth variant="outlined" onClick={() => send('+')} disabled={pendingCommand !== null}>
-                      Faster
+                      Быстрее
                     </Button>
                   </Grid>
                   <Grid size={{ xs: 6, md: 6, lg: 6 }}>
                     <Button fullWidth variant="outlined" onClick={() => send('-')} disabled={pendingCommand !== null}>
-                      Slower
+                      Медленнее
                     </Button>
                   </Grid>
                 </Grid>
@@ -190,8 +190,8 @@ export function ControlPanel() {
 
               <Stack spacing={1.25}>
                 <GroupTitle
-                  title="Phase diagnostics"
-                  subtitle="Force a specific phase and inspect driver behavior."
+                  title="Фазы драйвера"
+                  subtitle="Принудительное включение фаз для диагностики."
                 />
                 <Grid container spacing={1}>
                   <Grid size={{ xs: 3, md: 3, lg: 3 }}>
@@ -221,23 +221,23 @@ export function ControlPanel() {
 
               <Stack spacing={1.25}>
                 <GroupTitle
-                  title="Console actions"
-                  subtitle="MCU status request and raw log injection."
+                  title="Служебные команды"
+                  subtitle="Запрос статуса и тестовые записи в лог."
                 />
                 <Grid container spacing={1}>
                   <Grid size={{ xs: 12, md: 12, lg: 12 }}>
                     <Button fullWidth variant="outlined" color="warning" onClick={() => send('z')} disabled={pendingCommand !== null}>
-                      Release coils
+                      Отпустить катушки
                     </Button>
                   </Grid>
                   <Grid size={{ xs: 12, md: 12, lg: 12 }}>
                     <Button fullWidth variant="outlined" onClick={() => send('p')} disabled={pendingCommand !== null}>
-                      Request status
+                      Запросить статус
                     </Button>
                   </Grid>
                   <Grid size={{ xs: 12, md: 12, lg: 12 }}>
                     <Button fullWidth variant="contained" color="secondary" onClick={pushTestLog} disabled={pendingCommand !== null}>
-                      {pendingCommand === 'debug-log' ? 'Pushing log...' : 'Push test console line'}
+                      {pendingCommand === 'debug-log' ? 'Отправка...' : 'Добавить тестовую строку в лог'}
                     </Button>
                   </Grid>
                 </Grid>

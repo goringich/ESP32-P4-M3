@@ -39,7 +39,7 @@ export function ToolingPanel({ connection, tooling }: Props) {
     try {
       await startBuild();
     } catch (buildError) {
-      setError(buildError instanceof Error ? buildError.message : 'Unable to start build');
+      setError(buildError instanceof Error ? buildError.message : 'Не удалось запустить сборку');
     }
   };
 
@@ -49,7 +49,7 @@ export function ToolingPanel({ connection, tooling }: Props) {
     try {
       await startFlash(portPath);
     } catch (flashError) {
-      setError(flashError instanceof Error ? flashError.message : 'Unable to start flash');
+      setError(flashError instanceof Error ? flashError.message : 'Не удалось запустить прошивку');
     }
   };
 
@@ -58,10 +58,9 @@ export function ToolingPanel({ connection, tooling }: Props) {
       <CardContent>
         <Stack spacing={2.25}>
           <Stack spacing={0.5}>
-            <Typography variant="h6">Firmware pipeline</Typography>
+            <Typography variant="h6">Сборка и прошивка</Typography>
             <Typography variant="body2" color="text.secondary">
-              Build and flash the current `esp` firmware from the same control surface. This keeps
-              the serial workflow and firmware operations in one place.
+              Здесь можно собрать текущую прошивку и прошить плату, не выходя из веб-интерфейса.
             </Typography>
           </Stack>
 
@@ -72,12 +71,12 @@ export function ToolingPanel({ connection, tooling }: Props) {
 
           {connection.isOpen ? (
             <Alert severity="info" variant="outlined">
-              Flash auto-closes the active serial session before running `idf.py flash`.
+              Перед прошивкой активная UART-сессия будет автоматически закрыта.
             </Alert>
           ) : null}
 
           <TextField
-            label="Flash port"
+            label="Порт прошивки"
             value={portPath}
             onChange={(event) => setPortPath(event.target.value)}
             placeholder="/dev/ttyUSB0"
@@ -91,7 +90,7 @@ export function ToolingPanel({ connection, tooling }: Props) {
               disabled={tooling.isRunning}
               sx={{ flex: 1 }}
             >
-              {tooling.currentAction === 'build' ? 'Building...' : 'Build firmware'}
+              {tooling.currentAction === 'build' ? 'Сборка...' : 'Собрать прошивку'}
             </Button>
 
             <Button
@@ -101,7 +100,7 @@ export function ToolingPanel({ connection, tooling }: Props) {
               disabled={tooling.isRunning || !portPath.trim()}
               sx={{ flex: 1 }}
             >
-              {tooling.currentAction === 'flash' ? 'Flashing...' : 'Flash board'}
+              {tooling.currentAction === 'flash' ? 'Прошивка...' : 'Прошить плату'}
             </Button>
           </Stack>
 
@@ -114,14 +113,14 @@ export function ToolingPanel({ connection, tooling }: Props) {
             }}
           >
             <Stack spacing={0.75}>
-              <Typography variant="subtitle2">Pipeline state</Typography>
+              <Typography variant="subtitle2">Состояние</Typography>
               <Typography variant="body2" color="text.secondary">
-                project: {tooling.projectDir || '/home/goringich/esp'}
+                проект: {tooling.projectDir || '/home/goringich/esp'}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                state: {tooling.isRunning ? `running ${tooling.currentAction}` : 'idle'}
-                {tooling.lastAction ? `, last ${tooling.lastAction}` : ''}
-                {tooling.lastExitCode !== null ? `, exit ${tooling.lastExitCode}` : ''}
+                состояние: {tooling.isRunning ? `выполняется ${tooling.currentAction}` : 'ожидание'}
+                {tooling.lastAction ? `, последняя ${tooling.lastAction}` : ''}
+                {tooling.lastExitCode !== null ? `, код ${tooling.lastExitCode}` : ''}
               </Typography>
             </Stack>
           </Box>

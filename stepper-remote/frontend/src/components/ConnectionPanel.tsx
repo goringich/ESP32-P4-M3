@@ -66,10 +66,10 @@ export function ConnectionPanel({
       }
 
       if (data.length === 0) {
-        setPortError('No serial ports detected. Connect the ESP board and refresh the list.');
+        setPortError('UART-порты не найдены. Подключите плату и обновите список.');
       }
     } catch (error) {
-      setPortError(error instanceof Error ? error.message : 'Unable to load serial ports');
+      setPortError(error instanceof Error ? error.message : 'Не удалось загрузить список UART-портов');
     } finally {
       setLoadingPorts(false);
     }
@@ -91,7 +91,7 @@ export function ConnectionPanel({
       const next = await updateTransport(mode, wifiBaseUrl);
       onTransportChange(next);
     } catch (error) {
-      setPortError(error instanceof Error ? error.message : 'Unable to switch transport');
+      setPortError(error instanceof Error ? error.message : 'Не удалось переключить транспорт');
     } finally {
       setBusy(false);
     }
@@ -115,7 +115,7 @@ export function ConnectionPanel({
         baudRate: Number(baudRate),
       });
     } catch (error) {
-      setPortError(error instanceof Error ? error.message : 'Unable to connect');
+      setPortError(error instanceof Error ? error.message : 'Не удалось подключиться');
     } finally {
       setBusy(false);
     }
@@ -139,7 +139,7 @@ export function ConnectionPanel({
         baudRate: null,
       });
     } catch (error) {
-      setPortError(error instanceof Error ? error.message : 'Unable to disconnect');
+      setPortError(error instanceof Error ? error.message : 'Не удалось отключиться');
     } finally {
       setBusy(false);
     }
@@ -150,10 +150,10 @@ export function ConnectionPanel({
       <CardContent>
         <Stack spacing={2.25}>
           <Stack spacing={0.5}>
-            <Typography variant="h6">Transport gateway</Typography>
+            <Typography variant="h6">Подключение</Typography>
             <Typography variant="body2" color="text.secondary">
-              Switch transport independently from the power path. The board may stay powered
-              from USB/UART while commands and telemetry move through the MCU Wi-Fi API.
+              Здесь выбирается канал связи с платой. Питание может оставаться по USB/UART,
+              а команды и телеметрия могут идти через Wi-Fi API платы.
             </Typography>
           </Stack>
 
@@ -168,21 +168,21 @@ export function ConnectionPanel({
             size="small"
             color="primary"
           >
-            <ToggleButton value="serial">Serial</ToggleButton>
+            <ToggleButton value="serial">UART</ToggleButton>
             <ToggleButton value="wifi">Wi-Fi</ToggleButton>
           </ToggleButtonGroup>
 
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-            <Chip label={`mode ${transport.mode}`} color={transport.mode === 'wifi' ? 'secondary' : 'primary'} />
+            <Chip label={`режим ${transport.mode === 'wifi' ? 'wifi' : 'uart'}`} color={transport.mode === 'wifi' ? 'secondary' : 'primary'} />
             <Chip
               label={
                 transport.mode === 'wifi'
                   ? transport.wifiConnected
-                    ? 'wifi bridge live'
-                    : 'wifi bridge idle'
+                    ? 'Wi-Fi мост активен'
+                    : 'Wi-Fi мост не поднят'
                   : connection.isOpen
-                    ? 'link open'
-                    : 'link closed'
+                    ? 'порт открыт'
+                    : 'порт закрыт'
               }
               color={
                 transport.mode === 'wifi'
@@ -194,9 +194,21 @@ export function ConnectionPanel({
                     : 'default'
               }
             />
-            <Chip label={loadingPorts ? 'scanning ports' : `${ports.length} port${ports.length === 1 ? '' : 's'}`} />
+            <Chip label={loadingPorts ? 'поиск портов' : `${ports.length} порт${ports.length === 1 ? '' : 'ов'}`} />
             <Chip label={`baud ${baudRate}`} color="info" />
           </Stack>
+
+          <Alert severity="info" variant="outlined">
+            Эта сборка поддерживает только `UART` и `Wi-Fi` transport. Bluetooth в текущем
+            `ESP32-P4 + ESP-Hosted` контуре не выведен как рабочий канал, поэтому отдельный
+            переключатель Bluetooth здесь не добавлялся.
+          </Alert>
+
+          {transport.mode === 'wifi' && transport.lastError ? (
+            <Alert severity="warning" variant="outlined">
+              Ошибка Wi-Fi транспорта: {transport.lastError}
+            </Alert>
+          ) : null}
 
           {portError ? (
             <Alert severity={ports.length === 0 ? 'info' : 'error'} variant="outlined">
@@ -206,7 +218,7 @@ export function ConnectionPanel({
 
           {transport.mode === 'wifi' ? (
             <TextField
-              label="MCU Wi-Fi URL"
+              label="URL Wi-Fi API платы"
               value={wifiBaseUrl}
               onChange={(event) => setWifiBaseUrl(event.target.value)}
               fullWidth
@@ -215,7 +227,7 @@ export function ConnectionPanel({
           ) : ports.length > 0 ? (
             <TextField
               select
-              label="Port"
+              label="Порт"
               value={path}
               onChange={(event) => setPath(event.target.value)}
               fullWidth
@@ -228,7 +240,7 @@ export function ConnectionPanel({
             </TextField>
           ) : (
             <TextField
-              label="Port path"
+              label="Путь к порту"
               value={path}
               onChange={(event) => setPath(event.target.value)}
               fullWidth
@@ -239,21 +251,21 @@ export function ConnectionPanel({
           {transport.mode === 'serial' && ports.length === 0 ? (
             <FormHelperText sx={{ mt: -1 }}>
               {loadingPorts
-                ? 'Scanning for ports...'
-                : 'No ports detected. Enter the path manually if you know it.'}
+                ? 'Идёт поиск UART-портов...'
+                : 'Порты не найдены. Если знаете путь, введите его вручную.'}
             </FormHelperText>
           ) : null}
 
           {transport.mode === 'serial' ? (
             <TextField
-              label="Baud rate"
+              label="Скорость UART"
               value={baudRate}
               onChange={(event) => setBaudRate(event.target.value)}
               fullWidth
             />
           ) : (
             <FormHelperText sx={{ mt: -1 }}>
-              Connect the computer to the ESP Wi-Fi network, then point this URL to the board API.
+              Подключите компьютер к сети ESP и укажите адрес API платы.
             </FormHelperText>
           )}
 
@@ -267,15 +279,15 @@ export function ConnectionPanel({
               }}
             >
               <Stack spacing={0.75}>
-                <Typography variant="subtitle2">Port details</Typography>
+                <Typography variant="subtitle2">Данные порта</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  path: {selectedPort.path}
+                  путь: {selectedPort.path}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   vendor: {selectedPort.vendorId || '-'} / product: {selectedPort.productId || '-'}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  manufacturer: {selectedPort.manufacturer || '-'}
+                  устройство: {selectedPort.manufacturer || '-'}
                 </Typography>
               </Stack>
             </Box>
@@ -292,15 +304,15 @@ export function ConnectionPanel({
               }}
             >
               <Stack spacing={0.75}>
-                <Typography variant="subtitle2">Bench workflow</Typography>
+                <Typography variant="subtitle2">Порядок работы по Wi-Fi</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  1. Keep USB/UART connected for power and optional logs.
+                  1. Оставьте USB/UART для питания и логов, если это нужно.
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  2. Join the ESP Wi-Fi network and point the panel to its API URL.
+                  2. Подключитесь к Wi-Fi сети платы и укажите URL её API.
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  3. Activate the Wi-Fi bridge and confirm telemetry before motion commands.
+                  3. Активируйте Wi-Fi мост и убедитесь, что телеметрия пошла до отправки команд.
                 </Typography>
               </Stack>
             </Box>
@@ -315,27 +327,27 @@ export function ConnectionPanel({
             >
               {transport.mode === 'wifi'
                 ? busy
-                  ? 'Switching...'
-                  : 'Activate Wi-Fi bridge'
+                  ? 'Переключение...'
+                  : 'Включить Wi-Fi мост'
                 : busy && !connection.isOpen
-                  ? 'Connecting...'
-                  : 'Connect'}
+                  ? 'Подключение...'
+                  : 'Подключить'}
             </Button>
 
             {transport.mode === 'serial' ? (
               <Button variant="outlined" onClick={loadPorts} disabled={busy}>
-                {loadingPorts ? 'Refreshing...' : 'Refresh'}
+                {loadingPorts ? 'Обновление...' : 'Обновить'}
               </Button>
             ) : null}
 
             <Button variant="outlined" color="error" onClick={handleDisconnect} disabled={busy}>
               {transport.mode === 'wifi'
                 ? busy
-                  ? 'Releasing...'
-                  : 'Return to serial'
+                  ? 'Отключение...'
+                  : 'Вернуться на UART'
                 : busy && connection.isOpen
-                  ? 'Closing...'
-                  : 'Disconnect'}
+                  ? 'Закрытие...'
+                  : 'Отключить'}
             </Button>
           </Stack>
 
@@ -349,15 +361,15 @@ export function ConnectionPanel({
               }}
             >
               <Stack spacing={0.75}>
-                <Typography variant="subtitle2">Wi-Fi bridge details</Typography>
+                <Typography variant="subtitle2">Состояние Wi-Fi моста</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  base URL: {transport.wifiBaseUrl}
+                  URL: {transport.wifiBaseUrl}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  last telemetry: {transport.lastTelemetryAt ? new Date(transport.lastTelemetryAt).toLocaleTimeString() : '-'}
+                  последняя телеметрия: {transport.lastTelemetryAt ? new Date(transport.lastTelemetryAt).toLocaleTimeString() : '-'}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  state: {transport.wifiConnected ? 'connected to MCU API' : 'waiting for MCU API'}
+                  состояние: {transport.wifiConnected ? 'API платы доступен' : 'ожидание API платы'}
                 </Typography>
               </Stack>
             </Box>

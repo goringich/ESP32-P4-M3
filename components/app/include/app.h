@@ -26,6 +26,18 @@ typedef struct {
   char error[32];
 } app_i2c_status_t;
 
+typedef struct {
+  bool initialized;
+  bool controller_enabled;
+  bool advertising;
+  bool connected;
+  bool notify_enabled;
+  char device_name[32];
+  char address[24];
+  char last_error[32];
+} app_ble_status_t;
+
 void app_get_system_status(app_system_status_t *status);
 void app_get_i2c_status(app_i2c_status_t *status);
+void app_get_ble_status(app_ble_status_t *status);
 void app_set_system_error(const char *error);

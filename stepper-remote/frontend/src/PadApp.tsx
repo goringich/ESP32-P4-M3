@@ -27,7 +27,7 @@ export default function PadApp() {
     fetchTransport()
       .then(setTransport)
       .catch((loadError) => {
-        setError(loadError instanceof Error ? loadError.message : 'Unable to reach backend');
+        setError(loadError instanceof Error ? loadError.message : 'Не удалось связаться с backend');
       });
   }, []);
 
@@ -48,13 +48,13 @@ export default function PadApp() {
           {error ? <Alert severity="error" variant="outlined">{error}</Alert> : null}
           {transport.lastError ? (
             <Alert severity="warning" variant="outlined">
-              backend transport warning: {transport.lastError}
+              Ошибка Wi-Fi транспорта: {transport.lastError}
             </Alert>
           ) : null}
           <DirectionPadPanel
-            title="Wi-Fi motor pad"
-            subtitle="Four direct controls for live bench work. Vertical buttons hold motion; horizontal buttons send single steps."
-            caption={`transport: ${transport.mode} · wifi bridge: ${transport.wifiConnected ? 'live' : 'waiting'}`}
+            title="Wi-Fi пульт"
+            subtitle="Прямое управление для стенда. Вертикальные кнопки держат движение, горизонтальные отправляют одиночный шаг."
+            caption={`транспорт: ${transport.mode} · Wi-Fi мост: ${transport.wifiConnected ? 'активен' : 'ожидание'}`}
           />
         </Stack>
       </Box>

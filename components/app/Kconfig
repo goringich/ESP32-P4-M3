@@ -62,6 +62,10 @@ config APP_NET_ENABLE
   default y
   depends on APP_WIFI_SMOKE
 
+config APP_BLE_ENABLE
+  bool "enable BLE control/status bridge"
+  default y
+
 if APP_MODE_L293D_TEST
 
 config APP_L293D_IN1_GPIO

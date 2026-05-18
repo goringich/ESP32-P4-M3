@@ -1,12 +1,15 @@
 idf_component_register(
   SRCS
     "src/app.c"
+    "src/app_ble.c"
     "src/app_mpu_pretty.c"
     "src/app_net.c"
     "src/app_stepper.c"
     "src/app_wifi.c"
   INCLUDE_DIRS "include"
   REQUIRES
+    bt
+    esp_hosted
     i2c_bus
     mpu9250
     esp_driver_gpio

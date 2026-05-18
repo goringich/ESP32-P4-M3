@@ -12,6 +12,7 @@
 #include "sdkconfig.h"
 
 #include "app.h"
+#include "app_ble.h"
 #include "app_mpu_pretty.h"
 #include "app_wifi.h"
 #include "app_stepper.h"
@@ -30,6 +31,10 @@ typedef struct {
 
 static httpd_handle_t s_server;
 static uint32_t s_last_push_ms;
+
+static char *app_net_alloc_json_buffer(void) {
+  return calloc(1, APP_NET_JSON_MAX);
+}
 
 static void app_net_set_cors(httpd_req_t *req) {
   httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -57,6 +62,8 @@ static size_t app_net_build_json(char *buf, size_t len) {
   app_mpu_get_status(&mpu);
   app_i2c_status_t i2c = {0};
   app_get_i2c_status(&i2c);
+  app_ble_status_t ble = {0};
+  app_get_ble_status(&ble);
 
   char i2c_devices[48] = "[]";
   if (i2c.device_count > 0 && i2c.devices[0][0] != '\0') {
@@ -73,6 +80,7 @@ static size_t app_net_build_json(char *buf, size_t len) {
   char i2c_summary_json[64];
   char i2c_error_json[48];
   char wifi_error_json[48];
+  char ble_error_json[48];
 
   const char *system_error = app_net_json_str(system.last_error, system_error_json, sizeof(system_error_json));
   const char *mpu_error = app_net_json_str(mpu.error, mpu_error_json, sizeof(mpu_error_json));
@@ -86,6 +94,7 @@ static size_t app_net_build_json(char *buf, size_t len) {
   const char *wifi_error = (wifi.last_error == ESP_OK)
     ? "null"
     : app_net_json_str(esp_err_to_name(wifi.last_error), wifi_error_json, sizeof(wifi_error_json));
+  const char *ble_error = app_net_json_str(ble.last_error, ble_error_json, sizeof(ble_error_json));
   const char *wifi_ip = wifi.sta_ip[0] != '\0'
     ? wifi.sta_ip
     : (wifi.ap_ip[0] != '\0' ? wifi.ap_ip : "0.0.0.0");
@@ -114,7 +123,10 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          "\"mac\":null,\"lastError\":%s,"
                          "\"initialized\":%s,\"apStarted\":%s,\"staAttempted\":%s,"
                          "\"staConnected\":%s,\"apSsid\":\"%s\",\"apIp\":\"%s\","
-                         "\"staIp\":\"%s\"}}}",
+                         "\"staIp\":\"%s\"},\"ble\":{"
+                         "\"initialized\":%s,\"controllerEnabled\":%s,\"advertising\":%s,"
+                         "\"connected\":%s,\"notifyEnabled\":%s,\"deviceName\":\"%s\","
+                         "\"address\":%s,\"lastError\":%s}}}",
                          system.uptime_ms,
                          system.tick,
                          system.tick_delay_ms,
@@ -169,7 +181,15 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          wifi.sta_connected ? "true" : "false",
                          wifi.ap_ssid,
                          wifi.ap_ip[0] != '\0' ? wifi.ap_ip : "0.0.0.0",
-                         wifi.sta_ip[0] != '\0' ? wifi.sta_ip : "0.0.0.0");
+                         wifi.sta_ip[0] != '\0' ? wifi.sta_ip : "0.0.0.0",
+                         ble.initialized ? "true" : "false",
+                         ble.controller_enabled ? "true" : "false",
+                         ble.advertising ? "true" : "false",
+                         ble.connected ? "true" : "false",
+                         ble.notify_enabled ? "true" : "false",
+                         ble.device_name,
+                         ble.address[0] != '\0' ? ble.address : "null",
+                         ble_error);
   if (written < 0) {
     buf[0] = '\0';
     return 0;
@@ -216,12 +236,18 @@ static esp_err_t app_net_options_handler(httpd_req_t *req) {
 }
 
 static esp_err_t app_net_telemetry_handler(httpd_req_t *req) {
-  char json[APP_NET_JSON_MAX];
-  app_net_build_json(json, sizeof(json));
+  char *json = app_net_alloc_json_buffer();
+  if (json == NULL) {
+    httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "no memory");
+    return ESP_ERR_NO_MEM;
+  }
+
+  app_net_build_json(json, APP_NET_JSON_MAX);
 
   app_net_set_cors(req);
   httpd_resp_set_type(req, "application/json");
   httpd_resp_sendstr(req, json);
+  free(json);
   return ESP_OK;
 }
 
@@ -229,9 +255,14 @@ static esp_err_t app_net_wifi_handler(httpd_req_t *req) {
   app_wifi_status_t wifi = {0};
   app_wifi_get_status(&wifi);
 
-  char json[APP_NET_JSON_MAX];
+  char *json = app_net_alloc_json_buffer();
+  if (json == NULL) {
+    httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "no memory");
+    return ESP_ERR_NO_MEM;
+  }
+
   int written = snprintf(json,
-                         sizeof(json),
+                         APP_NET_JSON_MAX,
                          "{\"ok\":true,\"wifi\":{\"initialized\":%s,\"apStarted\":%s,"
                          "\"staAttempted\":%s,\"staConnected\":%s,\"apSsid\":\"%s\","
                          "\"apIp\":\"%s\",\"staIp\":\"%s\",\"lastError\":\"%s\"}}",
@@ -244,6 +275,7 @@ static esp_err_t app_net_wifi_handler(httpd_req_t *req) {
                          wifi.sta_ip[0] != '\0' ? wifi.sta_ip : "0.0.0.0",
                          esp_err_to_name(wifi.last_error));
   if (written < 0) {
+    free(json);
     httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "json encode failed");
     return ESP_FAIL;
   }
@@ -251,6 +283,7 @@ static esp_err_t app_net_wifi_handler(httpd_req_t *req) {
   app_net_set_cors(req);
   httpd_resp_set_type(req, "application/json");
   httpd_resp_sendstr(req, json);
+  free(json);
   return ESP_OK;
 }
 
@@ -346,8 +379,12 @@ static esp_err_t app_net_ws_handler(httpd_req_t *req) {
   }
   free(payload);
 
-  char json[APP_NET_JSON_MAX];
-  app_net_build_json(json, sizeof(json));
+  char *json = app_net_alloc_json_buffer();
+  if (json == NULL) {
+    return ESP_ERR_NO_MEM;
+  }
+
+  app_net_build_json(json, APP_NET_JSON_MAX);
   httpd_ws_frame_t response = {
     .final = true,
     .fragmented = false,
@@ -355,7 +392,9 @@ static esp_err_t app_net_ws_handler(httpd_req_t *req) {
     .payload = (uint8_t *)json,
     .len = strlen(json),
   };
-  return httpd_ws_send_frame(req, &response);
+  err = httpd_ws_send_frame(req, &response);
+  free(json);
+  return err;
 }
 
 esp_err_t app_net_start(void) {
@@ -426,8 +465,13 @@ void app_net_tick(void) {
     return;
   }
 
-  char json[APP_NET_JSON_MAX];
-  app_net_build_json(json, sizeof(json));
+  char *json = app_net_alloc_json_buffer();
+  if (json == NULL) {
+    ESP_LOGW(TAG, "json alloc failed");
+    return;
+  }
+
+  app_net_build_json(json, APP_NET_JSON_MAX);
 
   for (size_t i = 0; i < clients; i++) {
     if (httpd_ws_get_fd_info(s_server, client_fds[i]) == HTTPD_WS_CLIENT_WEBSOCKET) {
@@ -437,4 +481,6 @@ void app_net_tick(void) {
       }
     }
   }
+
+  free(json);
 }

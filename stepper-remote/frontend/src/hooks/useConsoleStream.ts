@@ -95,6 +95,16 @@ const EMPTY_TELEMETRY: TelemetryState = {
     mac: null,
     lastError: null,
   },
+  ble: {
+    initialized: null,
+    controllerEnabled: null,
+    advertising: null,
+    connected: null,
+    notifyEnabled: null,
+    deviceName: null,
+    address: null,
+    lastError: null,
+  },
   driver: {
     serialConnected: false,
     serialPort: null,

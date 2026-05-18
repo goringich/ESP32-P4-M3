@@ -9,6 +9,7 @@
 #include "esp_log.h"
 #include "sdkconfig.h"
 
+#include "app_ble.h"
 #include "app_mpu_pretty.h"
 #include "app_net.h"
 #include "app_stepper.h"
@@ -45,6 +46,16 @@ static app_i2c_status_t s_i2c_status = {
   .detected_mpu_address = "",
   .last_scan_summary = "",
   .error = "",
+};
+static app_ble_status_t s_ble_status = {
+  .initialized = false,
+  .controller_enabled = false,
+  .advertising = false,
+  .connected = false,
+  .notify_enabled = false,
+  .device_name = "",
+  .address = "",
+  .last_error = "",
 };
 
 static void app_log_color_block(const char *label, const char *color);
@@ -156,6 +167,14 @@ void app_init(void) {
   }
 #endif
 
+#if CONFIG_APP_BLE_ENABLE
+  err = app_ble_init();
+  app_ble_get_status(&s_ble_status);
+  if (err != ESP_OK) {
+    ESP_LOGW(TAG, "ble init result: %s", esp_err_to_name(err));
+  }
+#endif
+
 #if CONFIG_APP_NET_ENABLE
   if (s_network_ready) {
     err = app_net_start();
@@ -169,6 +188,11 @@ void app_init(void) {
 void app_tick(void) {
 #if CONFIG_APP_MODE_L293D_TEST
   app_stepper_tick();
+#endif
+
+#if CONFIG_APP_BLE_ENABLE
+  app_ble_tick();
+  app_ble_get_status(&s_ble_status);
 #endif
 
 #if CONFIG_APP_NET_ENABLE
@@ -220,6 +244,14 @@ void app_get_i2c_status(app_i2c_status_t *status) {
   }
 
   *status = s_i2c_status;
+}
+
+void app_get_ble_status(app_ble_status_t *status) {
+  if (status == NULL) {
+    return;
+  }
+
+  *status = s_ble_status;
 }
 
 void app_set_system_error(const char *error) {

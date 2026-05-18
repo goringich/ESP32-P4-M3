@@ -278,9 +278,9 @@ static void app_wifi_event_handler_common(void *arg,
 }
 
 esp_err_t app_wifi_smoke_run(void) {
-#if !(CONFIG_ESP_WIFI_ENABLED || CONFIG_ESP_HOST_WIFI_ENABLED)
+#if !(CONFIG_ESP_WIFI_ENABLED || CONFIG_ESP_HOST_WIFI_ENABLED || CONFIG_ESP_WIFI_REMOTE_ENABLED)
   ESP_LOGW(TAG,
-           "Wi-Fi stack is not enabled in sdkconfig (enable ESP_HOST_WIFI_ENABLED for ESP32-P4 + C6)");
+           "Wi-Fi stack is not enabled in sdkconfig (enable ESP_WIFI_REMOTE_ENABLED or ESP_HOST_WIFI_ENABLED for ESP32-P4 + C6)");
   return ESP_ERR_NOT_SUPPORTED;
 #else
   if (s_wifi_started) {
