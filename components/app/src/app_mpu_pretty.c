@@ -210,6 +210,32 @@ void app_mpu_get_status(app_mpu_status_t *status) {
   *status = s_status;
 }
 
+esp_err_t app_mpu_read_fast(float *ax_g, float *ay_g, float *az_g,
+                            float *gx_dps, float *gy_dps, float *gz_dps) {
+  if (!ax_g || !ay_g || !az_g || !gx_dps || !gy_dps || !gz_dps) {
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  esp_err_t err = app_mpu_pretty_init();
+  if (err != ESP_OK) {
+    return err;
+  }
+
+  uint8_t raw[14] = {0};
+  err = i2c_bus_read(s_mpu.addr, MPU_REG_ACCEL_XOUT_H, raw, sizeof(raw));
+  if (err != ESP_OK) {
+    return err;
+  }
+
+  *ax_g   = (float)app_mpu_i16be(raw[0],  raw[1])  / s_mpu.accel_lsb_per_g;
+  *ay_g   = (float)app_mpu_i16be(raw[2],  raw[3])  / s_mpu.accel_lsb_per_g;
+  *az_g   = (float)app_mpu_i16be(raw[4],  raw[5])  / s_mpu.accel_lsb_per_g;
+  *gx_dps = (float)app_mpu_i16be(raw[8],  raw[9])  / s_mpu.gyro_lsb_per_dps;
+  *gy_dps = (float)app_mpu_i16be(raw[10], raw[11]) / s_mpu.gyro_lsb_per_dps;
+  *gz_dps = (float)app_mpu_i16be(raw[12], raw[13]) / s_mpu.gyro_lsb_per_dps;
+  return ESP_OK;
+}
+
 esp_err_t app_mpu_pretty_log_line(uint32_t tick_counter, uint32_t uptime_ms) {
   uint8_t raw[14] = {0};
   char line[320];

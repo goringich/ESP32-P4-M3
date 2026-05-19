@@ -10,6 +10,7 @@
 #include "sdkconfig.h"
 
 #include "app_ble.h"
+#include "app_control.h"
 #include "app_mpu_pretty.h"
 #include "app_net.h"
 #include "app_stepper.h"
@@ -167,6 +168,10 @@ void app_init(void) {
   }
 #endif
 
+#if CONFIG_APP_CONTROL_ENABLE
+  app_control_init();
+#endif
+
 #if CONFIG_APP_BLE_ENABLE
   err = app_ble_init();
   app_ble_get_status(&s_ble_status);
@@ -186,6 +191,21 @@ void app_init(void) {
 }
 
 void app_tick(void) {
+#if CONFIG_APP_CONTROL_ENABLE
+  {
+    static uint32_t s_last_control_ms = 0;
+    const uint32_t now_ctrl = esp_log_timestamp();
+    if ((now_ctrl - s_last_control_ms) >= (uint32_t)CONFIG_APP_CONTROL_DT_MS) {
+      s_last_control_ms = now_ctrl;
+      float ax_g, ay_g, az_g, gx_dps, gy_dps, gz_dps;
+      if (app_mpu_read_fast(&ax_g, &ay_g, &az_g, &gx_dps, &gy_dps, &gz_dps) == ESP_OK) {
+        float vel = app_control_tick(ax_g, ay_g, az_g, gx_dps, gy_dps, gz_dps, now_ctrl);
+        app_stepper_set_stabilize_velocity(vel);
+      }
+    }
+  }
+#endif
+
 #if CONFIG_APP_MODE_L293D_TEST
   app_stepper_tick();
 #endif

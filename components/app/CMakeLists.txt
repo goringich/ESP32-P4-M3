@@ -2,6 +2,7 @@ idf_component_register(
   SRCS
     "src/app.c"
     "src/app_ble.c"
+    "src/app_control.c"
     "src/app_mpu_pretty.c"
     "src/app_net.c"
     "src/app_stepper.c"

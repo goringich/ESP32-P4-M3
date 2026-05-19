@@ -31,3 +31,6 @@ esp_err_t app_stepper_init(void);
 void app_stepper_tick(void);
 esp_err_t app_stepper_command_char(char cmd);
 void app_stepper_get_snapshot(app_stepper_snapshot_t *snapshot);
+
+/* Set velocity for stabilization mode (steps/s; positive=forward, negative=reverse, 0=stop). */
+void app_stepper_set_stabilize_velocity(float steps_per_second);

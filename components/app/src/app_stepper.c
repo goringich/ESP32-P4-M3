@@ -1,11 +1,16 @@
 #include "app_stepper.h"
 
 #include <inttypes.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+
+#if CONFIG_APP_CONTROL_ENABLE
+#include "app_control.h"
+#endif
 
 #include "driver/gpio.h"
 #include "driver/uart.h"
@@ -43,6 +48,7 @@ typedef enum {
   APP_STEPPER_MODE_FORWARD,
   APP_STEPPER_MODE_REVERSE,
   APP_STEPPER_MODE_SWEEP,
+  APP_STEPPER_MODE_STABILIZE,
 } app_stepper_mode_t;
 
 typedef enum {
@@ -72,6 +78,8 @@ typedef struct {
   uint8_t last_cmd;
   uint32_t last_cmd_ms;
   uint32_t last_telemetry_ms;
+  float    stabilize_velocity_sps;
+  uint32_t stabilize_last_step_ms;
 } app_stepper_state_t;
 
 static void app_stepper_log_block(const char *title);
@@ -127,6 +135,8 @@ static app_stepper_state_t s_stepper = {
   .last_cmd = 0,
   .last_cmd_ms = 0,
   .last_telemetry_ms = 0,
+  .stabilize_velocity_sps = 0.0f,
+  .stabilize_last_step_ms = 0,
 };
 
 static void app_stepper_log_block(const char *title) {
@@ -149,6 +159,8 @@ static const char *app_stepper_mode_to_str(app_stepper_mode_t mode) {
       return "reverse";
     case APP_STEPPER_MODE_SWEEP:
       return "sweep";
+    case APP_STEPPER_MODE_STABILIZE:
+      return "stabilize";
     default:
       return "unknown";
   }
@@ -497,6 +509,22 @@ static void app_stepper_handle_command(uint8_t cmd) {
     case 's':
     case 'S':
       app_stepper_set_mode(APP_STEPPER_MODE_STOP);
+#if CONFIG_APP_CONTROL_ENABLE
+      app_control_set_active(false);
+#endif
+      break;
+
+    case 'g':
+    case 'G':
+#if CONFIG_APP_CONTROL_ENABLE
+      s_stepper.stabilize_velocity_sps = 0.0f;
+      s_stepper.stabilize_last_step_ms = 0;
+      app_stepper_set_mode(APP_STEPPER_MODE_STABILIZE);
+      app_control_set_active(true);
+      ESP_LOGI(TAG, "stabilize mode enabled");
+#else
+      ESP_LOGW(TAG, "stabilize not built (APP_CONTROL_ENABLE=n)");
+#endif
       break;
 
     case 'f':
@@ -623,6 +651,10 @@ void app_stepper_get_snapshot(app_stepper_snapshot_t *snapshot) {
 #endif
 }
 
+void app_stepper_set_stabilize_velocity(float steps_per_second) {
+  s_stepper.stabilize_velocity_sps = steps_per_second;
+}
+
 static void app_stepper_handle_uart(void) {
   uint8_t buf[16] = {0};
 
@@ -747,6 +779,24 @@ void app_stepper_tick(void) {
       return;
     }
 
+    return;
+  }
+
+  if (s_stepper.mode == APP_STEPPER_MODE_STABILIZE) {
+    const float abs_vel = fabsf(s_stepper.stabilize_velocity_sps);
+    if (abs_vel < 0.5f) {
+      return;
+    }
+    const uint32_t interval_ms = (uint32_t)(1000.0f / abs_vel);
+    if ((now_ms - s_stepper.stabilize_last_step_ms) < interval_ms) {
+      return;
+    }
+    s_stepper.stabilize_last_step_ms = now_ms;
+    if (s_stepper.stabilize_velocity_sps > 0.0f) {
+      app_stepper_step_forward_once();
+    } else {
+      app_stepper_step_reverse_once();
+    }
     return;
   }
 
