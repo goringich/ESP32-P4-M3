@@ -57,6 +57,16 @@ config APP_WIFI_PASSWORD
   default ""
   depends on APP_WIFI_CONNECT
 
+config APP_WIFI_SSID_SECONDARY
+  string "Secondary Wi-Fi SSID"
+  default ""
+  depends on APP_WIFI_CONNECT
+
+config APP_WIFI_PASSWORD_SECONDARY
+  string "Secondary Wi-Fi password"
+  default ""
+  depends on APP_WIFI_CONNECT
+
 config APP_NET_ENABLE
   bool "enable HTTP/WebSocket control API"
   default y
@@ -87,6 +97,14 @@ config APP_L293D_IN4_GPIO
   int "L293D IN4 GPIO"
   range 0 54
   default 20
+
+config APP_L293D_LEFT_INVERT
+  bool "invert left motor direction"
+  default n
+
+config APP_L293D_RIGHT_INVERT
+  bool "invert right motor direction"
+  default y
 
 config APP_L293D_STEP_DELAY_MS
   int "L293D step delay (ms)"

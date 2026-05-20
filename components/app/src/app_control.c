@@ -8,6 +8,10 @@
 #include "sdkconfig.h"
 
 #define RAD_TO_DEG 57.29578f
+#define APP_CONTROL_ACCEL_NORM_MIN 0.80f
+#define APP_CONTROL_ACCEL_NORM_MAX 1.20f
+#define APP_CONTROL_D_FILTER_ALPHA 0.72f
+#define APP_CONTROL_OUTPUT_SMOOTH_ALPHA 0.65f
 
 static const app_control_params_t s_params = {
   .kp            = CONFIG_APP_CONTROL_KP_X100  / 100.0f,
@@ -23,15 +27,39 @@ static float    s_angle_deg  = 0.0f;
 static float    s_target_deg = 0.0f;
 static float    s_integral   = 0.0f;
 static float    s_prev_error = 0.0f;
+static float    s_prev_output = 0.0f;
+static float    s_d_filtered  = 0.0f;
 static bool     s_active     = false;
 static bool     s_first_tick = true;
 static uint32_t s_last_ms    = 0;
+
+static float app_control_clampf(float value, float min_value, float max_value) {
+  if (value < min_value) {
+    return min_value;
+  }
+  if (value > max_value) {
+    return max_value;
+  }
+  return value;
+}
+
+static float app_control_unwrap_deg(float reference_deg, float measured_deg) {
+  while ((measured_deg - reference_deg) > 180.0f) {
+    measured_deg -= 360.0f;
+  }
+  while ((measured_deg - reference_deg) < -180.0f) {
+    measured_deg += 360.0f;
+  }
+  return measured_deg;
+}
 
 void app_control_init(void) {
   s_angle_deg  = 0.0f;
   s_target_deg = 0.0f;
   s_integral   = 0.0f;
   s_prev_error = 0.0f;
+  s_prev_output = 0.0f;
+  s_d_filtered  = 0.0f;
   s_active     = false;
   s_first_tick = true;
   s_last_ms    = 0;
@@ -59,6 +87,8 @@ void app_control_set_target_deg(float deg) {
   s_target_deg = deg;
   s_integral   = 0.0f;
   s_prev_error = 0.0f;
+  s_prev_output = 0.0f;
+  s_d_filtered  = 0.0f;
 }
 
 float app_control_get_angle_deg(void) {
@@ -74,6 +104,8 @@ void app_control_set_active(bool active) {
     s_target_deg = s_angle_deg;
     s_integral   = 0.0f;
     s_prev_error = 0.0f;
+    s_prev_output = 0.0f;
+    s_d_filtered  = 0.0f;
   }
   s_active = active;
 }
@@ -95,21 +127,31 @@ float app_control_tick(float ax_g, float ay_g, float az_g,
   s_last_ms = now_ms;
 
   /* Accel-based roll angle around Y-axis (tilt in X-Z plane). */
-  const float accel_angle = atan2f(ax_g, az_g) * RAD_TO_DEG;
+  const float accel_norm = sqrtf((ax_g * ax_g) + (ay_g * ay_g) + (az_g * az_g));
+  const bool accel_reliable =
+    accel_norm >= APP_CONTROL_ACCEL_NORM_MIN && accel_norm <= APP_CONTROL_ACCEL_NORM_MAX;
+  const float accel_angle_raw = atan2f(ax_g, az_g) * RAD_TO_DEG;
+  const float accel_angle = s_first_tick
+    ? accel_angle_raw
+    : app_control_unwrap_deg(s_angle_deg, accel_angle_raw);
 
   /* Complementary filter. */
   if (s_first_tick) {
     s_angle_deg  = accel_angle;
     s_first_tick = false;
   } else {
-    s_angle_deg = s_params.alpha * (s_angle_deg + gy_dps * dt)
-                + (1.0f - s_params.alpha) * accel_angle;
+    const float predicted_angle = s_angle_deg + gy_dps * dt;
+    s_angle_deg = accel_reliable
+      ? (s_params.alpha * predicted_angle) + ((1.0f - s_params.alpha) * accel_angle)
+      : predicted_angle;
   }
 
   if (!s_active) {
     printf("@telemetry {\"kind\":\"control\","
-           "\"active\":false,\"angle_deg\":%.2f,\"target_deg\":%.2f}\n",
-           (double)s_angle_deg, (double)s_target_deg);
+           "\"active\":false,\"angle_deg\":%.2f,\"target_deg\":%.2f,\"accel_norm\":%.3f,"
+           "\"accel_reliable\":%s}\n",
+           (double)s_angle_deg, (double)s_target_deg, (double)accel_norm,
+           accel_reliable ? "true" : "false");
     return 0.0f;
   }
 
@@ -118,29 +160,49 @@ float app_control_tick(float ax_g, float ay_g, float az_g,
   float       p_term     = 0.0f;
   float       i_term     = 0.0f;
   float       d_term     = 0.0f;
+  float       output_raw = 0.0f;
   float       output     = 0.0f;
 
   if (fabsf(error) > s_params.dead_zone_deg) {
-    s_integral        += error * dt;
+    if (s_params.ki > 0.0f) {
+      const float integral_limit = s_params.max_output_sps / s_params.ki;
+      s_integral = app_control_clampf(
+        s_integral + (error * dt),
+        -integral_limit,
+        integral_limit
+      );
+    }
+
     const float deriv  = (error - s_prev_error) / dt;
+    s_d_filtered       = (APP_CONTROL_D_FILTER_ALPHA * s_d_filtered)
+                       + ((1.0f - APP_CONTROL_D_FILTER_ALPHA) * deriv);
     p_term             = s_params.kp * error;
     i_term             = s_params.ki * s_integral;
-    d_term             = s_params.kd * deriv;
-    output             = p_term + i_term + d_term;
-
-    if (output >  s_params.max_output_sps) { output =  s_params.max_output_sps; }
-    if (output < -s_params.max_output_sps) { output = -s_params.max_output_sps; }
+    d_term             = s_params.kd * s_d_filtered;
+    output_raw         = p_term + i_term + d_term;
+    output_raw         = app_control_clampf(
+      output_raw,
+      -s_params.max_output_sps,
+      s_params.max_output_sps
+    );
+    output             = (APP_CONTROL_OUTPUT_SMOOTH_ALPHA * s_prev_output)
+                       + ((1.0f - APP_CONTROL_OUTPUT_SMOOTH_ALPHA) * output_raw);
   } else {
     s_integral = 0.0f;
+    s_d_filtered = 0.0f;
+    output = s_prev_output * 0.4f;
   }
   s_prev_error = error;
+  s_prev_output = output;
 
   printf("@telemetry {\"kind\":\"control\","
          "\"active\":true,\"angle_deg\":%.2f,\"target_deg\":%.2f,\"error_deg\":%.2f,"
-         "\"p\":%.3f,\"i\":%.3f,\"d\":%.3f,\"output\":%.2f,\"dt_ms\":%.1f}\n",
+         "\"p\":%.3f,\"i\":%.3f,\"d\":%.3f,\"output\":%.2f,\"output_raw\":%.2f,"
+         "\"dt_ms\":%.1f,\"accel_norm\":%.3f,\"accel_reliable\":%s}\n",
          (double)s_angle_deg, (double)s_target_deg, (double)error,
          (double)p_term, (double)i_term, (double)d_term,
-         (double)output, (double)(dt * 1000.0f));
+         (double)output, (double)output_raw, (double)(dt * 1000.0f),
+         (double)accel_norm, accel_reliable ? "true" : "false");
 
   return output;
 }

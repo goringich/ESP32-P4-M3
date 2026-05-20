@@ -12,7 +12,7 @@ import { appTheme } from './theme/theme';
 import type { TransportState } from './types/api';
 
 const EMPTY_TRANSPORT: TransportState = {
-  mode: 'serial',
+  mode: 'wifi',
   wifiBaseUrl: 'http://192.168.4.1',
   wifiConnected: false,
   lastError: null,
@@ -54,7 +54,7 @@ export default function PadApp() {
           <DirectionPadPanel
             title="Wi-Fi пульт"
             subtitle="Прямое управление для стенда. Вертикальные кнопки держат движение, горизонтальные отправляют одиночный шаг."
-            caption={`транспорт: ${transport.mode} · Wi-Fi мост: ${transport.wifiConnected ? 'активен' : 'ожидание'}`}
+            caption={`транспорт: ${transport.mode === 'wifi' ? 'wifi-first' : 'uart-only'} · Wi-Fi мост: ${transport.wifiConnected ? 'активен' : 'ожидание'}`}
           />
         </Stack>
       </Box>

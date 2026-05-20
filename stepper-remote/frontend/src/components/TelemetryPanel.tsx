@@ -97,6 +97,10 @@ function PhaseLamp({
 
 export function TelemetryPanel({ telemetry }: Props) {
   const { system, mpu, stepper, i2c, wifi, ble, driver } = telemetry;
+  const leftMotorState = stepper.motors?.left?.state ?? stepper.leftState ?? '-';
+  const rightMotorState = stepper.motors?.right?.state ?? stepper.rightState ?? '-';
+  const leftMotorDirection = stepper.motors?.left?.direction ?? stepper.leftDirection;
+  const rightMotorDirection = stepper.motors?.right?.direction ?? stepper.rightDirection;
 
   return (
     <Card sx={{ borderRadius: 5 }}>
@@ -246,19 +250,19 @@ export function TelemetryPanel({ telemetry }: Props) {
                     <Metric label="Режим" value={stepper.mode ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Качание" value={stepper.sweepState ?? '-'} />
+                    <Metric label="Левый мотор" value={leftMotorState} />
+                  </Grid>
+                  <Grid size={{ xs: 6, sm: 4 }}>
+                    <Metric label="Правый мотор" value={rightMotorState} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
                     <Metric label="Последняя команда" value={stepper.lastCommand ?? '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Задержка" value={stepper.delayMs !== null ? `${stepper.delayMs} ms` : '-'} />
+                    <Metric label="Левый dir" value={leftMotorDirection !== null && leftMotorDirection !== undefined ? String(leftMotorDirection) : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Скорость" value={stepper.stepsPerSecond !== null ? `${fmtNumber(stepper.stepsPerSecond)} шаг/с` : '-'} />
-                  </Grid>
-                  <Grid size={{ xs: 6, sm: 4 }}>
-                    <Metric label="Фаза" value={stepper.phaseIndex !== null ? String(stepper.phaseIndex) : '-'} />
+                    <Metric label="Правый dir" value={rightMotorDirection !== null && rightMotorDirection !== undefined ? String(rightMotorDirection) : '-'} />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
                     <Metric label="Всего шагов" value={stepper.totalSteps !== null ? String(stepper.totalSteps) : '-'} />

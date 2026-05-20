@@ -73,7 +73,7 @@ export class WifiBridgeManager {
   private readonly stateListeners = new Set<StateListener>();
   private readonly telemetryListeners = new Set<TelemetryListener>();
   private state: TransportState = {
-    mode: 'serial',
+    mode: 'wifi',
     wifiBaseUrl: normalizeBaseUrl(DEFAULT_WIFI_BASE_URL),
     wifiConnected: false,
     lastError: null,
@@ -85,6 +85,8 @@ export class WifiBridgeManager {
 
   constructor(pushLog: PushLog) {
     this.pushLog = pushLog;
+    this.startPolling();
+    void this.pollOnce();
   }
 
   getState() {

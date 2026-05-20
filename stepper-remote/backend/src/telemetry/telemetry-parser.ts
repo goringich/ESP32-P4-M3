@@ -40,6 +40,14 @@ type TelemetryEnvelope =
       sweep_steps?: number | null;
       uart_ready?: boolean | null;
       last_command?: string | null;
+      left_state?: string | null;
+      right_state?: string | null;
+      left_direction?: number | null;
+      right_direction?: number | null;
+      motors?: {
+        left?: { state?: string | null; direction?: number | null };
+        right?: { state?: string | null; direction?: number | null };
+      };
       pins?: { in1: number; in2: number; in3: number; in4: number };
       gpio_pins?: { in1: number; in2: number; in3: number; in4: number };
       led_gpio?: number | null;
@@ -56,6 +64,10 @@ function cloneTelemetry(state: TelemetryState): TelemetryState {
     },
     stepper: {
       ...state.stepper,
+      motors: {
+        left: { ...state.stepper.motors?.left },
+        right: { ...state.stepper.motors?.right },
+      },
       pins: { ...state.stepper.pins },
       gpioPins: { ...state.stepper.gpioPins },
     },
@@ -109,6 +121,20 @@ export function createInitialTelemetryState(): TelemetryState {
       sweepSteps: null,
       uartReady: null,
       lastCommand: null,
+      leftState: null,
+      rightState: null,
+      leftDirection: null,
+      rightDirection: null,
+      motors: {
+        left: {
+          state: null,
+          direction: null,
+        },
+        right: {
+          state: null,
+          direction: null,
+        },
+      },
       pins: {
         in1: null,
         in2: null,
@@ -213,6 +239,20 @@ function applyTelemetryEnvelope(
   next.stepper.sweepSteps = envelope.sweep_steps ?? null;
   next.stepper.uartReady = envelope.uart_ready ?? null;
   next.stepper.lastCommand = envelope.last_command ?? null;
+  next.stepper.leftState = envelope.left_state ?? null;
+  next.stepper.rightState = envelope.right_state ?? null;
+  next.stepper.leftDirection = envelope.left_direction ?? null;
+  next.stepper.rightDirection = envelope.right_direction ?? null;
+  next.stepper.motors = {
+    left: {
+      state: envelope.motors?.left?.state ?? envelope.left_state ?? null,
+      direction: envelope.motors?.left?.direction ?? envelope.left_direction ?? null,
+    },
+    right: {
+      state: envelope.motors?.right?.state ?? envelope.right_state ?? null,
+      direction: envelope.motors?.right?.direction ?? envelope.right_direction ?? null,
+    },
+  };
   next.stepper.pins = {
     in1: envelope.pins?.in1 ?? null,
     in2: envelope.pins?.in2 ?? null,

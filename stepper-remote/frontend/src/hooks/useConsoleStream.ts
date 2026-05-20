@@ -66,6 +66,20 @@ const EMPTY_TELEMETRY: TelemetryState = {
     coilsEnabled: null,
     sweepSteps: null,
     uartReady: null,
+    leftState: null,
+    rightState: null,
+    leftDirection: null,
+    rightDirection: null,
+    motors: {
+      left: {
+        state: null,
+        direction: null,
+      },
+      right: {
+        state: null,
+        direction: null,
+      },
+    },
     pins: {
       in1: null,
       in2: null,
@@ -118,7 +132,7 @@ const EMPTY_TELEMETRY: TelemetryState = {
 };
 
 const EMPTY_TRANSPORT: TransportState = {
-  mode: 'serial',
+  mode: 'wifi',
   wifiBaseUrl: 'http://192.168.4.1',
   wifiConnected: false,
   lastError: null,

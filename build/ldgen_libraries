@@ -69,6 +69,7 @@
 /home/goringich/esp/build/esp-idf/esp_netif/libesp_netif.a
 /home/goringich/esp/build/esp-idf/espressif__esp_wifi_remote/libespressif__esp_wifi_remote.a
 /home/goringich/esp/build/esp-idf/espressif__esp_hosted/libespressif__esp_hosted.a
+/home/goringich/esp/build/esp-idf/bt/libbt.a
 /home/goringich/esp/build/esp-idf/console/libconsole.a
 /home/goringich/esp/build/esp-idf/esp_https_ota/libesp_https_ota.a
 /home/goringich/esp/build/esp-idf/esp_security/libesp_security.a
@@ -108,6 +109,7 @@
 /home/goringich/esp/build/esp-idf/esp_wifi/libesp_wifi.a
 /home/goringich/esp/build/esp-idf/esp_driver_spi/libesp_driver_spi.a
 /home/goringich/esp/build/esp-idf/esp_gdbstub/libesp_gdbstub.a
+/home/goringich/esp/build/esp-idf/bt/libbt.a
 /home/goringich/esp/build/esp-idf/unity/libunity.a
 /home/goringich/esp/build/esp-idf/cmock/libcmock.a
 /home/goringich/esp/build/esp-idf/unity/libunity.a

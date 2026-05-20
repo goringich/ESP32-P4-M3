@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { WifiBridgeManager } from './remote/wifi-bridge.js';
@@ -73,9 +74,13 @@ export function createApp(deps: AppDependencies = {}) {
     '../../frontend/dist'
   );
   const getTransportState = () => transport.getState();
+  const shouldUseWifiTelemetry = () => {
+    const state = getTransportState();
+    return state.mode === 'wifi' && state.wifiConnected;
+  };
   const getTelemetry = () =>
     applyToolingTelemetry(
-      getTransportState().mode === 'wifi' ? transport.getTelemetry() : serial.getTelemetry(),
+      shouldUseWifiTelemetry() ? transport.getTelemetry() : serial.getTelemetry(),
       tooling.getState()
     );
   let pendingReconnect: PendingReconnect | null = null;
@@ -225,8 +230,23 @@ export function createApp(deps: AppDependencies = {}) {
   app.post('/api/command', async (req, res) => {
     try {
       const body = req.body as SendCommandPayload;
-      if (getTransportState().mode === 'wifi') {
-        await transport.sendCommand(body.command);
+      const transportState = getTransportState();
+
+      if (transportState.mode === 'wifi') {
+        try {
+          await transport.sendCommand(body.command);
+        } catch (error) {
+          if (!serial.getState().isOpen) {
+            throw error;
+          }
+
+          serial.pushSystemLog(
+            `[wifi] command fallback to UART because Wi-Fi send failed: ${
+              error instanceof Error ? error.message : 'unknown error'
+            }`
+          );
+          await serial.send(body.command);
+        }
       } else {
         await serial.send(body.command);
       }
@@ -353,7 +373,7 @@ export function createApp(deps: AppDependencies = {}) {
     });
 
     const unsubscribeTelemetry = serial.onTelemetry((state) => {
-      if (getTransportState().mode === 'wifi') {
+      if (shouldUseWifiTelemetry()) {
         return;
       }
       res.write(`event: telemetry\n`);
@@ -369,7 +389,7 @@ export function createApp(deps: AppDependencies = {}) {
     });
 
     const unsubscribeTransportTelemetry = transport.onTelemetry((state) => {
-      if (getTransportState().mode !== 'wifi') {
+      if (!shouldUseWifiTelemetry()) {
         return;
       }
       res.write(`event: telemetry\n`);
@@ -401,10 +421,41 @@ export function createApp(deps: AppDependencies = {}) {
 
 const port = 3001;
 
+function collectListenUrls(port: number) {
+  const urls = new Set<string>([`http://127.0.0.1:${port}`]);
+  let interfaces: ReturnType<typeof os.networkInterfaces>;
+
+  try {
+    interfaces = os.networkInterfaces();
+  } catch (error) {
+    console.warn(
+      `networkInterfaces() is unavailable, falling back to localhost only: ${
+        error instanceof Error ? error.message : 'unknown error'
+      }`
+    );
+    return Array.from(urls);
+  }
+
+  for (const addresses of Object.values(interfaces)) {
+    for (const address of addresses ?? []) {
+      if (address.internal || address.family !== 'IPv4') {
+        continue;
+      }
+      urls.add(`http://${address.address}:${port}`);
+    }
+  }
+
+  return Array.from(urls).sort();
+}
+
 if (import.meta.url === `file://${process.argv[1]}`) {
   const app = createApp();
 
   app.listen(port, '0.0.0.0', () => {
-    console.log(`backend listening on http://0.0.0.0:${port}`);
+    console.log(`backend listening on 0.0.0.0:${port}`);
+    for (const url of collectListenUrls(port)) {
+      console.log(`ui available at ${url}/`);
+    }
+    console.log('wifi mode is proxied by backend -> ESP AP');
   });
 }

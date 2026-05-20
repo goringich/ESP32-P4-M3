@@ -138,8 +138,8 @@ export default function App() {
                     }}
                   >
                     Здесь показаны состояние платы, датчика, привода, UART и Wi-Fi.
-                    Можно держать плату на питании по USB/UART, а команды и телеметрию
-                    переводить на Wi-Fi, когда сетевой контур реально поднялся.
+                    Теперь Wi-Fi является основным каналом команд и телеметрии, а UART
+                    остаётся параллельным мониторингом и запасным контуром.
                   </Typography>
                 </Stack>
 
@@ -225,8 +225,8 @@ export default function App() {
                 </Tabs>
 
                 <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ px: { xs: 1, lg: 0 }, pb: { xs: 1, lg: 0 } }}>
-                  <Chip label={`транспорт: ${transport.mode === 'wifi' ? 'wifi' : 'serial'}`} color={transport.mode === 'wifi' ? 'secondary' : 'primary'} />
-                  <Chip label={transport.wifiConnected ? 'Wi-Fi активен' : 'Wi-Fi не активен'} color={transport.wifiConnected ? 'success' : 'default'} />
+                  <Chip label={`транспорт: ${transport.mode === 'wifi' ? 'wifi-first' : 'uart-only'}`} color={transport.mode === 'wifi' ? 'secondary' : 'primary'} />
+                  <Chip label={transport.wifiConnected ? 'Wi-Fi приоритет активен' : 'Wi-Fi приоритет ожидает'} color={transport.wifiConnected ? 'success' : 'default'} />
                   <Chip label={connection.isOpen ? connection.path ?? 'UART подключен' : 'UART отключен'} color={connection.isOpen ? 'success' : 'default'} />
                 </Stack>
               </Stack>

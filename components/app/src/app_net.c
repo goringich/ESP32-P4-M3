@@ -20,8 +20,68 @@
 static const char *TAG = "app_net";
 
 #define APP_NET_WS_PUSH_PERIOD_MS 1000U
-#define APP_NET_JSON_MAX 2048U
+#define APP_NET_JSON_MAX 8192U
 #define APP_NET_BODY_MAX 128U
+
+static const char APP_NET_EMBEDDED_UI[] =
+  "<!doctype html><html lang=\"ru\"><head><meta charset=\"utf-8\">"
+  "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1,viewport-fit=cover\">"
+  "<title>ESP32-P4 Remote</title><style>"
+  ":root{color-scheme:dark;font-family:system-ui,sans-serif}"
+  "body{margin:0;background:#06101b;color:#eef7ff;padding:16px}"
+  ".card{max-width:560px;margin:0 auto;background:#0b1726;border:1px solid #21405e;"
+  "border-radius:20px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.35)}"
+  "h1{font-size:22px;margin:0 0 8px}p{margin:0 0 14px;color:#9eb6cb;line-height:1.5}"
+  ".grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:18px 0;"
+  "grid-template-areas:'. up .' 'left . right' '. down .'}"
+  "button{min-height:72px;border:none;border-radius:18px;font-size:20px;font-weight:700;"
+  "background:#17324d;color:#eef7ff}button:active{transform:scale(.98)}"
+  "#forward{grid-area:up}#reverse{grid-area:down}#stepf{grid-area:left}#stepr{grid-area:right}"
+  ".hint{grid-column:1 / -1;background:#15314b;color:#9eb6cb}.meta{display:grid;gap:8px;margin-top:14px}"
+  ".line{padding:10px 12px;border-radius:12px;background:#102133;color:#dce9f5;font-size:14px}"
+  ".ok{color:#7ee787}.warn{color:#ffb86c}.mono{font-family:ui-monospace,monospace}"
+  "</style></head><body><div class=\"card\"><h1>ESP32-P4 Wi-Fi пульт</h1>"
+  "<p>Эта страница обслуживается самой платой. Кнопки ниже отправляют команды прямо в "
+  "<span class=\"mono\">/api/command</span>.</p>"
+  "<div class=\"grid\">"
+  "<button id=\"forward\">ВПЕРЕД</button><button id=\"reverse\">НАЗАД</button>"
+  "<button id=\"stepf\">ВЛЕВО</button><button id=\"stepr\">ВПРАВО</button>"
+  "<button class=\"hint\" id=\"hint\">Удерживай стрелку только пока движение действительно нужно</button></div>"
+  "<div class=\"meta\">"
+  "<div class=\"line\" id=\"wifi\">Wi-Fi: загрузка...</div>"
+  "<div class=\"line\" id=\"stepper\">Двигатель: загрузка...</div>"
+  "<div class=\"line\" id=\"system\">Система: загрузка...</div>"
+  "<div class=\"line\" id=\"status\">Статус: ожидание</div>"
+  "</div></div><script>"
+  "const statusEl=document.getElementById('status');"
+  "const setStatus=(m,c='')=>{statusEl.textContent='Статус: '+m;statusEl.className='line '+c;};"
+  "let refreshing=false;let refreshTimer=0;"
+  "async function send(command){setStatus('отправка '+command);"
+  "const r=await fetch('/api/command',{method:'POST',headers:{'Content-Type':'application/json'},"
+  "cache:'no-store',body:JSON.stringify({command})});if(!r.ok){throw new Error('HTTP '+r.status)}"
+  "await r.json();setStatus('команда '+command+' отправлена','ok');await refresh(true);}"
+  "function bindHold(id,start,stop){const el=document.getElementById(id);"
+  "const press=(e)=>{e.preventDefault();void send(start).catch(err=>setStatus(err.message,'warn'));};"
+  "const release=(e)=>{e.preventDefault();void send(stop).catch(err=>setStatus(err.message,'warn'));};"
+  "el.addEventListener('mousedown',press);el.addEventListener('touchstart',press,{passive:false});"
+  "el.addEventListener('mouseup',release);el.addEventListener('mouseleave',release);"
+  "el.addEventListener('touchend',release);el.addEventListener('touchcancel',release);}"
+  "bindHold('forward','f','s');bindHold('reverse','r','s');"
+  "bindHold('stepf','2','s');bindHold('stepr','1','s');"
+  "function scheduleRefresh(delay=1000){clearTimeout(refreshTimer);refreshTimer=setTimeout(()=>{void refresh();},delay);}"
+  "async function refresh(force=false){if(refreshing&&!force){return;}refreshing=true;"
+  "try{const r=await fetch('/api/status?ts='+Date.now(),{cache:'no-store'});const data=await r.json();"
+  "const t=data.status||{};const w=t.wifi||{};const s=t.stepper||{};const sys=t.system||{};"
+  "const wifiName=w.staConnected?(w.staSsid||'STA'):(w.apSsid||'AP');"
+  "const wifiIp=w.staConnected?(w.staIp||'-'):(w.apIp||'-');"
+  "document.getElementById('wifi').textContent='Wi-Fi: '+wifiName+' · IP '+wifiIp+' · '+(w.staConnected?'STA':'AP');"
+  "const left=(s.motors&&s.motors.left&&s.motors.left.state)||s.leftState||'-';"
+  "const right=(s.motors&&s.motors.right&&s.motors.right.state)||s.rightState||'-';"
+  "document.getElementById('stepper').textContent='Двигатель: '+(s.mode||'-')+' · left '+left+' · right '+right+' · coils '+(s.coilsEnabled?'on':'off');"
+  "document.getElementById('system').textContent='Система: '+(sys.firmware||'-')+' · tick '+(sys.tick!=null?sys.tick:'-')+' · error '+(sys.lastError||'none');"
+  "}catch(e){setStatus('ошибка телеметрии: '+e.message,'warn');}"
+  "finally{refreshing=false;scheduleRefresh();}}"
+  "refresh(true);</script></body></html>";
 
 typedef struct {
   httpd_handle_t server;
@@ -40,6 +100,9 @@ static void app_net_set_cors(httpd_req_t *req) {
   httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
   httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "Content-Type");
+  httpd_resp_set_hdr(req, "Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+  httpd_resp_set_hdr(req, "Pragma", "no-cache");
+  httpd_resp_set_hdr(req, "Expires", "0");
 }
 
 static const char *app_net_json_str(const char *value, char *buf, size_t len) {
@@ -81,6 +144,7 @@ static size_t app_net_build_json(char *buf, size_t len) {
   char i2c_error_json[48];
   char wifi_error_json[48];
   char ble_error_json[48];
+  char ble_address_json[24];
 
   const char *system_error = app_net_json_str(system.last_error, system_error_json, sizeof(system_error_json));
   const char *mpu_error = app_net_json_str(mpu.error, mpu_error_json, sizeof(mpu_error_json));
@@ -95,6 +159,7 @@ static size_t app_net_build_json(char *buf, size_t len) {
     ? "null"
     : app_net_json_str(esp_err_to_name(wifi.last_error), wifi_error_json, sizeof(wifi_error_json));
   const char *ble_error = app_net_json_str(ble.last_error, ble_error_json, sizeof(ble_error_json));
+  const char *ble_address = app_net_json_str(ble.address, ble_address_json, sizeof(ble_address_json));
   const char *wifi_ip = wifi.sta_ip[0] != '\0'
     ? wifi.sta_ip
     : (wifi.ap_ip[0] != '\0' ? wifi.ap_ip : "0.0.0.0");
@@ -116,6 +181,10 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          "\"totalSteps\":%" PRIu32 ",\"coilsEnabled\":%s,"
                          "\"sweepSteps\":%" PRIu32 ",\"uartReady\":%s,"
                          "\"lastCommand\":\"%s\","
+                         "\"leftState\":\"%s\",\"rightState\":\"%s\","
+                         "\"leftDirection\":%d,\"rightDirection\":%d,"
+                         "\"motors\":{\"left\":{\"state\":\"%s\",\"direction\":%d},"
+                         "\"right\":{\"state\":\"%s\",\"direction\":%d}},"
                          "\"pins\":{\"in1\":%u,\"in2\":%u,\"in3\":%u,\"in4\":%u},"
                          "\"gpioPins\":{\"in1\":%d,\"in2\":%d,\"in3\":%d,\"in4\":%d},"
                          "\"ledGpio\":%d},\"wifi\":{"
@@ -123,6 +192,7 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          "\"mac\":null,\"lastError\":%s,"
                          "\"initialized\":%s,\"apStarted\":%s,\"staAttempted\":%s,"
                          "\"staConnected\":%s,\"apSsid\":\"%s\",\"apIp\":\"%s\","
+                         "\"staSsid\":\"%s\","
                          "\"staIp\":\"%s\"},\"ble\":{"
                          "\"initialized\":%s,\"controllerEnabled\":%s,\"advertising\":%s,"
                          "\"connected\":%s,\"notifyEnabled\":%s,\"deviceName\":\"%s\","
@@ -161,6 +231,14 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          stepper.sweep_steps,
                          stepper.uart_ready ? "true" : "false",
                          stepper.last_command,
+                         stepper.left_motor_state,
+                         stepper.right_motor_state,
+                         (int)stepper.left_direction,
+                         (int)stepper.right_direction,
+                         stepper.left_motor_state,
+                         (int)stepper.left_direction,
+                         stepper.right_motor_state,
+                         (int)stepper.right_direction,
                          (unsigned)stepper.in1_level,
                          (unsigned)stepper.in2_level,
                          (unsigned)stepper.in3_level,
@@ -181,6 +259,7 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          wifi.sta_connected ? "true" : "false",
                          wifi.ap_ssid,
                          wifi.ap_ip[0] != '\0' ? wifi.ap_ip : "0.0.0.0",
+                         wifi.sta_ssid[0] != '\0' ? wifi.sta_ssid : "",
                          wifi.sta_ip[0] != '\0' ? wifi.sta_ip : "0.0.0.0",
                          ble.initialized ? "true" : "false",
                          ble.controller_enabled ? "true" : "false",
@@ -188,8 +267,71 @@ static size_t app_net_build_json(char *buf, size_t len) {
                          ble.connected ? "true" : "false",
                          ble.notify_enabled ? "true" : "false",
                          ble.device_name,
-                         ble.address[0] != '\0' ? ble.address : "null",
+                         ble_address,
                          ble_error);
+  if (written < 0) {
+    buf[0] = '\0';
+    return 0;
+  }
+  if ((size_t)written >= len) {
+    return len - 1U;
+  }
+  return (size_t)written;
+}
+
+static size_t app_net_build_status_json(char *buf, size_t len) {
+  app_stepper_snapshot_t stepper = {0};
+  app_stepper_get_snapshot(&stepper);
+  app_wifi_status_t wifi = {0};
+  app_wifi_get_status(&wifi);
+  app_system_status_t system = {0};
+  app_get_system_status(&system);
+
+  char system_error_json[48];
+  char wifi_error_json[48];
+  const char *system_error = app_net_json_str(system.last_error, system_error_json, sizeof(system_error_json));
+  const char *wifi_error = (wifi.last_error == ESP_OK)
+    ? "null"
+    : app_net_json_str(esp_err_to_name(wifi.last_error), wifi_error_json, sizeof(wifi_error_json));
+
+  int written = snprintf(
+    buf,
+    len,
+    "{\"ok\":true,\"status\":{\"system\":{"
+    "\"firmware\":\"%s\",\"tick\":%" PRIu32 ",\"lastError\":%s},"
+    "\"stepper\":{"
+    "\"mode\":\"%s\",\"coilsEnabled\":%s,"
+    "\"leftState\":\"%s\",\"rightState\":\"%s\","
+    "\"leftDirection\":%d,\"rightDirection\":%d,"
+    "\"motors\":{\"left\":{\"state\":\"%s\",\"direction\":%d},"
+    "\"right\":{\"state\":\"%s\",\"direction\":%d}}},"
+    "\"wifi\":{"
+    "\"initialized\":%s,\"apStarted\":%s,\"staAttempted\":%s,\"staConnected\":%s,"
+    "\"apSsid\":\"%s\",\"apIp\":\"%s\",\"staSsid\":\"%s\",\"staIp\":\"%s\","
+    "\"lastError\":%s}}}",
+    system.firmware,
+    system.tick,
+    system_error,
+    stepper.mode,
+    stepper.coils_enabled ? "true" : "false",
+    stepper.left_motor_state,
+    stepper.right_motor_state,
+    (int)stepper.left_direction,
+    (int)stepper.right_direction,
+    stepper.left_motor_state,
+    (int)stepper.left_direction,
+    stepper.right_motor_state,
+    (int)stepper.right_direction,
+    wifi.initialized ? "true" : "false",
+    wifi.ap_started ? "true" : "false",
+    wifi.sta_attempted ? "true" : "false",
+    wifi.sta_connected ? "true" : "false",
+    wifi.ap_ssid,
+    wifi.ap_ip[0] != '\0' ? wifi.ap_ip : "0.0.0.0",
+    wifi.sta_ssid[0] != '\0' ? wifi.sta_ssid : "",
+    wifi.sta_ip[0] != '\0' ? wifi.sta_ip : "0.0.0.0",
+    wifi_error
+  );
   if (written < 0) {
     buf[0] = '\0';
     return 0;
@@ -235,6 +377,13 @@ static esp_err_t app_net_options_handler(httpd_req_t *req) {
   return ESP_OK;
 }
 
+static esp_err_t app_net_root_handler(httpd_req_t *req) {
+  app_net_set_cors(req);
+  httpd_resp_set_type(req, "text/html; charset=utf-8");
+  httpd_resp_sendstr(req, APP_NET_EMBEDDED_UI);
+  return ESP_OK;
+}
+
 static esp_err_t app_net_telemetry_handler(httpd_req_t *req) {
   char *json = app_net_alloc_json_buffer();
   if (json == NULL) {
@@ -242,11 +391,37 @@ static esp_err_t app_net_telemetry_handler(httpd_req_t *req) {
     return ESP_ERR_NO_MEM;
   }
 
-  app_net_build_json(json, APP_NET_JSON_MAX);
+  size_t json_len = app_net_build_json(json, APP_NET_JSON_MAX);
+  if (json_len == 0U || json_len >= (APP_NET_JSON_MAX - 1U)) {
+    free(json);
+    httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "json encode failed");
+    return ESP_FAIL;
+  }
 
   app_net_set_cors(req);
   httpd_resp_set_type(req, "application/json");
-  httpd_resp_sendstr(req, json);
+  httpd_resp_send(req, json, json_len);
+  free(json);
+  return ESP_OK;
+}
+
+static esp_err_t app_net_status_handler(httpd_req_t *req) {
+  char *json = app_net_alloc_json_buffer();
+  if (json == NULL) {
+    httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "no memory");
+    return ESP_ERR_NO_MEM;
+  }
+
+  size_t json_len = app_net_build_status_json(json, APP_NET_JSON_MAX);
+  if (json_len == 0U || json_len >= (APP_NET_JSON_MAX - 1U)) {
+    free(json);
+    httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "json encode failed");
+    return ESP_FAIL;
+  }
+
+  app_net_set_cors(req);
+  httpd_resp_set_type(req, "application/json");
+  httpd_resp_send(req, json, json_len);
   free(json);
   return ESP_OK;
 }
@@ -254,6 +429,7 @@ static esp_err_t app_net_telemetry_handler(httpd_req_t *req) {
 static esp_err_t app_net_wifi_handler(httpd_req_t *req) {
   app_wifi_status_t wifi = {0};
   app_wifi_get_status(&wifi);
+  char wifi_error_json[48];
 
   char *json = app_net_alloc_json_buffer();
   if (json == NULL) {
@@ -265,7 +441,7 @@ static esp_err_t app_net_wifi_handler(httpd_req_t *req) {
                          APP_NET_JSON_MAX,
                          "{\"ok\":true,\"wifi\":{\"initialized\":%s,\"apStarted\":%s,"
                          "\"staAttempted\":%s,\"staConnected\":%s,\"apSsid\":\"%s\","
-                         "\"apIp\":\"%s\",\"staIp\":\"%s\",\"lastError\":\"%s\"}}",
+                         "\"apIp\":\"%s\",\"staIp\":\"%s\",\"lastError\":%s}}",
                          wifi.initialized ? "true" : "false",
                          wifi.ap_started ? "true" : "false",
                          wifi.sta_attempted ? "true" : "false",
@@ -273,7 +449,7 @@ static esp_err_t app_net_wifi_handler(httpd_req_t *req) {
                          wifi.ap_ssid,
                          wifi.ap_ip[0] != '\0' ? wifi.ap_ip : "0.0.0.0",
                          wifi.sta_ip[0] != '\0' ? wifi.sta_ip : "0.0.0.0",
-                         esp_err_to_name(wifi.last_error));
+                         wifi.last_error == ESP_OK ? "null" : app_net_json_str(esp_err_to_name(wifi.last_error), wifi_error_json, sizeof(wifi_error_json)));
   if (written < 0) {
     free(json);
     httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "json encode failed");
@@ -309,7 +485,7 @@ static esp_err_t app_net_command_handler(httpd_req_t *req) {
     return err;
   }
 
-  return app_net_telemetry_handler(req);
+  return app_net_status_handler(req);
 }
 
 static void app_net_ws_send_work(void *arg) {
@@ -403,7 +579,7 @@ esp_err_t app_net_start(void) {
   }
 
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-  config.max_uri_handlers = 8;
+  config.max_uri_handlers = 9;
 
   esp_err_t err = httpd_start(&s_server, &config);
   if (err != ESP_OK) {
@@ -415,6 +591,21 @@ esp_err_t app_net_start(void) {
     .uri = "/api/telemetry",
     .method = HTTP_GET,
     .handler = app_net_telemetry_handler,
+  };
+  const httpd_uri_t status_get = {
+    .uri = "/api/status",
+    .method = HTTP_GET,
+    .handler = app_net_status_handler,
+  };
+  const httpd_uri_t root_get = {
+    .uri = "/",
+    .method = HTTP_GET,
+    .handler = app_net_root_handler,
+  };
+  const httpd_uri_t pad_get = {
+    .uri = "/pad",
+    .method = HTTP_GET,
+    .handler = app_net_root_handler,
   };
   const httpd_uri_t wifi_get = {
     .uri = "/api/wifi",
@@ -438,6 +629,9 @@ esp_err_t app_net_start(void) {
     .is_websocket = true,
   };
 
+  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &root_get));
+  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &pad_get));
+  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &status_get));
   ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &telemetry_get));
   ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &wifi_get));
   ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &command_post));

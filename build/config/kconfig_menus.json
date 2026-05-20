@@ -12854,7 +12854,10 @@
                                         "help": "Time interval between RPA address change.",
                                         "id": "BT_NIMBLE_RPA_TIMEOUT",
                                         "name": "BT_NIMBLE_RPA_TIMEOUT",
-                                        "range": null,
+                                        "range": [
+                                            1,
+                                            41400
+                                        ],
                                         "title": "RPA timeout in seconds",
                                         "type": "int"
                                     },
@@ -12864,7 +12867,10 @@
                                         "help": "BLE list size",
                                         "id": "BT_NIMBLE_WHITELIST_SIZE",
                                         "name": "BT_NIMBLE_WHITELIST_SIZE",
-                                        "range": null,
+                                        "range": [
+                                            1,
+                                            15
+                                        ],
                                         "title": "BLE white list size",
                                         "type": "int"
                                     },
@@ -12935,7 +12941,10 @@
                                         "help": "Defines maximum number of concurrent BLE connections. For ESP32, user\nis expected to configure BTDM_CTRL_BLE_MAX_CONN from controller menu\nalong with this option. Similarly for ESP32-C3 or ESP32-S3, user is expected to\nconfigure BT_CTRL_BLE_MAX_ACT from controller menu.\nFor ESP32C2, ESP32C6 and ESP32H2, each connection will take about 1k DRAM.",
                                         "id": "BT_NIMBLE_MAX_CONNECTIONS",
                                         "name": "BT_NIMBLE_MAX_CONNECTIONS",
-                                        "range": null,
+                                        "range": [
+                                            1,
+                                            9
+                                        ],
                                         "title": "Maximum number of concurrent connections",
                                         "type": "int"
                                     },
@@ -13104,7 +13113,10 @@
                                         "help": "Defines maximum number of BLE Connection Oriented Channels. When set to (0), BLE COC is not compiled in",
                                         "id": "BT_NIMBLE_L2CAP_COC_MAX_NUM",
                                         "name": "BT_NIMBLE_L2CAP_COC_MAX_NUM",
-                                        "range": null,
+                                        "range": [
+                                            0,
+                                            9
+                                        ],
                                         "title": "Maximum number of connection oriented channels",
                                         "type": "int"
                                     },
@@ -13379,7 +13391,10 @@
                                                                 "help": "Set this option to set the upper limit for number of periodic sync\nconnections. This should be less than maximum connections allowed by\ncontroller.",
                                                                 "id": "BT_NIMBLE_MAX_PERIODIC_SYNCS",
                                                                 "name": "BT_NIMBLE_MAX_PERIODIC_SYNCS",
-                                                                "range": null,
+                                                                "range": [
+                                                                    0,
+                                                                    8
+                                                                ],
                                                                 "title": "Maximum number of periodic advertising syncs",
                                                                 "type": "int"
                                                             },
@@ -36716,6 +36731,26 @@
                                         "range": null,
                                         "title": "Wi-Fi password",
                                         "type": "string"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "APP_WIFI_CONNECT",
+                                        "help": null,
+                                        "id": "APP_WIFI_SSID_SECONDARY",
+                                        "name": "APP_WIFI_SSID_SECONDARY",
+                                        "range": null,
+                                        "title": "Secondary Wi-Fi SSID",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "APP_WIFI_CONNECT",
+                                        "help": null,
+                                        "id": "APP_WIFI_PASSWORD_SECONDARY",
+                                        "name": "APP_WIFI_PASSWORD_SECONDARY",
+                                        "range": null,
+                                        "title": "Secondary Wi-Fi password",
+                                        "type": "string"
                                     }
                                 ],
                                 "depends_on": "APP_WIFI_SMOKE",
@@ -36743,6 +36778,16 @@
                         "name": "APP_WIFI_SMOKE",
                         "range": null,
                         "title": "run Wi-Fi smoke test on boot",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "APP_BLE_ENABLE",
+                        "name": "APP_BLE_ENABLE",
+                        "range": null,
+                        "title": "enable BLE control/status bridge",
                         "type": "bool"
                     },
                     {
@@ -36801,6 +36846,26 @@
                         "children": [],
                         "depends_on": "APP_MODE_L293D_TEST",
                         "help": null,
+                        "id": "APP_L293D_LEFT_INVERT",
+                        "name": "APP_L293D_LEFT_INVERT",
+                        "range": null,
+                        "title": "invert left motor direction",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "APP_MODE_L293D_TEST",
+                        "help": null,
+                        "id": "APP_L293D_RIGHT_INVERT",
+                        "name": "APP_L293D_RIGHT_INVERT",
+                        "range": null,
+                        "title": "invert right motor direction",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "APP_MODE_L293D_TEST",
+                        "help": null,
                         "id": "APP_L293D_STEP_DELAY_MS",
                         "name": "APP_L293D_STEP_DELAY_MS",
                         "range": [
@@ -36842,6 +36907,108 @@
                         "name": "APP_STEPPER_LED_ENABLE",
                         "range": null,
                         "title": "enable stepper activity led",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "APP_CONTROL_ENABLE && APP_MODE_L293D_TEST",
+                                "help": null,
+                                "id": "APP_CONTROL_DT_MS",
+                                "name": "APP_CONTROL_DT_MS",
+                                "range": [
+                                    5,
+                                    100
+                                ],
+                                "title": "control loop period (ms)",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "APP_CONTROL_ENABLE && APP_MODE_L293D_TEST",
+                                "help": null,
+                                "id": "APP_CONTROL_KP_X100",
+                                "name": "APP_CONTROL_KP_X100",
+                                "range": [
+                                    0,
+                                    50000
+                                ],
+                                "title": "PID Kp x100 (e.g. 200 = 2.00)",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "APP_CONTROL_ENABLE && APP_MODE_L293D_TEST",
+                                "help": null,
+                                "id": "APP_CONTROL_KI_X100",
+                                "name": "APP_CONTROL_KI_X100",
+                                "range": [
+                                    0,
+                                    50000
+                                ],
+                                "title": "PID Ki x100 (e.g. 10 = 0.10)",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "APP_CONTROL_ENABLE && APP_MODE_L293D_TEST",
+                                "help": null,
+                                "id": "APP_CONTROL_KD_X100",
+                                "name": "APP_CONTROL_KD_X100",
+                                "range": [
+                                    0,
+                                    50000
+                                ],
+                                "title": "PID Kd x100 (e.g. 50 = 0.50)",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "APP_CONTROL_ENABLE && APP_MODE_L293D_TEST",
+                                "help": null,
+                                "id": "APP_CONTROL_ALPHA_X100",
+                                "name": "APP_CONTROL_ALPHA_X100",
+                                "range": [
+                                    0,
+                                    100
+                                ],
+                                "title": "complementary filter alpha x100 (e.g. 98 = 0.98)",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "APP_CONTROL_ENABLE && APP_MODE_L293D_TEST",
+                                "help": null,
+                                "id": "APP_CONTROL_DEAD_ZONE_DEG_X10",
+                                "name": "APP_CONTROL_DEAD_ZONE_DEG_X10",
+                                "range": [
+                                    0,
+                                    500
+                                ],
+                                "title": "dead zone degrees x10 (e.g. 10 = 1.0 deg)",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "APP_CONTROL_ENABLE && APP_MODE_L293D_TEST",
+                                "help": null,
+                                "id": "APP_CONTROL_MAX_OUTPUT_SPS",
+                                "name": "APP_CONTROL_MAX_OUTPUT_SPS",
+                                "range": [
+                                    1,
+                                    200
+                                ],
+                                "title": "max output steps/s",
+                                "type": "int"
+                            }
+                        ],
+                        "depends_on": "APP_MODE_L293D_TEST && APP_MODE_L293D_TEST",
+                        "help": null,
+                        "id": "APP_CONTROL_ENABLE",
+                        "name": "APP_CONTROL_ENABLE",
+                        "range": null,
+                        "title": "enable MPU-based stabilization loop (PID + complementary filter)",
                         "type": "bool"
                     }
                 ],
@@ -37600,10 +37767,7 @@
                                                 "help": "SPI controller Host MOSI",
                                                 "id": "ESP_HOSTED_SPI_HSPI_GPIO_MOSI",
                                                 "name": "ESP_HOSTED_SPI_HSPI_GPIO_MOSI",
-                                                "range": [
-                                                    0,
-                                                    100
-                                                ],
+                                                "range": null,
                                                 "title": "GPIO pin for Host MOSI",
                                                 "type": "int"
                                             },
@@ -37633,10 +37797,7 @@
                                                 "help": "SPI controller Host MISO",
                                                 "id": "ESP_HOSTED_SPI_HSPI_GPIO_MISO",
                                                 "name": "ESP_HOSTED_SPI_HSPI_GPIO_MISO",
-                                                "range": [
-                                                    0,
-                                                    100
-                                                ],
+                                                "range": null,
                                                 "title": "GPIO pin for Host MISO",
                                                 "type": "int"
                                             },
@@ -37666,10 +37827,7 @@
                                                 "help": "SPI controller Host CLK",
                                                 "id": "ESP_HOSTED_SPI_HSPI_GPIO_CLK",
                                                 "name": "ESP_HOSTED_SPI_HSPI_GPIO_CLK",
-                                                "range": [
-                                                    0,
-                                                    100
-                                                ],
+                                                "range": null,
                                                 "title": "GPIO pin for Host CLK",
                                                 "type": "int"
                                             },
@@ -37699,10 +37857,7 @@
                                                 "help": "SPI controller Host CS",
                                                 "id": "ESP_HOSTED_SPI_HSPI_GPIO_CS",
                                                 "name": "ESP_HOSTED_SPI_HSPI_GPIO_CS",
-                                                "range": [
-                                                    0,
-                                                    100
-                                                ],
+                                                "range": null,
                                                 "title": "GPIO pin for Host  CS",
                                                 "type": "int"
                                             },
@@ -37812,10 +37967,7 @@
                                                 "help": "GPIO pin to use for handshake with other spi controller",
                                                 "id": "ESP_HOSTED_SPI_GPIO_HANDSHAKE",
                                                 "name": "ESP_HOSTED_SPI_GPIO_HANDSHAKE",
-                                                "range": [
-                                                    0,
-                                                    100
-                                                ],
+                                                "range": null,
                                                 "title": "GPIO pin for handshake",
                                                 "type": "int"
                                             },
@@ -37845,10 +37997,7 @@
                                                 "help": "GPIO pin for indicating host that SPI slave has data to be read by host",
                                                 "id": "ESP_HOSTED_SPI_GPIO_DATA_READY",
                                                 "name": "ESP_HOSTED_SPI_GPIO_DATA_READY",
-                                                "range": [
-                                                    0,
-                                                    100
-                                                ],
+                                                "range": null,
                                                 "title": "GPIO pin for data ready interrupt",
                                                 "type": "int"
                                             },
@@ -37878,10 +38027,7 @@
                                                 "help": "GPIO pin for Resetting ESP SPI slave device. Should be connected to RST/EN of ESP SPI slave device.",
                                                 "id": "ESP_HOSTED_SPI_GPIO_RESET_SLAVE",
                                                 "name": "ESP_HOSTED_SPI_GPIO_RESET_SLAVE",
-                                                "range": [
-                                                    0,
-                                                    100
-                                                ],
+                                                "range": null,
                                                 "title": "GPIO pin for Resetting slave ESP",
                                                 "type": "int"
                                             }
@@ -37907,10 +38053,7 @@
                                         "help": "\"Optimize SPI CLK by increasing till host practically can support\"",
                                         "id": "ESP_HOSTED_SPI_FREQ_ESP32H2",
                                         "name": "ESP_HOSTED_SPI_FREQ_ESP32H2",
-                                        "range": [
-                                            1,
-                                            32
-                                        ],
+                                        "range": null,
                                         "title": "SPI Clock Freq (MHz)",
                                         "type": "int"
                                     },
@@ -38149,7 +38292,10 @@
                                         "help": "\"Optimize SDIO CLK by increasing till host practically can support. Clock frequency for ESP32-P4 as host <= 40MHz\"",
                                         "id": "ESP_HOSTED_SDIO_CLOCK_FREQ_KHZ",
                                         "name": "ESP_HOSTED_SDIO_CLOCK_FREQ_KHZ",
-                                        "range": null,
+                                        "range": [
+                                            400,
+                                            50000
+                                        ],
                                         "title": "SDIO Clock Freq (in kHz)",
                                         "type": "int"
                                     },
@@ -38309,7 +38455,10 @@
                                         "help": "CMD GPIO pin for SDIO. Range enforced dynamically based on slave target to ensure IOMUX compliance.",
                                         "id": "ESP_HOSTED_PRIV_SDIO_PIN_CMD_SLOT_1",
                                         "name": "ESP_HOSTED_PRIV_SDIO_PIN_CMD_SLOT_1",
-                                        "range": null,
+                                        "range": [
+                                            19,
+                                            19
+                                        ],
                                         "title": "CMD GPIO number",
                                         "type": "int"
                                     },
@@ -38329,7 +38478,10 @@
                                         "help": "CLK GPIO pin for SDIO. Range enforced dynamically based on slave target to ensure IOMUX compliance.",
                                         "id": "ESP_HOSTED_PRIV_SDIO_PIN_CLK_SLOT_1",
                                         "name": "ESP_HOSTED_PRIV_SDIO_PIN_CLK_SLOT_1",
-                                        "range": null,
+                                        "range": [
+                                            18,
+                                            18
+                                        ],
                                         "title": "CLK GPIO number",
                                         "type": "int"
                                     },
@@ -38349,7 +38501,10 @@
                                         "help": "D0 GPIO pin for SDIO. Range enforced dynamically based on slave target to ensure IOMUX compliance.",
                                         "id": "ESP_HOSTED_PRIV_SDIO_PIN_D0_SLOT_1",
                                         "name": "ESP_HOSTED_PRIV_SDIO_PIN_D0_SLOT_1",
-                                        "range": null,
+                                        "range": [
+                                            14,
+                                            14
+                                        ],
                                         "title": "D0 GPIO number",
                                         "type": "int"
                                     },
@@ -38369,7 +38524,10 @@
                                         "help": "D1 GPIO pin for SDIO. Range enforced dynamically based on slave target to ensure IOMUX compliance.",
                                         "id": "ESP_HOSTED_PRIV_SDIO_PIN_D1_4BIT_BUS_SLOT_1",
                                         "name": "ESP_HOSTED_PRIV_SDIO_PIN_D1_4BIT_BUS_SLOT_1",
-                                        "range": null,
+                                        "range": [
+                                            15,
+                                            15
+                                        ],
                                         "title": "D1 GPIO number",
                                         "type": "int"
                                     },
@@ -38389,7 +38547,10 @@
                                         "help": "D2 GPIO pin for SDIO. Range enforced dynamically based on slave target to ensure IOMUX compliance.",
                                         "id": "ESP_HOSTED_PRIV_SDIO_PIN_D2_4BIT_BUS_SLOT_1",
                                         "name": "ESP_HOSTED_PRIV_SDIO_PIN_D2_4BIT_BUS_SLOT_1",
-                                        "range": null,
+                                        "range": [
+                                            16,
+                                            16
+                                        ],
                                         "title": "D2 GPIO number",
                                         "type": "int"
                                     },
@@ -38409,7 +38570,10 @@
                                         "help": "D3 GPIO pin for SDIO. Range enforced dynamically based on slave target to ensure IOMUX compliance.",
                                         "id": "ESP_HOSTED_PRIV_SDIO_PIN_D3_4BIT_BUS_SLOT_1",
                                         "name": "ESP_HOSTED_PRIV_SDIO_PIN_D3_4BIT_BUS_SLOT_1",
-                                        "range": null,
+                                        "range": [
+                                            17,
+                                            17
+                                        ],
                                         "title": "D3 GPIO number",
                                         "type": "int"
                                     },
@@ -38439,7 +38603,10 @@
                                         "help": "GPIO pin for Resetting ESP SDIO slave device. Should be connected to RST/EN of ESP SDIO slave device.",
                                         "id": "ESP_HOSTED_SDIO_GPIO_RESET_SLAVE",
                                         "name": "ESP_HOSTED_SDIO_GPIO_RESET_SLAVE",
-                                        "range": null,
+                                        "range": [
+                                            54,
+                                            54
+                                        ],
                                         "title": "GPIO pin for Resetting slave ESP",
                                         "type": "int"
                                     },
@@ -40005,10 +40172,7 @@
                                                 "help": "Host will throttle incoming data if the slave datapath Rx load goes beyond this threshold\n0 value will disable this function",
                                                 "id": "ESP_HOSTED_PRIV_WIFI_TX_SPI_HIGH_THRESHOLD",
                                                 "name": "ESP_HOSTED_PRIV_WIFI_TX_SPI_HIGH_THRESHOLD",
-                                                "range": [
-                                                    0,
-                                                    100
-                                                ],
+                                                "range": null,
                                                 "title": "High threshold to report host to drop data when wifi highly loaded",
                                                 "type": "int"
                                             },
@@ -40018,7 +40182,10 @@
                                                 "help": "Host will throttle incoming data if the slave datapath Rx load goes beyond this threshold\n0 value will disable this function",
                                                 "id": "ESP_HOSTED_PRIV_WIFI_TX_SDIO_HIGH_THRESHOLD",
                                                 "name": "ESP_HOSTED_PRIV_WIFI_TX_SDIO_HIGH_THRESHOLD",
-                                                "range": null,
+                                                "range": [
+                                                    0,
+                                                    100
+                                                ],
                                                 "title": "High threshold to report host to drop data when wifi highly loaded",
                                                 "type": "int"
                                             },
@@ -40060,7 +40227,7 @@
                                                 "name": "ESP_HOSTED_TO_WIFI_DATA_THROTTLE_LOW_THRESHOLD",
                                                 "range": [
                                                     0,
-                                                    90
+                                                    80
                                                 ],
                                                 "title": "Low threshold to report host to stop dropping data",
                                                 "type": "int"

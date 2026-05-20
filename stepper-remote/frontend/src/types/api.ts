@@ -59,6 +59,20 @@ export type TelemetryState = {
     sweepSteps: number | null;
     uartReady: boolean | null;
     lastCommand: string | null;
+    leftState?: string | null;
+    rightState?: string | null;
+    leftDirection?: number | null;
+    rightDirection?: number | null;
+    motors?: {
+      left?: {
+        state?: string | null;
+        direction?: number | null;
+      };
+      right?: {
+        state?: string | null;
+        direction?: number | null;
+      };
+    };
     pins: {
       in1: number | null;
       in2: number | null;

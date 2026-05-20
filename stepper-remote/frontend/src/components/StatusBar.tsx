@@ -57,8 +57,8 @@ export function StatusBar({ connection, linesCount, tooling, transport, streamSt
               label={
                 transport.mode === 'wifi'
                   ? transport.wifiConnected
-                    ? 'Wi-Fi мост подключен'
-                    : 'Wi-Fi мост ожидает'
+                    ? 'Wi-Fi приоритет подключен'
+                    : 'Wi-Fi приоритет ожидает'
                   : connection.isOpen
                     ? 'UART подключен'
                     : 'UART отключен'

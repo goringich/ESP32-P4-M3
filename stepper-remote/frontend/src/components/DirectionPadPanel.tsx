@@ -1,19 +1,20 @@
 import {
   Alert,
   Box,
-  Button,
+  Chip,
   Stack,
   Typography,
 } from '@mui/material';
-import { useState, type ReactNode } from 'react';
+import ButtonBase from '@mui/material/ButtonBase';
+import { useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import { sendCommand } from '../api/client';
 
 type DirectionButtonProps = {
   label: string;
-  color: 'primary' | 'secondary' | 'inherit';
+  color: 'primary' | 'secondary';
+  mode?: 'hold' | 'tap';
   onPress: () => Promise<void>;
   onRelease?: () => Promise<void>;
-  disabled: boolean;
 };
 
 type DirectionPadPanelProps = {
@@ -26,75 +27,93 @@ type DirectionPadPanelProps = {
 function DirectionButton({
   label,
   color,
+  mode = 'tap',
   onPress,
   onRelease,
-  disabled,
 }: DirectionButtonProps) {
   const [pressed, setPressed] = useState(false);
+  const activePointerId = useRef<number | null>(null);
 
-  const handlePress = async () => {
-    if (pressed || disabled) {
+  const handlePress = async (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (activePointerId.current !== null) {
       return;
     }
 
+    activePointerId.current = event.pointerId;
     setPressed(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
     await onPress();
   };
 
-  const handleRelease = async () => {
-    if (!pressed) {
+  const handleRelease = async (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (activePointerId.current !== event.pointerId) {
       return;
     }
 
+    activePointerId.current = null;
     setPressed(false);
 
-    if (onRelease) {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    if (mode === 'hold' && onRelease) {
       await onRelease();
     }
   };
 
   return (
-    <Button
-      variant="contained"
-      color={color}
-      onPointerDown={() => void handlePress()}
-      onPointerUp={() => void handleRelease()}
-      onPointerCancel={() => void handleRelease()}
-      onPointerLeave={() => void handleRelease()}
-      disabled={disabled}
+    <ButtonBase
+      onPointerDown={(event) => void handlePress(event)}
+      onPointerUp={(event) => void handleRelease(event)}
+      onPointerCancel={(event) => void handleRelease(event)}
+      onPointerLeave={(event) => {
+        if (mode === 'hold') {
+          void handleRelease(event);
+        }
+      }}
       sx={{
-        minHeight: { xs: 88, sm: 96 },
+        minHeight: { xs: 96, sm: 104 },
         borderRadius: 5,
         fontSize: { xs: '1.05rem', sm: '1.2rem' },
         fontWeight: 800,
         letterSpacing: '0.08em',
+        color: 'common.white',
+        border: '1px solid',
+        borderColor:
+          color === 'primary'
+            ? 'rgba(124,223,255,0.45)'
+            : 'rgba(246,168,93,0.45)',
+        background:
+          pressed
+            ? color === 'primary'
+              ? 'linear-gradient(180deg, rgba(124,223,255,0.34), rgba(18,65,102,0.92))'
+              : 'linear-gradient(180deg, rgba(246,168,93,0.30), rgba(86,49,17,0.92))'
+            : 'linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))',
         touchAction: 'none',
       }}
     >
       {label}
-    </Button>
+    </ButtonBase>
   );
 }
 
 export function DirectionPadPanel({
   title = '4-кнопочное управление',
-  subtitle = 'Вверх и вниз удерживают движение, влево и вправо отправляют одиночный шаг.',
+  subtitle = 'Все 4 стрелки работают только пока кнопка реально зажата. На отпускании всегда уходит стоп.',
   caption,
   embedded = false,
 }: DirectionPadPanelProps) {
   const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [driveState, setDriveState] = useState<'forward' | 'reverse' | 'left' | 'right' | 'stop'>('stop');
 
   const run = async (command: string) => {
     setError(null);
-    setBusy(true);
 
     try {
       await sendCommand(command);
     } catch (sendError) {
       setError(sendError instanceof Error ? sendError.message : 'Не удалось отправить команду');
-    } finally {
-      setBusy(false);
     }
   };
 
@@ -107,6 +126,24 @@ export function DirectionPadPanel({
         <Typography variant="body2" color="text.secondary">
           {subtitle}
         </Typography>
+        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+          <Chip
+            size="small"
+            color={driveState === 'stop' ? 'default' : 'success'}
+            label={`режим: ${
+              driveState === 'forward'
+                ? 'вперед'
+                : driveState === 'reverse'
+                  ? 'назад'
+                  : driveState === 'left'
+                    ? 'влево'
+                    : driveState === 'right'
+                      ? 'вправо'
+                      : 'стоп'
+            }`}
+          />
+          <Chip size="small" variant="outlined" label="лишние кнопки убраны" />
+        </Stack>
         {caption ? (
           <Typography variant="caption" color="text.secondary">
             {caption}
@@ -134,51 +171,65 @@ export function DirectionPadPanel({
       >
         <Box sx={{ gridArea: 'up' }}>
           <DirectionButton
-            label="ВВЕРХ"
+            label="ВПЕРЕД"
             color="primary"
-            onPress={() => run('f')}
-            onRelease={() => run('s')}
-            disabled={busy}
+            mode="hold"
+            onPress={async () => {
+              setDriveState('forward');
+              await run('f');
+            }}
+            onRelease={async () => {
+              setDriveState('stop');
+              await run('s');
+            }}
           />
         </Box>
         <Box sx={{ gridArea: 'left' }}>
           <DirectionButton
             label="ВЛЕВО"
             color="secondary"
-            onPress={() => run('2')}
-            disabled={busy}
+            mode="hold"
+            onPress={async () => {
+              setDriveState('left');
+              await run('2');
+            }}
+            onRelease={async () => {
+              setDriveState('stop');
+              await run('s');
+            }}
           />
         </Box>
         <Box sx={{ gridArea: 'right' }}>
           <DirectionButton
             label="ВПРАВО"
             color="secondary"
-            onPress={() => run('1')}
-            disabled={busy}
+            mode="hold"
+            onPress={async () => {
+              setDriveState('right');
+              await run('1');
+            }}
+            onRelease={async () => {
+              setDriveState('stop');
+              await run('s');
+            }}
           />
         </Box>
         <Box sx={{ gridArea: 'down' }}>
           <DirectionButton
-            label="ВНИЗ"
+            label="НАЗАД"
             color="primary"
-            onPress={() => run('r')}
-            onRelease={() => run('s')}
-            disabled={busy}
+            mode="hold"
+            onPress={async () => {
+              setDriveState('reverse');
+              await run('r');
+            }}
+            onRelease={async () => {
+              setDriveState('stop');
+              await run('s');
+            }}
           />
         </Box>
       </Box>
-
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-        <Button fullWidth variant="outlined" color="error" onClick={() => void run('s')} disabled={busy}>
-          Стоп
-        </Button>
-        <Button fullWidth variant="outlined" color="warning" onClick={() => void run('z')} disabled={busy}>
-          Отпустить катушки
-        </Button>
-        <Button fullWidth variant="text" onClick={() => void run('p')} disabled={busy}>
-          Статус
-        </Button>
-      </Stack>
     </Stack>
   );
 }

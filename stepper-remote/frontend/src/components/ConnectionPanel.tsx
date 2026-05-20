@@ -102,12 +102,6 @@ export function ConnectionPanel({
     setPortError(null);
 
     try {
-      if (transport.mode === 'wifi') {
-        const next = await updateTransport('wifi', wifiBaseUrl);
-        onTransportChange(next);
-        return;
-      }
-
       await connectPort(path, Number(baudRate));
       onConnectionChange({
         isOpen: true,
@@ -126,12 +120,6 @@ export function ConnectionPanel({
     setPortError(null);
 
     try {
-      if (transport.mode === 'wifi') {
-        const next = await updateTransport('serial', wifiBaseUrl);
-        onTransportChange(next);
-        return;
-      }
-
       await disconnectPort();
       onConnectionChange({
         isOpen: false,
@@ -152,8 +140,8 @@ export function ConnectionPanel({
           <Stack spacing={0.5}>
             <Typography variant="h6">Подключение</Typography>
             <Typography variant="body2" color="text.secondary">
-              Здесь выбирается канал связи с платой. Питание может оставаться по USB/UART,
-              а команды и телеметрия могут идти через Wi-Fi API платы.
+              Wi-Fi и UART здесь работают параллельно. Wi-Fi задаёт основной канал
+              команд и телеметрии, а UART остаётся для питания, логов и аварийного отката.
             </Typography>
           </Stack>
 
@@ -168,32 +156,25 @@ export function ConnectionPanel({
             size="small"
             color="primary"
           >
-            <ToggleButton value="serial">UART</ToggleButton>
-            <ToggleButton value="wifi">Wi-Fi</ToggleButton>
+            <ToggleButton value="wifi">Wi-Fi в приоритете</ToggleButton>
+            <ToggleButton value="serial">Форсировать UART</ToggleButton>
           </ToggleButtonGroup>
 
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-            <Chip label={`режим ${transport.mode === 'wifi' ? 'wifi' : 'uart'}`} color={transport.mode === 'wifi' ? 'secondary' : 'primary'} />
+            <Chip label={`режим ${transport.mode === 'wifi' ? 'wifi-first' : 'uart-only'}`} color={transport.mode === 'wifi' ? 'secondary' : 'primary'} />
             <Chip
               label={
-                transport.mode === 'wifi'
-                  ? transport.wifiConnected
-                    ? 'Wi-Fi мост активен'
-                    : 'Wi-Fi мост не поднят'
-                  : connection.isOpen
-                    ? 'порт открыт'
-                    : 'порт закрыт'
+                transport.wifiConnected
+                  ? 'Wi-Fi мост активен'
+                  : 'Wi-Fi мост не поднят'
               }
               color={
-                transport.mode === 'wifi'
-                  ? transport.wifiConnected
-                    ? 'success'
-                    : 'default'
-                  : connection.isOpen
-                    ? 'success'
-                    : 'default'
+                transport.wifiConnected
+                  ? 'success'
+                  : 'default'
               }
             />
+            <Chip label={connection.isOpen ? 'UART открыт' : 'UART закрыт'} color={connection.isOpen ? 'success' : 'default'} />
             <Chip label={loadingPorts ? 'поиск портов' : `${ports.length} порт${ports.length === 1 ? '' : 'ов'}`} />
             <Chip label={`baud ${baudRate}`} color="info" />
           </Stack>
@@ -204,7 +185,13 @@ export function ConnectionPanel({
             переключатель Bluetooth здесь не добавлялся.
           </Alert>
 
-          {transport.mode === 'wifi' && transport.lastError ? (
+          <Alert severity="info" variant="outlined">
+            В режиме `Wi-Fi` браузер не ходит на плату напрямую. Запросы идут в backend на
+            `:3001`, а backend уже проксирует их в `http://192.168.4.1`. Поэтому устройство с UI
+            может оставаться в другом Wi-Fi, но backend-хост обязан реально видеть ESP AP.
+          </Alert>
+
+          {transport.lastError ? (
             <Alert severity="warning" variant="outlined">
               Ошибка Wi-Fi транспорта: {transport.lastError}
             </Alert>
@@ -216,15 +203,15 @@ export function ConnectionPanel({
             </Alert>
           ) : null}
 
-          {transport.mode === 'wifi' ? (
-            <TextField
-              label="URL Wi-Fi API платы"
-              value={wifiBaseUrl}
-              onChange={(event) => setWifiBaseUrl(event.target.value)}
-              fullWidth
-              placeholder="http://192.168.4.1"
-            />
-          ) : ports.length > 0 ? (
+          <TextField
+            label="URL Wi-Fi API платы"
+            value={wifiBaseUrl}
+            onChange={(event) => setWifiBaseUrl(event.target.value)}
+            fullWidth
+            placeholder="http://192.168.4.1"
+          />
+
+          {ports.length > 0 ? (
             <TextField
               select
               label="Порт"
@@ -248,7 +235,7 @@ export function ConnectionPanel({
             />
           )}
 
-          {transport.mode === 'serial' && ports.length === 0 ? (
+          {ports.length === 0 ? (
             <FormHelperText sx={{ mt: -1 }}>
               {loadingPorts
                 ? 'Идёт поиск UART-портов...'
@@ -256,20 +243,18 @@ export function ConnectionPanel({
             </FormHelperText>
           ) : null}
 
-          {transport.mode === 'serial' ? (
-            <TextField
-              label="Скорость UART"
-              value={baudRate}
-              onChange={(event) => setBaudRate(event.target.value)}
-              fullWidth
-            />
-          ) : (
-            <FormHelperText sx={{ mt: -1 }}>
-              Подключите компьютер к сети ESP и укажите адрес API платы.
-            </FormHelperText>
-          )}
+          <TextField
+            label="Скорость UART"
+            value={baudRate}
+            onChange={(event) => setBaudRate(event.target.value)}
+            fullWidth
+          />
 
-          {transport.mode === 'serial' && selectedPort ? (
+          <FormHelperText sx={{ mt: -1 }}>
+            Wi-Fi должен смотреть в `http://192.168.4.1`, а UART можно держать открытым параллельно.
+          </FormHelperText>
+
+          {selectedPort ? (
             <Box
               sx={{
                 p: 1.5,
@@ -293,87 +278,92 @@ export function ConnectionPanel({
             </Box>
           ) : null}
 
-          {transport.mode === 'wifi' ? (
-            <Box
-              sx={{
-                p: 1.5,
-                borderRadius: 3,
-                border: '1px solid rgba(99,230,255,0.14)',
-                background:
-                  'linear-gradient(180deg, rgba(99,230,255,0.08), rgba(255,255,255,0.02))',
-              }}
-            >
-              <Stack spacing={0.75}>
-                <Typography variant="subtitle2">Порядок работы по Wi-Fi</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  1. Оставьте USB/UART для питания и логов, если это нужно.
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  2. Подключитесь к Wi-Fi сети платы и укажите URL её API.
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  3. Активируйте Wi-Fi мост и убедитесь, что телеметрия пошла до отправки команд.
-                </Typography>
-              </Stack>
-            </Box>
-          ) : null}
+          <Box
+            sx={{
+              p: 1.5,
+              borderRadius: 3,
+              border: '1px solid rgba(99,230,255,0.14)',
+              background:
+                'linear-gradient(180deg, rgba(99,230,255,0.08), rgba(255,255,255,0.02))',
+            }}
+          >
+            <Stack spacing={0.75}>
+              <Typography variant="subtitle2">Порядок работы</Typography>
+              <Typography variant="body2" color="text.secondary">
+                1. Держите Wi-Fi в приоритете, чтобы команды шли на плату по `192.168.4.1`.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                2. Оставляйте UART открытым для логов, питания и аварийного фоллбэка.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                3. Если Wi-Fi мост упал, backend сам вернёт команду в UART, если порт открыт.
+              </Typography>
+            </Stack>
+          </Box>
 
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+            <Button
+              variant="contained"
+              onClick={() => {
+                void switchTransport('wifi');
+              }}
+              disabled={!wifiBaseUrl.trim() || busy}
+            >
+              {busy && transport.mode === 'wifi' ? 'Применение...' : 'Wi-Fi в приоритете'}
+            </Button>
+
+            <Button
+              variant="outlined"
+              color={transport.mode === 'serial' ? 'warning' : 'inherit'}
+              onClick={() => {
+                void switchTransport('serial');
+              }}
+              disabled={busy}
+            >
+              Форсировать UART
+            </Button>
+
             <Button
               variant="contained"
               onClick={handleConnect}
-              disabled={(transport.mode === 'serial' ? !path : !wifiBaseUrl.trim()) || busy}
-              sx={{ flex: 1 }}
+              disabled={!path || busy}
             >
-              {transport.mode === 'wifi'
-                ? busy
-                  ? 'Переключение...'
-                  : 'Включить Wi-Fi мост'
-                : busy && !connection.isOpen
-                  ? 'Подключение...'
-                  : 'Подключить'}
+              {busy && !connection.isOpen ? 'Подключение...' : 'Открыть UART'}
             </Button>
 
-            {transport.mode === 'serial' ? (
-              <Button variant="outlined" onClick={loadPorts} disabled={busy}>
-                {loadingPorts ? 'Обновление...' : 'Обновить'}
-              </Button>
-            ) : null}
+            <Button variant="outlined" onClick={loadPorts} disabled={busy}>
+              {loadingPorts ? 'Обновление...' : 'Обновить порты'}
+            </Button>
 
-            <Button variant="outlined" color="error" onClick={handleDisconnect} disabled={busy}>
-              {transport.mode === 'wifi'
-                ? busy
-                  ? 'Отключение...'
-                  : 'Вернуться на UART'
-                : busy && connection.isOpen
-                  ? 'Закрытие...'
-                  : 'Отключить'}
+            <Button variant="outlined" color="error" onClick={handleDisconnect} disabled={busy || !connection.isOpen}>
+              {busy && connection.isOpen ? 'Закрытие...' : 'Закрыть UART'}
             </Button>
           </Stack>
 
-          {transport.mode === 'wifi' ? (
-            <Box
-              sx={{
-                p: 1.5,
-                borderRadius: 3,
-                border: '1px solid rgba(255,255,255,0.06)',
-                background: 'rgba(255,255,255,0.025)',
-              }}
-            >
-              <Stack spacing={0.75}>
-                <Typography variant="subtitle2">Состояние Wi-Fi моста</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  URL: {transport.wifiBaseUrl}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  последняя телеметрия: {transport.lastTelemetryAt ? new Date(transport.lastTelemetryAt).toLocaleTimeString() : '-'}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  состояние: {transport.wifiConnected ? 'API платы доступен' : 'ожидание API платы'}
-                </Typography>
-              </Stack>
-            </Box>
-          ) : null}
+          <Box
+            sx={{
+              p: 1.5,
+              borderRadius: 3,
+              border: '1px solid rgba(255,255,255,0.06)',
+              background: 'rgba(255,255,255,0.025)',
+            }}
+          >
+            <Stack spacing={0.75}>
+              <Typography variant="subtitle2">Состояние каналов</Typography>
+              <Typography variant="body2" color="text.secondary">
+                Wi-Fi URL: {transport.wifiBaseUrl}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Wi-Fi: {transport.wifiConnected ? 'API платы доступен' : 'ожидание API платы'}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                последняя телеметрия Wi-Fi: {transport.lastTelemetryAt ? new Date(transport.lastTelemetryAt).toLocaleTimeString() : '-'}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                UART: {connection.isOpen ? `${connection.path} @ ${connection.baudRate}` : 'закрыт'}
+              </Typography>
+            </Stack>
+          </Box>
         </Stack>
       </CardContent>
     </Card>

@@ -3,7 +3,6 @@
 #include <inttypes.h>
 #include <math.h>
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -26,48 +25,39 @@
 #define APP_STEPPER_UART_PORT UART_NUM_0
 #define APP_STEPPER_UART_RX_BUF_SIZE 256
 #define APP_STEPPER_UART_TX_BUF_SIZE 0
-
-#define APP_STEPPER_SWEEP_STEPS 200U
-#define APP_STEPPER_EDGE_PAUSE_MS 500U
 #define APP_STEPPER_DUPLICATE_CMD_GUARD_MS 150U
-#define APP_STEPPER_MIN_DELAY_MS 20U
-#define APP_STEPPER_MAX_DELAY_MS 5000U
+#define APP_STEPPER_STABILIZE_DEADBAND_RATIO 0.15f
+#define APP_STEPPER_STABILIZE_MAX_BUDGET_MS 120.0f
+
+#ifdef CONFIG_APP_L293D_LEFT_INVERT
+#define APP_STEPPER_LEFT_INVERT true
+#else
+#define APP_STEPPER_LEFT_INVERT false
+#endif
+
+#ifdef CONFIG_APP_L293D_RIGHT_INVERT
+#define APP_STEPPER_RIGHT_INVERT true
+#else
+#define APP_STEPPER_RIGHT_INVERT false
+#endif
 
 static const char *TAG = "app_stepper";
-
-typedef struct {
-  uint8_t in1;
-  uint8_t in2;
-  uint8_t in3;
-  uint8_t in4;
-  const char *label;
-} app_stepper_phase_t;
 
 typedef enum {
   APP_STEPPER_MODE_STOP = 0,
   APP_STEPPER_MODE_FORWARD,
   APP_STEPPER_MODE_REVERSE,
-  APP_STEPPER_MODE_SWEEP,
+  APP_STEPPER_MODE_LEFT,
+  APP_STEPPER_MODE_RIGHT,
   APP_STEPPER_MODE_STABILIZE,
 } app_stepper_mode_t;
 
-typedef enum {
-  APP_STEPPER_SWEEP_FORWARD = 0,
-  APP_STEPPER_SWEEP_REVERSE,
-  APP_STEPPER_SWEEP_PAUSE_AFTER_FORWARD,
-  APP_STEPPER_SWEEP_PAUSE_AFTER_REVERSE,
-} app_stepper_sweep_state_t;
-
 typedef struct {
   app_stepper_mode_t mode;
-  app_stepper_sweep_state_t sweep_state;
-  size_t phase_index;
-  size_t active_phase_index;
   uint32_t step_delay_ms;
-  uint32_t last_step_ms;
-  uint32_t pause_started_ms;
-  uint32_t moved_steps_in_leg;
   uint32_t total_steps;
+  uint32_t last_cmd_ms;
+  uint32_t last_telemetry_ms;
   bool coils_enabled;
   bool uart_ready;
   bool led_state;
@@ -76,55 +66,39 @@ typedef struct {
   uint8_t in3_level;
   uint8_t in4_level;
   uint8_t last_cmd;
-  uint32_t last_cmd_ms;
-  uint32_t last_telemetry_ms;
-  float    stabilize_velocity_sps;
-  uint32_t stabilize_last_step_ms;
+  int8_t left_direction;
+  int8_t right_direction;
+  float stabilize_velocity_sps;
+  float stabilize_drive_budget_ms;
+  uint32_t stabilize_last_tick_ms;
 } app_stepper_state_t;
 
 static void app_stepper_log_block(const char *title);
 static const char *app_stepper_mode_to_str(app_stepper_mode_t mode);
-static uint32_t app_stepper_delay_adjust_delta_ms(uint32_t current_delay_ms);
-static float app_stepper_steps_per_second(uint32_t delay_ms);
-static void app_stepper_log_timing(const char *reason);
+static const char *app_stepper_motor_to_str(int8_t direction);
 static void app_stepper_print_help(void);
 static void app_stepper_print_status(void);
-static const char *app_stepper_sweep_state_to_str(app_stepper_sweep_state_t state);
-static const char *app_stepper_cmd_to_str(uint8_t cmd);
 static void app_stepper_emit_telemetry(const char *reason);
 
 static esp_err_t app_stepper_gpio_init(void);
 static esp_err_t app_stepper_uart_init(void);
 static void app_stepper_led_init(void);
-static void app_stepper_led_toggle(void);
 static void app_stepper_led_set(bool on);
 
-static void app_stepper_apply_phase(const app_stepper_phase_t *phase);
+static void app_stepper_apply_drive(int8_t left_direction, int8_t right_direction);
+static void app_stepper_apply_channel(int gpio_a, int gpio_b, int8_t direction,
+                                      bool invert, uint8_t *out_a, uint8_t *out_b);
 static void app_stepper_release(void);
-static void app_stepper_step_forward_once(void);
-static void app_stepper_step_reverse_once(void);
 static void app_stepper_set_mode(app_stepper_mode_t mode);
 static void app_stepper_handle_uart(void);
 static void app_stepper_handle_command(uint8_t cmd);
-static void app_stepper_apply_named_phase(size_t phase_index);
-
-static const app_stepper_phase_t s_phases[] = {
-  {1, 0, 1, 0, "phase A"},
-  {0, 1, 1, 0, "phase B"},
-  {0, 1, 0, 1, "phase C"},
-  {1, 0, 0, 1, "phase D"},
-};
 
 static app_stepper_state_t s_stepper = {
   .mode = APP_STEPPER_MODE_STOP,
-  .sweep_state = APP_STEPPER_SWEEP_FORWARD,
-  .phase_index = 0,
-  .active_phase_index = 0,
   .step_delay_ms = CONFIG_APP_L293D_STEP_DELAY_MS,
-  .last_step_ms = 0,
-  .pause_started_ms = 0,
-  .moved_steps_in_leg = 0,
   .total_steps = 0,
+  .last_cmd_ms = 0,
+  .last_telemetry_ms = 0,
   .coils_enabled = false,
   .uart_ready = false,
   .led_state = false,
@@ -133,10 +107,11 @@ static app_stepper_state_t s_stepper = {
   .in3_level = 0,
   .in4_level = 0,
   .last_cmd = 0,
-  .last_cmd_ms = 0,
-  .last_telemetry_ms = 0,
+  .left_direction = 0,
+  .right_direction = 0,
   .stabilize_velocity_sps = 0.0f,
-  .stabilize_last_step_ms = 0,
+  .stabilize_drive_budget_ms = 0.0f,
+  .stabilize_last_tick_ms = 0,
 };
 
 static void app_stepper_log_block(const char *title) {
@@ -157,8 +132,10 @@ static const char *app_stepper_mode_to_str(app_stepper_mode_t mode) {
       return "forward";
     case APP_STEPPER_MODE_REVERSE:
       return "reverse";
-    case APP_STEPPER_MODE_SWEEP:
-      return "sweep";
+    case APP_STEPPER_MODE_LEFT:
+      return "left";
+    case APP_STEPPER_MODE_RIGHT:
+      return "right";
     case APP_STEPPER_MODE_STABILIZE:
       return "stabilize";
     default:
@@ -166,42 +143,14 @@ static const char *app_stepper_mode_to_str(app_stepper_mode_t mode) {
   }
 }
 
-static uint32_t app_stepper_delay_adjust_delta_ms(uint32_t current_delay_ms) {
-  if (current_delay_ms >= 1000U) {
-    return 200U;
+static const char *app_stepper_motor_to_str(int8_t direction) {
+  if (direction > 0) {
+    return "forward";
   }
-  if (current_delay_ms >= 500U) {
-    return 100U;
+  if (direction < 0) {
+    return "reverse";
   }
-  if (current_delay_ms >= 250U) {
-    return 50U;
-  }
-  if (current_delay_ms >= 100U) {
-    return 20U;
-  }
-  return 10U;
-}
-
-static float app_stepper_steps_per_second(uint32_t delay_ms) {
-  if (delay_ms == 0U) {
-    return 0.0f;
-  }
-  return 1000.0f / (float)delay_ms;
-}
-
-static const char *app_stepper_sweep_state_to_str(app_stepper_sweep_state_t state) {
-  switch (state) {
-    case APP_STEPPER_SWEEP_FORWARD:
-      return "forward";
-    case APP_STEPPER_SWEEP_REVERSE:
-      return "reverse";
-    case APP_STEPPER_SWEEP_PAUSE_AFTER_FORWARD:
-      return "pause_after_forward";
-    case APP_STEPPER_SWEEP_PAUSE_AFTER_REVERSE:
-      return "pause_after_reverse";
-    default:
-      return "unknown";
-  }
+  return "stop";
 }
 
 static const char *app_stepper_cmd_to_str(uint8_t cmd) {
@@ -223,22 +172,31 @@ static const char *app_stepper_cmd_to_str(uint8_t cmd) {
 
 static void app_stepper_emit_telemetry(const char *reason) {
   printf("@telemetry {\"kind\":\"stepper\",\"reason\":\"%s\",\"mode\":\"%s\","
-         "\"sweep_state\":\"%s\",\"step_delay_ms\":%" PRIu32 ",\"steps_per_second\":%.2f,"
-         "\"phase_index\":%u,\"total_steps\":%" PRIu32 ",\"coils_enabled\":%s,"
-         "\"sweep_steps\":%" PRIu32 ",\"uart_ready\":%s,\"last_command\":\"%s\","
+         "\"sweep_state\":\"none\",\"step_delay_ms\":%" PRIu32 ",\"steps_per_second\":%.2f,"
+         "\"phase_index\":0,\"total_steps\":%" PRIu32 ",\"coils_enabled\":%s,"
+         "\"sweep_steps\":0,\"uart_ready\":%s,\"last_command\":\"%s\","
+         "\"left_state\":\"%s\",\"right_state\":\"%s\","
+         "\"left_direction\":%d,\"right_direction\":%d,"
+         "\"motors\":{\"left\":{\"state\":\"%s\",\"direction\":%d},"
+         "\"right\":{\"state\":\"%s\",\"direction\":%d}},"
          "\"pins\":{\"in1\":%u,\"in2\":%u,\"in3\":%u,\"in4\":%u},"
          "\"gpio_pins\":{\"in1\":%d,\"in2\":%d,\"in3\":%d,\"in4\":%d},\"led_gpio\":%d}\n",
          reason != NULL ? reason : "update",
          app_stepper_mode_to_str(s_stepper.mode),
-         app_stepper_sweep_state_to_str(s_stepper.sweep_state),
          s_stepper.step_delay_ms,
-         (double)app_stepper_steps_per_second(s_stepper.step_delay_ms),
-         (unsigned)s_stepper.active_phase_index,
+         (double)fabsf(s_stepper.stabilize_velocity_sps),
          s_stepper.total_steps,
          s_stepper.coils_enabled ? "true" : "false",
-         s_stepper.moved_steps_in_leg,
          s_stepper.uart_ready ? "true" : "false",
          app_stepper_cmd_to_str(s_stepper.last_cmd),
+         app_stepper_motor_to_str(s_stepper.left_direction),
+         app_stepper_motor_to_str(s_stepper.right_direction),
+         (int)s_stepper.left_direction,
+         (int)s_stepper.right_direction,
+         app_stepper_motor_to_str(s_stepper.left_direction),
+         (int)s_stepper.left_direction,
+         app_stepper_motor_to_str(s_stepper.right_direction),
+         (int)s_stepper.right_direction,
          (unsigned)s_stepper.in1_level,
          (unsigned)s_stepper.in2_level,
          (unsigned)s_stepper.in3_level,
@@ -255,47 +213,34 @@ static void app_stepper_emit_telemetry(const char *reason) {
   );
 }
 
-static void app_stepper_log_timing(const char *reason) {
-  ESP_LOGI(TAG,
-           "%s delay=%" PRIu32 " ms (%.2f steps/s)%s",
-           reason != NULL ? reason : "timing",
-           s_stepper.step_delay_ms,
-           app_stepper_steps_per_second(s_stepper.step_delay_ms),
-           APP_STEPPER_COLOR_RESET);
-  app_stepper_emit_telemetry(reason);
-}
-
 static void app_stepper_print_help(void) {
   ESP_LOGI(TAG, "%scommands%s", APP_STEPPER_COLOR_CMD, APP_STEPPER_COLOR_RESET);
   ESP_LOGI(TAG, "  h : print help");
   ESP_LOGI(TAG, "  p : print status");
-  ESP_LOGI(TAG, "  s : stop");
-  ESP_LOGI(TAG, "  f : run forward");
-  ESP_LOGI(TAG, "  r : run reverse");
-  ESP_LOGI(TAG, "  w : sweep forward/reverse");
-  ESP_LOGI(TAG, "  1 : single step forward");
-  ESP_LOGI(TAG, "  2 : single step reverse");
-  ESP_LOGI(TAG, "  a : hold phase A");
-  ESP_LOGI(TAG, "  b : hold phase B");
-  ESP_LOGI(TAG, "  c : hold phase C");
-  ESP_LOGI(TAG, "  d : hold phase D");
-  ESP_LOGI(TAG, "  +/= : speed up (adaptive delay decrease)");
-  ESP_LOGI(TAG, "  -/_ : slow down (adaptive delay increase)");
-  ESP_LOGI(TAG, "  z : release coils");
+  ESP_LOGI(TAG, "  s : stop both motors");
+  ESP_LOGI(TAG, "  f : both motors forward");
+  ESP_LOGI(TAG, "  r : both motors reverse");
+  ESP_LOGI(TAG, "  2 : turn left  (left reverse, right forward)");
+  ESP_LOGI(TAG, "  1 : turn right (left forward, right reverse)");
+  ESP_LOGI(TAG, "  g : stabilization demo (forward/reverse by PID sign)");
+  ESP_LOGI(TAG, "  z : release both channels");
 }
 
 static void app_stepper_print_status(void) {
   ESP_LOGI(TAG,
-           "status: mode=%s delay=%" PRIu32 " ms (%.2f steps/s) phase=%u total_steps=%" PRIu32
-           " coils=%s sweep_steps=%" PRIu32 " uart=%s",
+           "status: mode=%s left=%s(%d) right=%s(%d) total_moves=%" PRIu32
+           " uart=%s pins=%u/%u/%u/%u",
            app_stepper_mode_to_str(s_stepper.mode),
-           s_stepper.step_delay_ms,
-           app_stepper_steps_per_second(s_stepper.step_delay_ms),
-           (unsigned)s_stepper.phase_index,
+           app_stepper_motor_to_str(s_stepper.left_direction),
+           (int)s_stepper.left_direction,
+           app_stepper_motor_to_str(s_stepper.right_direction),
+           (int)s_stepper.right_direction,
            s_stepper.total_steps,
-           s_stepper.coils_enabled ? "on" : "off",
-           s_stepper.moved_steps_in_leg,
-           s_stepper.uart_ready ? "ready" : "off");
+           s_stepper.uart_ready ? "ready" : "off",
+           (unsigned)s_stepper.in1_level,
+           (unsigned)s_stepper.in2_level,
+           (unsigned)s_stepper.in3_level,
+           (unsigned)s_stepper.in4_level);
   app_stepper_emit_telemetry("status");
 }
 
@@ -331,16 +276,10 @@ static void app_stepper_led_init(void) {
 
 static void app_stepper_led_set(bool on) {
 #if CONFIG_APP_STEPPER_LED_ENABLE
+  s_stepper.led_state = on;
   gpio_set_level((gpio_num_t)CONFIG_APP_STEPPER_LED_GPIO, on ? 1 : 0);
 #else
   (void)on;
-#endif
-}
-
-static void app_stepper_led_toggle(void) {
-#if CONFIG_APP_STEPPER_LED_ENABLE
-  s_stepper.led_state = !s_stepper.led_state;
-  gpio_set_level((gpio_num_t)CONFIG_APP_STEPPER_LED_GPIO, s_stepper.led_state ? 1 : 0);
 #endif
 }
 
@@ -362,7 +301,6 @@ static esp_err_t app_stepper_uart_init(void) {
     NULL,
     0
   );
-
   if (err != ESP_OK && err != ESP_ERR_INVALID_STATE) {
     ESP_LOGE(TAG, "uart_driver_install failed: %s", esp_err_to_name(err));
     return err;
@@ -384,108 +322,107 @@ static esp_err_t app_stepper_uart_init(void) {
   return ESP_OK;
 }
 
-static void app_stepper_apply_phase(const app_stepper_phase_t *phase) {
-  gpio_set_level((gpio_num_t)CONFIG_APP_L293D_IN1_GPIO, phase->in1);
-  gpio_set_level((gpio_num_t)CONFIG_APP_L293D_IN2_GPIO, phase->in2);
-  gpio_set_level((gpio_num_t)CONFIG_APP_L293D_IN3_GPIO, phase->in3);
-  gpio_set_level((gpio_num_t)CONFIG_APP_L293D_IN4_GPIO, phase->in4);
+static void app_stepper_apply_channel(int gpio_a, int gpio_b, int8_t direction,
+                                      bool invert, uint8_t *out_a, uint8_t *out_b) {
+  uint8_t level_a = 0;
+  uint8_t level_b = 0;
+  int8_t effective = direction;
 
-  s_stepper.coils_enabled = true;
-  s_stepper.in1_level = phase->in1;
-  s_stepper.in2_level = phase->in2;
-  s_stepper.in3_level = phase->in3;
-  s_stepper.in4_level = phase->in4;
-  app_stepper_led_toggle();
+  if (invert) {
+    effective = (int8_t)-effective;
+  }
+
+  if (effective > 0) {
+    level_a = 1;
+    level_b = 0;
+  } else if (effective < 0) {
+    level_a = 0;
+    level_b = 1;
+  }
+
+  gpio_set_level((gpio_num_t)gpio_a, level_a);
+  gpio_set_level((gpio_num_t)gpio_b, level_b);
+  *out_a = level_a;
+  *out_b = level_b;
+}
+
+static void app_stepper_apply_drive(int8_t left_direction, int8_t right_direction) {
+  app_stepper_apply_channel(CONFIG_APP_L293D_IN1_GPIO,
+                            CONFIG_APP_L293D_IN2_GPIO,
+                            left_direction,
+                            APP_STEPPER_LEFT_INVERT,
+                            &s_stepper.in1_level,
+                            &s_stepper.in2_level);
+  app_stepper_apply_channel(CONFIG_APP_L293D_IN3_GPIO,
+                            CONFIG_APP_L293D_IN4_GPIO,
+                            right_direction,
+                            APP_STEPPER_RIGHT_INVERT,
+                            &s_stepper.in3_level,
+                            &s_stepper.in4_level);
+
+  s_stepper.left_direction = left_direction;
+  s_stepper.right_direction = right_direction;
+  s_stepper.coils_enabled = (left_direction != 0) || (right_direction != 0);
+  app_stepper_led_set(s_stepper.coils_enabled);
 }
 
 static void app_stepper_release(void) {
-  gpio_set_level((gpio_num_t)CONFIG_APP_L293D_IN1_GPIO, 0);
-  gpio_set_level((gpio_num_t)CONFIG_APP_L293D_IN2_GPIO, 0);
-  gpio_set_level((gpio_num_t)CONFIG_APP_L293D_IN3_GPIO, 0);
-  gpio_set_level((gpio_num_t)CONFIG_APP_L293D_IN4_GPIO, 0);
-
-  s_stepper.coils_enabled = false;
-  s_stepper.led_state = false;
-  s_stepper.in1_level = 0;
-  s_stepper.in2_level = 0;
-  s_stepper.in3_level = 0;
-  s_stepper.in4_level = 0;
-  app_stepper_led_set(false);
-}
-
-static void app_stepper_step_forward_once(void) {
-  const size_t phase_count = sizeof(s_phases) / sizeof(s_phases[0]);
-
-  app_stepper_apply_phase(&s_phases[s_stepper.phase_index]);
-  s_stepper.active_phase_index = s_stepper.phase_index;
-  s_stepper.phase_index = (s_stepper.phase_index + 1U) % phase_count;
-  s_stepper.total_steps++;
-}
-
-static void app_stepper_step_reverse_once(void) {
-  const size_t phase_count = sizeof(s_phases) / sizeof(s_phases[0]);
-
-  if (s_stepper.phase_index == 0) {
-    s_stepper.phase_index = phase_count - 1U;
-  } else {
-    s_stepper.phase_index--;
-  }
-
-  app_stepper_apply_phase(&s_phases[s_stepper.phase_index]);
-  s_stepper.active_phase_index = s_stepper.phase_index;
-  s_stepper.total_steps++;
-}
-
-static void app_stepper_apply_named_phase(size_t phase_index) {
-  const size_t phase_count = sizeof(s_phases) / sizeof(s_phases[0]);
-
-  if (phase_index >= phase_count) {
-    return;
-  }
-
-  app_stepper_set_mode(APP_STEPPER_MODE_STOP);
-  s_stepper.phase_index = phase_index;
-  s_stepper.active_phase_index = phase_index;
-  app_stepper_apply_phase(&s_phases[phase_index]);
-
-  ESP_LOGI(TAG,
-           "hold %s: in1=%u in2=%u in3=%u in4=%u",
-           s_phases[phase_index].label,
-           s_phases[phase_index].in1,
-           s_phases[phase_index].in2,
-           s_phases[phase_index].in3,
-           s_phases[phase_index].in4);
-  app_stepper_emit_telemetry("hold_phase");
+  app_stepper_apply_drive(0, 0);
 }
 
 static void app_stepper_set_mode(app_stepper_mode_t mode) {
-  if (s_stepper.mode == mode) {
-    return;
-  }
-
   s_stepper.mode = mode;
-  s_stepper.pause_started_ms = 0;
-  s_stepper.moved_steps_in_leg = 0;
+
+  switch (mode) {
+    case APP_STEPPER_MODE_STOP:
+      app_stepper_release();
+      break;
+    case APP_STEPPER_MODE_FORWARD:
+      app_stepper_apply_drive(1, 1);
+      s_stepper.total_steps++;
+      break;
+    case APP_STEPPER_MODE_REVERSE:
+      app_stepper_apply_drive(-1, -1);
+      s_stepper.total_steps++;
+      break;
+    case APP_STEPPER_MODE_LEFT:
+      app_stepper_apply_drive(-1, 1);
+      s_stepper.total_steps++;
+      break;
+    case APP_STEPPER_MODE_RIGHT:
+      app_stepper_apply_drive(1, -1);
+      s_stepper.total_steps++;
+      break;
+    case APP_STEPPER_MODE_STABILIZE:
+      s_stepper.stabilize_drive_budget_ms = 0.0f;
+      s_stepper.stabilize_last_tick_ms = 0U;
+      app_stepper_release();
+      break;
+    default:
+      app_stepper_release();
+      break;
+  }
 
   ESP_LOGI(TAG,
-           "%smode -> %s%s",
+           "%smode -> %s | left=%s right=%s%s",
            APP_STEPPER_COLOR_OK,
            app_stepper_mode_to_str(mode),
+           app_stepper_motor_to_str(s_stepper.left_direction),
+           app_stepper_motor_to_str(s_stepper.right_direction),
            APP_STEPPER_COLOR_RESET);
-
-  if (mode == APP_STEPPER_MODE_STOP) {
-    app_stepper_release();
-    app_stepper_emit_telemetry("mode_stop");
-    return;
-  }
-
-  /* Make the next tick step immediately after a mode switch. */
-  s_stepper.last_step_ms = 0;
   app_stepper_emit_telemetry("mode_change");
 }
 
 static void app_stepper_handle_command(uint8_t cmd) {
   const uint32_t now_ms = esp_log_timestamp();
+
+  if (cmd == '\r' || cmd == '\n') {
+    return;
+  }
+
+  if (cmd < 32U || cmd > 126U) {
+    return;
+  }
 
   if (cmd == s_stepper.last_cmd &&
       (now_ms - s_stepper.last_cmd_ms) < APP_STEPPER_DUPLICATE_CMD_GUARD_MS) {
@@ -508,6 +445,8 @@ static void app_stepper_handle_command(uint8_t cmd) {
 
     case 's':
     case 'S':
+    case 'z':
+    case 'Z':
       app_stepper_set_mode(APP_STEPPER_MODE_STOP);
 #if CONFIG_APP_CONTROL_ENABLE
       app_control_set_active(false);
@@ -518,7 +457,6 @@ static void app_stepper_handle_command(uint8_t cmd) {
     case 'G':
 #if CONFIG_APP_CONTROL_ENABLE
       s_stepper.stabilize_velocity_sps = 0.0f;
-      s_stepper.stabilize_last_step_ms = 0;
       app_stepper_set_mode(APP_STEPPER_MODE_STABILIZE);
       app_control_set_active(true);
       ESP_LOGI(TAG, "stabilize mode enabled");
@@ -537,74 +475,33 @@ static void app_stepper_handle_command(uint8_t cmd) {
       app_stepper_set_mode(APP_STEPPER_MODE_REVERSE);
       break;
 
-    case 'w':
-    case 'W':
-      s_stepper.sweep_state = APP_STEPPER_SWEEP_FORWARD;
-      app_stepper_set_mode(APP_STEPPER_MODE_SWEEP);
+    case '2':
+    case 'l':
+    case 'L':
+      app_stepper_set_mode(APP_STEPPER_MODE_LEFT);
       break;
 
     case '1':
-      app_stepper_step_forward_once();
-      app_stepper_print_status();
-      break;
-
-    case '2':
-      app_stepper_step_reverse_once();
-      app_stepper_print_status();
-      break;
-
-    case 'a':
-    case 'A':
-      app_stepper_apply_named_phase(0);
-      break;
-
-    case 'b':
-    case 'B':
-      app_stepper_apply_named_phase(1);
-      break;
-
-    case 'c':
-    case 'C':
-      app_stepper_apply_named_phase(2);
-      break;
-
-    case 'd':
-    case 'D':
-      app_stepper_apply_named_phase(3);
+    case 'q':
+    case 'Q':
+      app_stepper_set_mode(APP_STEPPER_MODE_RIGHT);
       break;
 
     case '+':
-    case '=': {
-      const uint32_t delta_ms = app_stepper_delay_adjust_delta_ms(s_stepper.step_delay_ms);
-      if (s_stepper.step_delay_ms > APP_STEPPER_MIN_DELAY_MS) {
-        const uint32_t next_delay =
-          (s_stepper.step_delay_ms > (APP_STEPPER_MIN_DELAY_MS + delta_ms))
-            ? (s_stepper.step_delay_ms - delta_ms)
-            : APP_STEPPER_MIN_DELAY_MS;
-        s_stepper.step_delay_ms = next_delay;
-      }
-      app_stepper_log_timing("faster");
-      break;
-    }
-
+    case '=':
     case '-':
-    case '_': {
-      const uint32_t delta_ms = app_stepper_delay_adjust_delta_ms(s_stepper.step_delay_ms);
-      const uint32_t remaining_ms = APP_STEPPER_MAX_DELAY_MS - s_stepper.step_delay_ms;
-      s_stepper.step_delay_ms += (delta_ms < remaining_ms) ? delta_ms : remaining_ms;
-      app_stepper_log_timing("slower");
-      break;
-    }
-
-    case 'z':
-    case 'Z':
-      app_stepper_release();
-      ESP_LOGI(TAG, "%scoils released%s", APP_STEPPER_COLOR_WARN, APP_STEPPER_COLOR_RESET);
-      app_stepper_emit_telemetry("release");
-      break;
-
-    case '\r':
-    case '\n':
+    case '_':
+    case 'w':
+    case 'W':
+    case 'a':
+    case 'A':
+    case 'b':
+    case 'B':
+    case 'c':
+    case 'C':
+    case 'd':
+    case 'D':
+      ESP_LOGW(TAG, "command '%c' is disabled in two-wheel drive mode", cmd);
       break;
 
     default:
@@ -625,17 +522,21 @@ void app_stepper_get_snapshot(app_stepper_snapshot_t *snapshot) {
 
   memset(snapshot, 0, sizeof(*snapshot));
   snapshot->mode = app_stepper_mode_to_str(s_stepper.mode);
-  snapshot->sweep_state = app_stepper_sweep_state_to_str(s_stepper.sweep_state);
+  snapshot->sweep_state = "none";
+  snapshot->left_motor_state = app_stepper_motor_to_str(s_stepper.left_direction);
+  snapshot->right_motor_state = app_stepper_motor_to_str(s_stepper.right_direction);
   snapshot->step_delay_ms = s_stepper.step_delay_ms;
-  snapshot->steps_per_second = app_stepper_steps_per_second(s_stepper.step_delay_ms);
-  snapshot->phase_index = (uint32_t)s_stepper.active_phase_index;
+  snapshot->steps_per_second = fabsf(s_stepper.stabilize_velocity_sps);
+  snapshot->phase_index = 0;
   snapshot->total_steps = s_stepper.total_steps;
-  snapshot->sweep_steps = s_stepper.moved_steps_in_leg;
+  snapshot->sweep_steps = 0;
   snapshot->coils_enabled = s_stepper.coils_enabled;
   snapshot->uart_ready = s_stepper.uart_ready;
   strlcpy(snapshot->last_command,
           app_stepper_cmd_to_str(s_stepper.last_cmd),
           sizeof(snapshot->last_command));
+  snapshot->left_direction = s_stepper.left_direction;
+  snapshot->right_direction = s_stepper.right_direction;
   snapshot->in1_level = s_stepper.in1_level;
   snapshot->in2_level = s_stepper.in2_level;
   snapshot->in3_level = s_stepper.in3_level;
@@ -669,7 +570,7 @@ static void app_stepper_handle_uart(void) {
 }
 
 esp_err_t app_stepper_init(void) {
-  app_stepper_log_block("L293D STEPPER UART CONTROL");
+  app_stepper_log_block("L293D DUAL DRIVE UART CONTROL");
 
   esp_err_t err = app_stepper_gpio_init();
   if (err != ESP_OK) {
@@ -687,25 +588,18 @@ esp_err_t app_stepper_init(void) {
   }
 
   ESP_LOGI(TAG,
-           "pins: in1=%d in2=%d in3=%d in4=%d",
+           "left motor: in1=%d in2=%d invert=%s",
            CONFIG_APP_L293D_IN1_GPIO,
            CONFIG_APP_L293D_IN2_GPIO,
+           APP_STEPPER_LEFT_INVERT ? "yes" : "no");
+  ESP_LOGI(TAG,
+           "right motor: in3=%d in4=%d invert=%s",
            CONFIG_APP_L293D_IN3_GPIO,
-           CONFIG_APP_L293D_IN4_GPIO);
-  ESP_LOGI(TAG, "step delay: %" PRIu32 " ms", s_stepper.step_delay_ms);
-  ESP_LOGI(TAG, "uart: num=%d baud=%d ready=%s",
-           APP_STEPPER_UART_PORT,
-           CONFIG_APP_STEPPER_UART_BAUD_RATE,
-           s_stepper.uart_ready ? "yes" : "no");
+           CONFIG_APP_L293D_IN4_GPIO,
+           APP_STEPPER_RIGHT_INVERT ? "yes" : "no");
   ESP_LOGI(TAG, "EN1,2 and EN3,4 must be tied HIGH");
 
-#if CONFIG_APP_STEPPER_LED_ENABLE
-  ESP_LOGI(TAG, "stepper led gpio=%d", CONFIG_APP_STEPPER_LED_GPIO);
-#endif
-
   app_stepper_print_help();
-
-  s_stepper.sweep_state = APP_STEPPER_SWEEP_FORWARD;
   app_stepper_set_mode(APP_STEPPER_MODE_STOP);
   app_stepper_emit_telemetry("init_idle");
 
@@ -724,95 +618,73 @@ void app_stepper_tick(void) {
     app_stepper_emit_telemetry("heartbeat");
   }
 
-  if (s_stepper.mode == APP_STEPPER_MODE_STOP) {
+  if (s_stepper.mode != APP_STEPPER_MODE_STABILIZE) {
     return;
   }
 
-  if (s_stepper.mode == APP_STEPPER_MODE_SWEEP) {
-    if (s_stepper.sweep_state == APP_STEPPER_SWEEP_PAUSE_AFTER_FORWARD ||
-        s_stepper.sweep_state == APP_STEPPER_SWEEP_PAUSE_AFTER_REVERSE) {
-      if (s_stepper.pause_started_ms == 0U) {
-        s_stepper.pause_started_ms = now_ms;
-        app_stepper_release();
-      }
-
-      if ((now_ms - s_stepper.pause_started_ms) < APP_STEPPER_EDGE_PAUSE_MS) {
-        return;
-      }
-
-      s_stepper.pause_started_ms = 0;
-      s_stepper.moved_steps_in_leg = 0;
-
-      if (s_stepper.sweep_state == APP_STEPPER_SWEEP_PAUSE_AFTER_FORWARD) {
-        s_stepper.sweep_state = APP_STEPPER_SWEEP_REVERSE;
-        ESP_LOGI(TAG, "sweep -> reverse");
-      } else {
-        s_stepper.sweep_state = APP_STEPPER_SWEEP_FORWARD;
-        ESP_LOGI(TAG, "sweep -> forward");
-      }
-      app_stepper_emit_telemetry("sweep_edge");
+  if (fabsf(s_stepper.stabilize_velocity_sps) < 0.5f) {
+    if (s_stepper.left_direction != 0 || s_stepper.right_direction != 0) {
+      app_stepper_release();
+      app_stepper_emit_telemetry("stabilize_hold");
     }
-
-    if ((now_ms - s_stepper.last_step_ms) < s_stepper.step_delay_ms) {
-      return;
-    }
-
-    s_stepper.last_step_ms = now_ms;
-
-    if (s_stepper.sweep_state == APP_STEPPER_SWEEP_FORWARD) {
-      app_stepper_step_forward_once();
-      s_stepper.moved_steps_in_leg++;
-
-      if (s_stepper.moved_steps_in_leg >= APP_STEPPER_SWEEP_STEPS) {
-        s_stepper.sweep_state = APP_STEPPER_SWEEP_PAUSE_AFTER_FORWARD;
-      }
-      return;
-    }
-
-    if (s_stepper.sweep_state == APP_STEPPER_SWEEP_REVERSE) {
-      app_stepper_step_reverse_once();
-      s_stepper.moved_steps_in_leg++;
-
-      if (s_stepper.moved_steps_in_leg >= APP_STEPPER_SWEEP_STEPS) {
-        s_stepper.sweep_state = APP_STEPPER_SWEEP_PAUSE_AFTER_REVERSE;
-      }
-      return;
-    }
-
+    s_stepper.stabilize_drive_budget_ms = 0.0f;
     return;
   }
 
-  if (s_stepper.mode == APP_STEPPER_MODE_STABILIZE) {
-    const float abs_vel = fabsf(s_stepper.stabilize_velocity_sps);
-    if (abs_vel < 0.5f) {
-      return;
+  uint32_t dt_ms = 5U;
+  if (s_stepper.stabilize_last_tick_ms > 0U && now_ms > s_stepper.stabilize_last_tick_ms) {
+    dt_ms = now_ms - s_stepper.stabilize_last_tick_ms;
+    if (dt_ms > 50U) {
+      dt_ms = 50U;
     }
-    const uint32_t interval_ms = (uint32_t)(1000.0f / abs_vel);
-    if ((now_ms - s_stepper.stabilize_last_step_ms) < interval_ms) {
-      return;
+  }
+  s_stepper.stabilize_last_tick_ms = now_ms;
+
+#if CONFIG_APP_CONTROL_ENABLE
+  const float max_velocity = (float)CONFIG_APP_CONTROL_MAX_OUTPUT_SPS;
+#else
+  const float max_velocity = 50.0f;
+#endif
+
+  float drive_ratio = fabsf(s_stepper.stabilize_velocity_sps) / max_velocity;
+  if (drive_ratio > 1.0f) {
+    drive_ratio = 1.0f;
+  }
+
+  if (drive_ratio < APP_STEPPER_STABILIZE_DEADBAND_RATIO) {
+    if (s_stepper.left_direction != 0 || s_stepper.right_direction != 0) {
+      app_stepper_release();
+      app_stepper_emit_telemetry("stabilize_deadband");
     }
-    s_stepper.stabilize_last_step_ms = now_ms;
-    if (s_stepper.stabilize_velocity_sps > 0.0f) {
-      app_stepper_step_forward_once();
-    } else {
-      app_stepper_step_reverse_once();
+    s_stepper.stabilize_drive_budget_ms = 0.0f;
+    return;
+  }
+
+  s_stepper.stabilize_drive_budget_ms += drive_ratio * (float)dt_ms;
+  if (s_stepper.stabilize_drive_budget_ms > APP_STEPPER_STABILIZE_MAX_BUDGET_MS) {
+    s_stepper.stabilize_drive_budget_ms = APP_STEPPER_STABILIZE_MAX_BUDGET_MS;
+  }
+
+  if (s_stepper.stabilize_drive_budget_ms < (float)dt_ms) {
+    if (s_stepper.left_direction != 0 || s_stepper.right_direction != 0) {
+      app_stepper_release();
+      app_stepper_emit_telemetry("stabilize_pwm_idle");
     }
     return;
   }
 
-  if ((now_ms - s_stepper.last_step_ms) < s_stepper.step_delay_ms) {
+  s_stepper.stabilize_drive_budget_ms -= (float)dt_ms;
+
+  if (s_stepper.stabilize_velocity_sps > 0.0f) {
+    if (s_stepper.left_direction != 1 || s_stepper.right_direction != 1) {
+      app_stepper_apply_drive(1, 1);
+      app_stepper_emit_telemetry("stabilize_forward");
+    }
     return;
   }
 
-  s_stepper.last_step_ms = now_ms;
-
-  if (s_stepper.mode == APP_STEPPER_MODE_FORWARD) {
-    app_stepper_step_forward_once();
-    return;
-  }
-
-  if (s_stepper.mode == APP_STEPPER_MODE_REVERSE) {
-    app_stepper_step_reverse_once();
-    return;
+  if (s_stepper.left_direction != -1 || s_stepper.right_direction != -1) {
+    app_stepper_apply_drive(-1, -1);
+    app_stepper_emit_telemetry("stabilize_reverse");
   }
 }

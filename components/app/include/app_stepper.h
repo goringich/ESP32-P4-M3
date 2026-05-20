@@ -8,6 +8,8 @@
 typedef struct {
   const char *mode;
   const char *sweep_state;
+  const char *left_motor_state;
+  const char *right_motor_state;
   uint32_t step_delay_ms;
   float steps_per_second;
   uint32_t phase_index;
@@ -16,6 +18,8 @@ typedef struct {
   bool coils_enabled;
   bool uart_ready;
   char last_command[3];
+  int8_t left_direction;
+  int8_t right_direction;
   uint8_t in1_level;
   uint8_t in2_level;
   uint8_t in3_level;
