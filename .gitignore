@@ -11,3 +11,6 @@ logs/monitor/latest.log
 
 sdkconfig.old
 hello_world_p4.worktrees/
+
+# Obsolete coursework export: never track this file again
+course_work2526.pdf
