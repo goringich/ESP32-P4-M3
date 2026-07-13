@@ -1,0 +1,295 @@
+{
+  "objects": {
+    "BALANCE_STAND_SIDE": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 318937.26
+    },
+    "BALLAST_HOLDER": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 20009.88
+    },
+    "BALLAST_LID": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 5283.71
+    },
+    "BALL_STAND": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 205770.16
+    },
+    "BATTERY_TRAY": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 12949.19
+    },
+    "BEARING_FIT_COUPON": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 17025.55
+    },
+    "CABLE_CLIP_01": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 456.7
+    },
+    "CHARGE_PORT_HOLDER": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 2005.78
+    },
+    "DRIVER_TRAY": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 8908.02
+    },
+    "ENCODER_GUARD": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 4410.55
+    },
+    "EQUATOR_EDGE_CLIP_01": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 1130.0
+    },
+    "FIXED_FRAME_BOTTOM": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 23822.89
+    },
+    "FIXED_FRAME_RING_QUADRANT_01": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 12656.66
+    },
+    "FIXED_FRAME_TOP": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 23822.89
+    },
+    "FRAME_STRUT_TOP_01": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 4449.75
+    },
+    "HEAT_INSERT_TEMPLATE": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 24173.46
+    },
+    "IMU_MOUNT": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 1849.4
+    },
+    "M3_TEST_COUPON": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 13525.51
+    },
+    "MOTOR_CLAMP": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 13805.61
+    },
+    "MOTOR_MOUNT": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 16376.42
+    },
+    "PCB_TRAY": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 12072.34
+    },
+    "PENDULUM_ARM": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 12347.36
+    },
+    "PENDULUM_ENCODER_GUARD": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 3033.61
+    },
+    "PENDULUM_TEST_STAND_BASE": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 128605.59
+    },
+    "PENDULUM_TEST_STAND_UPRIGHT": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 94894.16
+    },
+    "SEGMENT_ALIGNMENT_KEY": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 277.8
+    },
+    "SEGMENT_ALIGNMENT_TEMPLATE": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 6666.58
+    },
+    "SERVICE_HATCH": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 11512.9
+    },
+    "SHAFT_SUPPORT_LEFT": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 22754.84
+    },
+    "SHAFT_SUPPORT_RIGHT": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 22754.84
+    },
+    "SHELL_SEGMENT_01_POS_X": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 83822.94
+    },
+    "SHELL_SEGMENT_02_NEG_X": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 95533.03
+    },
+    "SHELL_SEGMENT_03_POS_Y": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 95533.03
+    },
+    "SHELL_SEGMENT_04_NEG_Y": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 95533.04
+    },
+    "SHELL_SEGMENT_05_POS_Z": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 95533.91
+    },
+    "SHELL_SEGMENT_06_NEG_Z": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 95533.89
+    },
+    "SPHERICAL_JOINT_TEST_FRAGMENT": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 5595.81
+    },
+    "STEERING_ACTUATOR_MOUNT": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 10409.06
+    },
+    "STEERING_RING": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 28535.92
+    },
+    "SWITCH_HOLDER": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 2647.78
+    },
+    "TPU_GRIP_01_POS_X": {
+      "manifold": true,
+      "non_manifold_edges": 0,
+      "non_manifold_face_counts": [],
+      "duplicate_faces": 0,
+      "volume_mm3": 171.26
+    }
+  },
+  "all_manifold": true,
+  "collision_status": "PASS",
+  "minimum_dynamic_clearance_mm": 4.0,
+  "minimum_case": "BATTERY_PLACEHOLDER yaw=-65 pendulum=0"
+}
