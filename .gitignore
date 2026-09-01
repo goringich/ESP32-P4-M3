@@ -9,8 +9,15 @@ logs/monitor/latest.log
 *~
 .codex
 
+sdkconfig
 sdkconfig.old
 hello_world_p4.worktrees/
+
+# Local credential material
+*.pem
+*.key
+.env
+.env.*
 
 # Obsolete coursework export: never track this file again
 course_work2526.pdf
