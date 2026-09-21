@@ -80,7 +80,7 @@ def build_xml(
   <compiler angle="degree" coordinate="local"/>
   <option timestep="0.001" gravity="0 0 -9.80665" integrator="implicitfast"/>
   <default>
-    <geom condim="6" friction="{selected_friction:.6f} {selected_friction:.6f} 0.01 0.002 0.002"/>
+    <geom condim="6" friction="{selected_friction:.6f} 0.01 0.002"/>
     <joint damping="0.001"/>
   </default>
   <worldbody>
@@ -95,8 +95,8 @@ def build_xml(
         <geom name="steering_proxy" type="cylinder" size="0.095 0.004" mass="0.08" contype="0" conaffinity="0" rgba="0.8 0.6 0.2 0.5"/>
         <body name="pendulum" pos="0 0 0">
           <joint name="pendulum_hinge" type="hinge" axis="0 1 0" limited="false"/>
-          <geom name="pendulum_arm" type="capsule" fromto="0 0 0 0 0 -{arm:.9f}" size="0.006" mass="{extra:.9f}" rgba="0.8 0.25 0.2 1"/>
-          <geom name="ballast" type="sphere" pos="0 0 -{arm:.9f}" size="0.02" mass="{ballast:.9f}" rgba="0.15 0.15 0.15 1"/>
+          <geom name="pendulum_arm" type="capsule" fromto="0 0 0 0 0 -{arm:.9f}" size="0.006" mass="{extra:.9f}" contype="0" conaffinity="0" rgba="0.8 0.25 0.2 1"/>
+          <geom name="ballast" type="sphere" pos="0 0 -{arm:.9f}" size="0.02" mass="{ballast:.9f}" contype="0" conaffinity="0" rgba="0.15 0.15 0.15 1"/>
         </body>
       </body>
     </body>
