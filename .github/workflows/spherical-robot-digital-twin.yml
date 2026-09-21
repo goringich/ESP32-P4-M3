@@ -1,0 +1,46 @@
+name: Spherical Robot Digital Twin
+
+on:
+  pull_request:
+    paths:
+      - "AGENTS.md"
+      - "README.md"
+      - "mechanical/spherical_robot/**"
+      - ".github/workflows/spherical-robot-digital-twin.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "AGENTS.md"
+      - "README.md"
+      - "mechanical/spherical_robot/**"
+      - ".github/workflows/spherical-robot-digital-twin.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Verify dependency-free engineering baseline
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python -m unittest discover -s mechanical/spherical_robot/tests -p 'test_*.py'
+          python mechanical/spherical_robot/calculations.py --json >/tmp/spherical-sizing.json
+          python mechanical/spherical_robot/simulation/run_sweep.py --output /tmp/spherical-sweep.json
+          python mechanical/spherical_robot/simulation/mujoco_model.py --output /tmp/spherical-robot.xml
+          python -m json.tool /tmp/spherical-sizing.json >/dev/null
+          python -m json.tool /tmp/spherical-sweep.json >/dev/null
+          python - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree
+          ElementTree.parse(Path("/tmp/spherical-robot.xml"))
+          PY
+          git diff --check
