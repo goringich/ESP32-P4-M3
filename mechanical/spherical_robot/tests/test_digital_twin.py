@@ -118,18 +118,17 @@ class MuJoCoInputTests(unittest.TestCase):
     self.assertIn("dimensions_sha256", xml)
     self.assertIn("GENERATED_MODEL_NOT_EXECUTED", xml)
 
-  def test_mujoco_contact_friction_is_isotropic_and_complete(self) -> None:
-    xml = mujoco_model.build_xml(friction_mu=0.45)
-    root = ElementTree.fromstring(xml)
-    default_geom = root.find("./default/geom")
-    self.assertIsNotNone(default_geom)
-    values = [float(value) for value in default_geom.attrib["friction"].split()]
-    self.assertEqual(len(values), 5)
-    self.assertAlmostEqual(values[0], 0.45)
-    self.assertAlmostEqual(values[1], 0.45)
-    self.assertAlmostEqual(values[2], 0.01)
-    self.assertAlmostEqual(values[3], 0.002)
-    self.assertAlmostEqual(values[4], 0.002)
+  def test_mujoco_internal_pendulum_geoms_do_not_collide_with_solid_shell_proxy(self) -> None:
+    root = ElementTree.fromstring(mujoco_model.build_xml())
+    by_name = {
+      geom.attrib.get("name"): geom
+      for geom in root.findall(".//geom")
+      if geom.attrib.get("name")
+    }
+    for name in ("pendulum_arm", "ballast"):
+      self.assertEqual(by_name[name].attrib.get("contype"), "0")
+      self.assertEqual(by_name[name].attrib.get("conaffinity"), "0")
+    self.assertNotEqual(by_name["shell_contact"].attrib.get("contype"), "0")
 
   def test_generated_model_accepts_scenario_overrides(self) -> None:
     xml = mujoco_model.build_xml(
