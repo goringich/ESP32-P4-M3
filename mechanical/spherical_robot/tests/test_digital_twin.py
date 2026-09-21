@@ -20,6 +20,7 @@ if str(SIM) not in sys.path:
 import calculations
 import reduced_order
 import mujoco_model
+import run_multibody_crosscheck
 
 
 class ParameterContractTests(unittest.TestCase):
@@ -159,6 +160,44 @@ class CadConfigContractTests(unittest.TestCase):
     source = (ROOT / "blender/build_robot.py").read_text(encoding="utf-8")
     self.assertNotIn("def collision_sweep(inner_r:", source)
     self.assertIn("def collision_sweep_v2(inner_r:", source)
+
+
+class MultibodyEntrypointTests(unittest.TestCase):
+  def test_stage_commands_share_one_work_directory(self) -> None:
+    work = Path("/tmp/agent-multibody-test")
+    stages = run_multibody_crosscheck.build_stage_commands(
+      work,
+      python_executable="/usr/bin/python",
+    )
+    self.assertEqual([row[0] for row in stages], ["mujoco", "chrono", "compare"])
+    for _stage, command, output in stages:
+      self.assertEqual(command[0], "/usr/bin/python")
+      self.assertEqual(output.parent, work)
+    compare_command = stages[-1][1]
+    self.assertIn(str(work / "mujoco-evidence.json"), compare_command)
+    self.assertIn(str(work / "chrono-evidence.json"), compare_command)
+
+  def test_backend_blockers_remain_explicit(self) -> None:
+    mujoco = run_multibody_crosscheck.blocker_from_stage(
+      "mujoco",
+      3,
+      '{"status":"SIMULATION_BACKEND_BLOCKED"}',
+      "",
+      {"status": "SIMULATION_BACKEND_BLOCKED"},
+    )
+    chrono = run_multibody_crosscheck.blocker_from_stage(
+      "chrono",
+      3,
+      '{"status":"CROSSCHECK_BACKEND_BLOCKED"}',
+      "",
+      {"status": "CROSSCHECK_BACKEND_BLOCKED"},
+    )
+    self.assertEqual(mujoco["status"], "SIMULATION_BACKEND_BLOCKED")
+    self.assertEqual(mujoco["backend"], "mujoco")
+    self.assertEqual(chrono["status"], "CROSSCHECK_BACKEND_BLOCKED")
+    self.assertEqual(chrono["backend"], "project-chrono")
+    self.assertFalse(mujoco["physical_accepted"])
+    self.assertFalse(chrono["physical_accepted"])
 
 
 if __name__ == "__main__":
