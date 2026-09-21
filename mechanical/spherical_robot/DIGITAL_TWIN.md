@@ -18,7 +18,7 @@ The digital twin binds the existing exact mechanical parameter/CAD pipeline to d
 10. `PHYSICAL_SYSTEM_PASS`
 11. `REPEATED_VALIDATION`
 
-The current repository can deterministically produce levels 1–2 and the existing Blender pipeline produces geometry/collision evidence for level 3. Higher states require the corresponding tool/runtime and exact execution evidence.
+The repository deterministically produces levels 1–2, the existing Blender pipeline produces geometry/collision evidence for level 3, and CI now executes a pinned MuJoCo backend for level 4. Levels 5+ remain separate evidence gates.
 
 ## Reduced-order model
 
@@ -56,7 +56,23 @@ python mechanical/spherical_robot/simulation/mujoco_model.py \
   --output /tmp/spherical_robot.xml
 ```
 
-This validates XML generation and binds hashes, but **does not execute MuJoCo**. A future solver execution receipt must record the exact MuJoCo version, model hash, scenario matrix, solver settings and numeric results before `PRIMARY_MULTIBODY_PASS`.
+XML generation alone remains `GENERATED_MODEL_NOT_EXECUTED`. The separate
+`simulation/run_mujoco.py` path installs/executes pinned MuJoCo 3.13.0 in CI,
+runs all 27 ballast/arm/friction combinations, verifies stable shell-floor
+contact, bounded penetration, finite state, torque-speed limiting and a
+positive/negative torque symmetry check, and records exact source hashes plus
+solver/runtime versions. Only that executed path may emit
+`PRIMARY_MULTIBODY_PASS`.
+
+Run it locally after installing the pinned dependency:
+
+```bash
+python -m pip install -r mechanical/spherical_robot/simulation/requirements-simulation.txt
+MUJOCO_GL=egl python mechanical/spherical_robot/simulation/run_mujoco.py
+```
+
+A MuJoCo pass still leaves the design verdict `PROVISIONAL` while canonical
+inputs remain `PLACEHOLDER`/`ASSUMED`; it does not imply physical acceptance.
 
 The MuJoCo model contains:
 
