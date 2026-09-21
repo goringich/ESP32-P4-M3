@@ -18,7 +18,7 @@ The digital twin binds the existing exact mechanical parameter/CAD pipeline to d
 10. `PHYSICAL_SYSTEM_PASS`
 11. `REPEATED_VALIDATION`
 
-The repository deterministically produces levels 1–2, the existing Blender pipeline produces geometry/collision evidence for level 3, and CI now executes a pinned MuJoCo backend for level 4. Levels 5+ remain separate evidence gates.
+The repository deterministically produces levels 1–2, the existing Blender pipeline produces geometry/collision evidence for level 3, CI executes pinned MuJoCo 3.13.0 for level 4, and the dedicated heavyweight lane executes Project Chrono 10.0.0 as an independent level-5 cross-check. Levels 6+ remain separate evidence gates.
 
 ## Reduced-order model
 
@@ -114,3 +114,17 @@ After the first safe subassembly/rolling tests, feed measured values back into t
 - real pendulum and steering limits.
 
 Every calibration update invalidates dependent simulation evidence until rerun.
+
+
+## Project Chrono independent cross-check
+
+The heavyweight CI lane uses official PyChrono 10.0.0 through its recommended
+Conda distribution. `simulation/run_chrono.py` rebuilds an independent
+Y-up/NSC/Bullet rigid-body model rather than reusing MuJoCo internals. It runs
+the same 27 ballast/arm/friction scenarios and a ±torque symmetry pair.
+
+`simulation/compare_multibody.py` then binds both solver reports to the same
+canonical source hashes and checks scenario identity, rolling direction
+agreement, bounded median response magnitude and independent symmetry. This may
+emit `INDEPENDENT_DYNAMICS_CROSSCHECK_PASS`; it still cannot set
+`physical_accepted=true`.
