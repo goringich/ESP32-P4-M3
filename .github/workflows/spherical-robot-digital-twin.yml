@@ -61,8 +61,6 @@ jobs:
           python -m pip install --disable-pip-version-check --no-input             -r mechanical/spherical_robot/simulation/requirements-simulation.txt
       - name: Execute primary multibody scenario matrix
         shell: bash
-        env:
-          MUJOCO_GL: egl
         run: |
           set -Eeuo pipefail
           python mechanical/spherical_robot/simulation/run_mujoco.py             --output /tmp/mujoco-evidence.json
