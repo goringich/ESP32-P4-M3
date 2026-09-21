@@ -47,9 +47,10 @@ void spherical_control_step(
   if (!spherical_control_validate_params(params)
       || sensors == NULL
       || target == NULL
+      || !isfinite(sensors->shell_roll_angle_rad)
       || !isfinite(sensors->shell_gyro_y_rad_s)
-      || !isfinite(sensors->pendulum_angle_rad)
-      || !isfinite(sensors->pendulum_speed_rad_s)
+      || !isfinite(sensors->pendulum_relative_angle_rad)
+      || !isfinite(sensors->pendulum_relative_speed_rad_s)
       || !isfinite(target->target_shell_speed_m_s)
       || !isfinite(target->target_steering_angle_rad)) {
     return;
@@ -65,7 +66,14 @@ void spherical_control_step(
     params->maximum_tilt_rad
   );
 
-  const float relative_speed = fabsf(sensors->pendulum_speed_rad_s);
+  const float relative_speed =
+    fabsf(sensors->pendulum_relative_speed_rad_s);
+  const float absolute_pendulum_angle =
+    sensors->shell_roll_angle_rad
+    + sensors->pendulum_relative_angle_rad;
+  const float absolute_pendulum_speed =
+    sensors->shell_gyro_y_rad_s
+    + sensors->pendulum_relative_speed_rad_s;
   const float speed_fraction = spherical_control_clampf(
     relative_speed / params->motor_no_load_rad_s,
     0.0f,
@@ -76,9 +84,9 @@ void spherical_control_step(
 
   const float raw_torque =
     params->pendulum_kp_nm_per_rad
-      * (desired_pendulum - sensors->pendulum_angle_rad)
+      * (desired_pendulum - absolute_pendulum_angle)
     - params->pendulum_kd_nms_per_rad
-      * sensors->pendulum_speed_rad_s;
+      * absolute_pendulum_speed;
   const float torque = spherical_control_clampf(
     raw_torque,
     -available_torque,
@@ -88,6 +96,8 @@ void spherical_control_step(
   output->estimated_shell_speed_m_s = estimated_speed;
   output->speed_error_m_s = speed_error;
   output->desired_pendulum_angle_rad = desired_pendulum;
+  output->absolute_pendulum_angle_rad = absolute_pendulum_angle;
+  output->absolute_pendulum_speed_rad_s = absolute_pendulum_speed;
   output->available_motor_torque_nm = available_torque;
   output->pendulum_torque_nm = torque;
   output->pendulum_command_normalized =
