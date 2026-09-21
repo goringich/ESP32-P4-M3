@@ -16,7 +16,13 @@ Shell speed is estimated from the shell-frame IMU gyro using rolling kinematics:
 
 `v = R * omega_y`
 
-The inner loop uses the pendulum encoder angle/speed and applies the configured
+The pendulum encoder is relative to the rolling shell, so the controller first
+forms the gravity-referenced pendulum state:
+
+`absolute pendulum angle = unwrapped shell roll + encoder relative angle`
+
+and the matching angular velocity from shell gyro + relative encoder speed.
+The inner loop controls that absolute pendulum state and applies the configured
 torque-speed motor limit.
 
 Steering is deliberately a semantic output channel with zero command until the
