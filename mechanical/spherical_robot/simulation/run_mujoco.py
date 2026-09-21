@@ -144,6 +144,7 @@ def execute_scenario(
   contact_steps = 0
   max_penetration_m = 0.0
   max_normal_contact_force_n = 0.0
+  unexpected_contact_count = 0
   peak_ctrl_nm = 0.0
   peak_pendulum_speed_rad_s = 0.0
   max_abs_pendulum_angle_rad = 0.0
@@ -194,6 +195,7 @@ def execute_scenario(
       contact = data.contact[contact_index]
       pair = {int(contact.geom1), int(contact.geom2)}
       if pair != {floor_geom, shell_geom}:
+        unexpected_contact_count += 1
         continue
       floor_contact_seen = True
       if float(contact.dist) < 0.0:
@@ -224,6 +226,7 @@ def execute_scenario(
       and max_center_z_m <= radius_m + 0.012
     ),
     "contact_force_observed": max_normal_contact_force_n > 0.0,
+    "no_unexpected_contacts": unexpected_contact_count == 0,
   }
   return {
     "inputs": {
@@ -249,6 +252,7 @@ def execute_scenario(
       "floor_contact_fraction": contact_fraction,
       "maximum_penetration_m": max_penetration_m,
       "maximum_normal_contact_force_n": max_normal_contact_force_n,
+      "unexpected_contact_count": unexpected_contact_count,
       "peak_applied_motor_torque_nm": peak_ctrl_nm,
       "peak_pendulum_speed_rad_s": peak_pendulum_speed_rad_s,
       "maximum_absolute_pendulum_deg": math.degrees(

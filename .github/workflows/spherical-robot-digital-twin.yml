@@ -78,3 +78,49 @@ jobs:
           assert report["unresolved_inputs"], report
           PY
           git diff --check
+
+  chrono-crosscheck:
+    name: Cross-check Project Chrono 10.0.0
+    needs: mujoco
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: conda-incubator/setup-miniconda@8ee1f361103df19b6f8c8655fd3967a8ecb162d5 # v4.0.1
+        with:
+          activate-environment: chrono
+          python-version: "3.12"
+          channels: conda-forge,projectchrono
+      - name: Install pinned independent solver
+        run: |
+          set -Eeuo pipefail
+          conda install --yes projectchrono::pychrono=10.0.0 -c conda-forge
+          python -m pip install --disable-pip-version-check --no-input \
+            -r mechanical/spherical_robot/simulation/requirements-simulation.txt
+      - name: Execute independent cross-check
+        run: |
+          set -Eeuo pipefail
+          python mechanical/spherical_robot/simulation/run_mujoco.py \
+            --output /tmp/mujoco-evidence.json
+          python mechanical/spherical_robot/simulation/run_chrono.py \
+            --output /tmp/chrono-evidence.json
+          python mechanical/spherical_robot/simulation/compare_multibody.py \
+            --mujoco /tmp/mujoco-evidence.json \
+            --chrono /tmp/chrono-evidence.json \
+            --output /tmp/multibody-crosscheck.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/multibody-crosscheck.json").read_text())
+          assert report["status"] == "PASS", report
+          assert report["evidence_state"] == "INDEPENDENT_DYNAMICS_CROSSCHECK_PASS", report
+          assert report["metrics"]["scenario_count"] == 27, report
+          assert report["metrics"]["direction_agreement_fraction"] >= 0.95, report
+          assert report["physical_accepted"] is False, report
+          PY
+          git diff --check
