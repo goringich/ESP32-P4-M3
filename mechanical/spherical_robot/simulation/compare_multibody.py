@@ -140,11 +140,41 @@ def main() -> int:
     json.dumps(payload, indent=2) + "\n",
     encoding="utf-8",
   )
+  nominal_key = (
+    300.0,
+    60.0,
+    0.45,
+  )
+  nominal_mj = mj.get(nominal_key)
+  nominal_ch = ch.get(nominal_key)
+  mj_displacements = [
+    abs(float(row["metrics"]["displacement_m"]))
+    for row in mj.values()
+  ]
+  ch_displacements = [
+    abs(float(row["metrics"]["displacement_m"]))
+    for row in ch.values()
+  ]
+  diagnostics = {
+    "mujoco_displacement_abs_range_m": [
+      min(mj_displacements),
+      max(mj_displacements),
+    ],
+    "chrono_displacement_abs_range_m": [
+      min(ch_displacements),
+      max(ch_displacements),
+    ],
+    "nominal": {
+      "mujoco": nominal_mj["metrics"] if nominal_mj else None,
+      "chrono": nominal_ch["metrics"] if nominal_ch else None,
+    },
+  }
   print(json.dumps({
     "status": payload["status"],
     "evidence_state": payload["evidence_state"],
     "direction_agreement_fraction": direction_fraction,
     "median_magnitude_ratio": median_ratio,
+    "diagnostics": diagnostics,
     "output": str(args.output),
   }))
   return 0 if passed else 1
