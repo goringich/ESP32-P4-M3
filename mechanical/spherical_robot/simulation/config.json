@@ -1,0 +1,40 @@
+{
+  "schema_version": "2026-09-21.spherical-robot-reduced-order.v1",
+  "model_class": "planar_no_slip_screening_with_slip_margin",
+  "evidence_state": "ANALYTIC_BASELINE",
+  "gravity_m_s2": 9.80665,
+  "body_inertia_factor_nominal": 0.55,
+  "body_inertia_factor_bounds": [0.4, 0.67],
+  "pendulum_extra_mass_g_assumed": 80.0,
+  "static_friction_mu_values": [0.25, 0.45, 0.65],
+  "rolling_drag_ns_per_m": 0.035,
+  "pendulum_damping_nms": 0.002,
+  "controller": {
+    "speed_to_tilt_gain_rad_per_m_s": 1.0,
+    "maximum_tilt_deg": 22.0,
+    "pendulum_kp_nm_per_rad": 1.2,
+    "pendulum_kd_nms_per_rad": 0.09
+  },
+  "integration": {
+    "dt_s": 0.002,
+    "duration_s": 4.0
+  },
+  "requirements": {
+    "target_speed_fraction_for_screening": 0.8,
+    "maximum_absolute_pendulum_deg": 70.0
+  },
+  "status": {
+    "body_inertia_factor_nominal": "ASSUMED",
+    "pendulum_extra_mass_g_assumed": "ASSUMED",
+    "static_friction_mu_values": "ASSUMED",
+    "rolling_drag_ns_per_m": "ASSUMED",
+    "pendulum_damping_nms": "ASSUMED"
+  },
+  "limitations": [
+    "planar reduced-order model only; steering/yaw is not dynamically solved",
+    "no-slip rolling is assumed while a friction-margin diagnostic detects when that assumption becomes invalid",
+    "motor torque-speed values come from current project placeholders until measured/datasheet-bound",
+    "contact compliance, shell deformation, backlash, tire/grip hysteresis, battery sag and thermal behavior are not high-fidelity modeled",
+    "results are screening evidence and never physical acceptance"
+  ]
+}

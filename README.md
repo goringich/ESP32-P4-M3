@@ -1,53 +1,46 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-H21 | ESP32-H4 | ESP32-P4 | ESP32-S2 | ESP32-S3 | Linux |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | --------- | -------- | -------- | -------- | -------- | ----- |
+# ESP32-P4-M3 — spherical robot
 
-# Hello World Example
+This repository contains the ESP32-P4-M3 firmware/control stack and the current mechanical source for a pendulum-driven steerable spherical robot.
 
-Starts a FreeRTOS task to print "Hello World".
+## Current engineering source of truth
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+The active mechanical project is:
 
-## How to use example
+`mechanical/spherical_robot/`
 
-Follow detailed instructions provided specifically for this example.
+Key sources:
 
-Select the instructions depending on Espressif chip installed on your development board:
+- `config/dimensions.json` — canonical mechanical dimensions, component envelopes and evidence status;
+- `calculations.py` — deterministic sizing/load/traction screening;
+- `blender/build_robot.py` + `blender/validate_robot.py` — exact assembly generation, topology and collision sweep;
+- `simulation/` — reduced-order digital twin plus generated MuJoCo model contract;
+- `DIGITAL_TWIN.md` — evidence ladder and commands;
+- `NEEDS_MEASUREMENT.md` — physical measurements still required before final fits;
+- `ASSEMBLY.md` and `PRINTING.md` — staged physical build path.
 
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
+The historical `3D-model/fiish.*` files are not the current spherical-robot CAD authority.
 
+## Verification
 
-## Example folder contents
+Dependency-free digital checks:
 
-The project **hello_world** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
-
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt` files that provide set of directives and instructions describing the project's source files and targets (executable, library, or both).
-
-Below is short explanation of remaining files in the project folder.
-
-```
-├── CMakeLists.txt
-├── pytest_hello_world.py      Python script used for automated testing
-├── main
-│   ├── CMakeLists.txt
-│   └── hello_world_main.c
-└── README.md                  This is the file you are currently reading
+```bash
+python -m unittest discover -s mechanical/spherical_robot/tests -p 'test_*.py'
+python mechanical/spherical_robot/calculations.py --json
+python mechanical/spherical_robot/simulation/run_sweep.py
+python mechanical/spherical_robot/simulation/mujoco_model.py --output /tmp/spherical_robot.xml
 ```
 
-For more information on structure and contents of ESP-IDF projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the ESP-IDF Programming Guide.
+Full geometry regeneration requires Blender:
 
-## Troubleshooting
+```bash
+blender --background --factory-startup --python mechanical/spherical_robot/blender/build_robot.py
+```
 
-* Program upload failure
+MuJoCo, Project Chrono and FreeCAD/CalculiX are higher evidence layers. Their absence must be reported as pending/blocked; generated XML or Blender animation is not solver evidence and no simulation is physical validation.
 
-    * Hardware connection is not correct: run `idf.py -p PORT monitor`, and reboot your board to see if there are any output logs.
-    * The baud rate for downloading is too high: lower your baud rate in the `menuconfig` menu, and try again.
+## Firmware
 
-## Technical support and feedback
+ESP-IDF application code lives under `main/` and `components/`. The current repository includes MPU-9250, I2C, stepper/control, Wi-Fi/network and telemetry code.
 
-Please use the following feedback channels:
-
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
-
-We will get back to you as soon as possible.
+Local/generated `sdkconfig` and `build/` remain ignored because they may contain machine-local configuration.
