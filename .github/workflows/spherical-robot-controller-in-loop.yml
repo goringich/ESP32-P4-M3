@@ -1,0 +1,80 @@
+name: Spherical Robot Controller In Loop
+
+on:
+  pull_request:
+    paths:
+      - "components/spherical_control/**"
+      - "mechanical/spherical_robot/control/**"
+      - "mechanical/spherical_robot/config/dimensions.json"
+      - "mechanical/spherical_robot/simulation/**"
+      - ".github/workflows/spherical-robot-controller-in-loop.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "components/spherical_control/**"
+      - "mechanical/spherical_robot/control/**"
+      - "mechanical/spherical_robot/config/dimensions.json"
+      - "mechanical/spherical_robot/simulation/**"
+      - ".github/workflows/spherical-robot-controller-in-loop.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spherical-cil-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  controller-in-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Verify source contract
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python -m unittest discover -s mechanical/spherical_robot/tests -p 'test_*.py'
+          cc -Wall -Wextra -Werror -pedantic -std=c11 \
+            -Icomponents/spherical_control/include \
+            -c components/spherical_control/src/spherical_control.c \
+            -o /tmp/spherical_control.o
+          git diff --check
+      - name: Build production-intended controller for host
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cc -shared -fPIC -O2 -std=c11 \
+            -Icomponents/spherical_control/include \
+            components/spherical_control/src/spherical_control.c \
+            -lm \
+            -o /tmp/libspherical_control.so
+      - name: Install pinned MuJoCo plant
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python -m pip install --disable-pip-version-check --no-input \
+            -r mechanical/spherical_robot/simulation/requirements-simulation.txt
+      - name: Execute closed-loop matrix
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python mechanical/spherical_robot/control/run_controller_in_loop.py \
+            --library /tmp/libspherical_control.so \
+            --output /tmp/controller-in-loop.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("/tmp/controller-in-loop.json").read_text())
+          assert report["status"] == "PASS", report
+          assert report["evidence_state"] == "CONTROLLER_IN_LOOP_SCREENING_PASS", report
+          assert report["scenario_count"] == 54, report
+          assert report["failed_scenario_indexes"] == [], report
+          assert report["status_contract"]["hardware_firmware_binding"] == "NOT_IMPLEMENTED", report
+          assert report["physical_accepted"] is False, report
+          PY
