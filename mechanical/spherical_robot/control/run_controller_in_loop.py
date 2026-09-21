@@ -44,9 +44,10 @@ class ControllerParams(ctypes.Structure):
 
 class ControllerSensors(ctypes.Structure):
   _fields_ = [
+    ("shell_roll_angle_rad", ctypes.c_float),
     ("shell_gyro_y_rad_s", ctypes.c_float),
-    ("pendulum_angle_rad", ctypes.c_float),
-    ("pendulum_speed_rad_s", ctypes.c_float),
+    ("pendulum_relative_angle_rad", ctypes.c_float),
+    ("pendulum_relative_speed_rad_s", ctypes.c_float),
   ]
 
 
@@ -62,6 +63,8 @@ class ControllerOutput(ctypes.Structure):
     ("estimated_shell_speed_m_s", ctypes.c_float),
     ("speed_error_m_s", ctypes.c_float),
     ("desired_pendulum_angle_rad", ctypes.c_float),
+    ("absolute_pendulum_angle_rad", ctypes.c_float),
+    ("absolute_pendulum_speed_rad_s", ctypes.c_float),
     ("available_motor_torque_nm", ctypes.c_float),
     ("pendulum_torque_nm", ctypes.c_float),
     ("pendulum_command_normalized", ctypes.c_float),
@@ -130,6 +133,25 @@ def named_id(mujoco: Any, model: Any, object_type: Any, name: str) -> int:
   return value
 
 
+def wrapped_shell_roll_y(data: Any, free_qpos: int) -> float:
+  w = float(data.qpos[free_qpos + 3])
+  x = float(data.qpos[free_qpos + 4])
+  y = float(data.qpos[free_qpos + 5])
+  z = float(data.qpos[free_qpos + 6])
+  numerator = 2.0 * (w * y + x * z)
+  denominator = 1.0 - 2.0 * (y * y + z * z)
+  return math.atan2(numerator, denominator)
+
+
+def unwrap_angle(previous: float, wrapped: float) -> float:
+  candidate = wrapped
+  while candidate - previous > math.pi:
+    candidate -= 2.0 * math.pi
+  while candidate - previous < -math.pi:
+    candidate += 2.0 * math.pi
+  return candidate
+
+
 def execute_scenario(
   *,
   mujoco: Any,
@@ -186,6 +208,7 @@ def execute_scenario(
   )
 
   free_dof = int(model.jnt_dofadr[free_joint])
+  free_qpos = int(model.jnt_qposadr[free_joint])
   pendulum_dof = int(model.jnt_dofadr[pendulum_joint])
   pendulum_qpos = int(model.jnt_qposadr[pendulum_joint])
   gyro_adr = int(model.sensor_adr[gyro_sensor])
@@ -222,6 +245,7 @@ def execute_scenario(
   tracking_samples: list[float] = []
   estimate_errors: list[float] = []
   coast_samples: list[float] = []
+  shell_roll = wrapped_shell_roll_y(data, free_qpos)
 
   total_active_steps = command_steps + coast_steps
   tracking_start = int(command_steps * 0.75)
@@ -233,10 +257,15 @@ def execute_scenario(
         target_steering_angle_rad=0.0,
       )
       gyro_y = float(data.sensordata[gyro_adr + 1])
+      shell_roll = unwrap_angle(
+        shell_roll,
+        wrapped_shell_roll_y(data, free_qpos),
+      )
       sensors = ControllerSensors(
+        shell_roll_angle_rad=shell_roll,
         shell_gyro_y_rad_s=gyro_y,
-        pendulum_angle_rad=float(data.qpos[pendulum_qpos]),
-        pendulum_speed_rad_s=float(data.qvel[pendulum_dof]),
+        pendulum_relative_angle_rad=float(data.qpos[pendulum_qpos]),
+        pendulum_relative_speed_rad_s=float(data.qvel[pendulum_dof]),
       )
       command = ControllerOutput()
       controller.spherical_control_step(
@@ -264,7 +293,7 @@ def execute_scenario(
     )
     maximum_abs_pendulum = max(
       maximum_abs_pendulum,
-      abs(float(data.qpos[pendulum_qpos])),
+      abs(float(command.absolute_pendulum_angle_rad)),
     )
     peak_torque = max(
       peak_torque,
