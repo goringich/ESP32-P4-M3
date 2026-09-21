@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import math
+import re
 from pathlib import Path
 import sys
 import unittest
@@ -127,6 +128,25 @@ class MuJoCoInputTests(unittest.TestCase):
     self.assertIn('scenario_ballast_g" data="400.000000"', xml)
     self.assertIn('scenario_arm_mm" data="68.000000"', xml)
     self.assertIn('scenario_friction_mu" data="0.650000"', xml)
+
+
+class CadConfigContractTests(unittest.TestCase):
+  def test_blender_cfg_references_exist_in_canonical_dimensions(self) -> None:
+    cfg = calculations.load_config()
+    for relative in (
+      Path("blender/build_robot.py"),
+      Path("blender/validate_robot.py"),
+      Path("blender/export_parts.py"),
+    ):
+      source = (ROOT / relative).read_text(encoding="utf-8")
+      referenced = set(re.findall(r'CFG\\[["\\\']([^"\\\']+)["\\\']\\]', source))
+      missing = sorted(referenced - set(cfg))
+      self.assertEqual(missing, [], f"{relative}: stale CFG keys: {missing}")
+
+  def test_legacy_collision_sweep_is_removed(self) -> None:
+    source = (ROOT / "blender/build_robot.py").read_text(encoding="utf-8")
+    self.assertNotIn("def collision_sweep(inner_r:", source)
+    self.assertIn("def collision_sweep_v2(inner_r:", source)
 
 
 if __name__ == "__main__":
