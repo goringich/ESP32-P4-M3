@@ -1,0 +1,66 @@
+name: Spherical Robot Structural FEA
+
+on:
+  pull_request:
+    paths:
+      - "mechanical/spherical_robot/fea/**"
+      - "mechanical/spherical_robot/config/dimensions.json"
+      - "mechanical/spherical_robot/simulation/config.json"
+      - "mechanical/spherical_robot/exports/stl/PENDULUM_ARM.stl"
+      - ".github/workflows/spherical-robot-structural.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "mechanical/spherical_robot/fea/**"
+      - "mechanical/spherical_robot/config/dimensions.json"
+      - "mechanical/spherical_robot/simulation/config.json"
+      - "mechanical/spherical_robot/exports/stl/PENDULUM_ARM.stl"
+      - ".github/workflows/spherical-robot-structural.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spherical-structural-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pendulum-arm:
+    name: CalculiX PENDULUM_ARM screening
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install pinned mesher and structural solver
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update
+          sudo apt-get install --yes calculix-ccx libglu1-mesa
+          python -m pip install --disable-pip-version-check --no-input \
+            -r mechanical/spherical_robot/fea/requirements-fea.txt
+      - name: Execute structural screening
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python mechanical/spherical_robot/fea/run_structural_fea.py \
+            --output /tmp/structural-fea.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("/tmp/structural-fea.json").read_text())
+          assert report["status"] == "PASS", report
+          assert report["evidence_state"] == "STRUCTURAL_FEA_SCREENING_PASS", report
+          assert report["part"] == "PENDULUM_ARM", report
+          assert report["mesh"]["tetrahedra_count"] >= 500, report
+          assert report["result"]["stress_rows"] > 0, report
+          assert report["result"]["displacement_rows"] > 0, report
+          assert report["material"]["status"] == "ASSUMED", report
+          assert report["physical_accepted"] is False, report
+          PY
+          git diff --check

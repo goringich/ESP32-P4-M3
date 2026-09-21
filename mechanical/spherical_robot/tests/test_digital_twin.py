@@ -6,12 +6,14 @@ import math
 import re
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 from xml.etree import ElementTree
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SIM = ROOT / "simulation"
+FEA_ROOT = ROOT / "fea"
 if str(ROOT) not in sys.path:
   sys.path.insert(0, str(ROOT))
 if str(SIM) not in sys.path:
@@ -20,6 +22,14 @@ if str(SIM) not in sys.path:
 import calculations
 import reduced_order
 import mujoco_model
+
+fea_spec = importlib.util.spec_from_file_location(
+  "run_structural_fea",
+  FEA_ROOT / "run_structural_fea.py",
+)
+run_structural_fea = importlib.util.module_from_spec(fea_spec)
+assert fea_spec.loader is not None
+fea_spec.loader.exec_module(run_structural_fea)
 
 
 class ParameterContractTests(unittest.TestCase):
@@ -159,6 +169,51 @@ class CadConfigContractTests(unittest.TestCase):
     source = (ROOT / "blender/build_robot.py").read_text(encoding="utf-8")
     self.assertNotIn("def collision_sweep(inner_r:", source)
     self.assertIn("def collision_sweep_v2(inner_r:", source)
+
+
+class StructuralFeaContractTests(unittest.TestCase):
+  def test_fea_material_truth_is_explicitly_assumed(self) -> None:
+    cfg = json.loads((FEA_ROOT / "config.json").read_text(encoding="utf-8"))
+    self.assertEqual(cfg["material"]["status"], "ASSUMED")
+    self.assertFalse(cfg["evidence_policy"]["physical_accepted"])
+    self.assertFalse(cfg["evidence_policy"]["may_promote_to_structural_analysis_pass"])
+    self.assertEqual(
+      cfg["evidence_policy"]["pass_state"],
+      "STRUCTURAL_FEA_SCREENING_PASS",
+    )
+
+  def test_five_g_per_arm_load_is_positive_and_uses_worst_ballast(self) -> None:
+    dimensions = calculations.load_config()
+    simulation = reduced_order.load_simulation_config()
+    cfg = json.loads((FEA_ROOT / "config.json").read_text(encoding="utf-8"))
+    load_n = run_structural_fea.load_case_force_n(
+      dimensions,
+      simulation,
+      cfg,
+    )
+    expected = (
+      max(float(value) for value in dimensions["ballast_variants_g"])
+      + float(simulation["pendulum_extra_mass_g_assumed"])
+    ) / 1000.0 * 9.80665 * 5.0 * 0.5
+    self.assertAlmostEqual(load_n, expected, places=9)
+    self.assertGreater(load_n, 0.0)
+
+  def test_calculix_dat_parser_extracts_displacement_and_mises(self) -> None:
+    fixture = """
+ displacements (vx,vy,vz) for set NALL and time  0.1000000E+01
+
+         1  0.000000E+00  3.000000E-01  4.000000E-01
+         2  0.000000E+00  0.000000E+00  0.000000E+00
+
+ stresses (elem, integ.pnt.,sxx,syy,szz,sxy,sxz,syz) for set EALL and time  0.1000000E+01
+
+         1  1  1.000000E+01  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+"""
+    result = run_structural_fea.parse_calculix_dat(fixture)
+    self.assertAlmostEqual(result["maximum_displacement_mm"], 0.5, places=9)
+    self.assertAlmostEqual(result["maximum_von_mises_mpa"], 10.0, places=9)
+    self.assertEqual(result["displacement_rows"], 2)
+    self.assertEqual(result["stress_rows"], 1)
 
 
 if __name__ == "__main__":

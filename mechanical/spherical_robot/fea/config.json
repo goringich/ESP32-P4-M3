@@ -1,0 +1,39 @@
+{
+  "schema_version": "2026-09-21.spherical-robot-structural-fea.v1",
+  "part": "PENDULUM_ARM",
+  "source_stl": "../exports/stl/PENDULUM_ARM.stl",
+  "mesh": {
+    "gmsh_version": "4.15.2",
+    "classification_angle_deg": 40.0,
+    "minimum_size_mm": 1.2,
+    "maximum_size_mm": 2.5,
+    "minimum_tetrahedra": 500
+  },
+  "load_case": {
+    "name": "five_g_ballast_shock_per_arm",
+    "shock_factor_g": 5.0,
+    "load_share_per_arm": 0.5,
+    "root_band_mm": 10.0,
+    "loaded_end_band_mm": 10.0,
+    "load_direction": "weakest_bending_axis"
+  },
+  "material": {
+    "name": "PETG_FDM_SCREENING_ISOTROPIC",
+    "elastic_modulus_mpa": 1200.0,
+    "poisson_ratio": 0.38,
+    "screening_allowable_von_mises_mpa": 15.0,
+    "screening_max_displacement_mm": 1.5,
+    "status": "ASSUMED",
+    "limitations": [
+      "isotropic solid material is only a screening approximation for printed PETG",
+      "actual layer orientation, wall/infill topology, weld quality, creep and temperature are not represented",
+      "coupon-backed anisotropic properties are required before release-qualified structural acceptance"
+    ]
+  },
+  "evidence_policy": {
+    "pass_state": "STRUCTURAL_FEA_SCREENING_PASS",
+    "fail_state": "STRUCTURAL_FEA_SCREENING_FAIL",
+    "may_promote_to_structural_analysis_pass": false,
+    "physical_accepted": false
+  }
+}

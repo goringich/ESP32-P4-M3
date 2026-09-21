@@ -128,3 +128,12 @@ canonical source hashes and checks scenario identity, rolling direction
 agreement, bounded median response magnitude and independent symmetry. This may
 emit `INDEPENDENT_DYNAMICS_CROSSCHECK_PASS`; it still cannot set
 `physical_accepted=true`.
+
+
+## Structural FEA screening
+
+`fea/run_structural_fea.py` runs the tracked `PENDULUM_ARM.stl` through
+Gmsh and CalculiX. Until coupon-backed anisotropic FDM properties and the final
+slicer topology are bound, a green solve is only
+`STRUCTURAL_FEA_SCREENING_PASS`, not `STRUCTURAL_ANALYSIS_PASS` and never
+physical acceptance. See `STRUCTURAL_FEA.md`.
