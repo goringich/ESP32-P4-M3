@@ -216,5 +216,36 @@ class StructuralFeaContractTests(unittest.TestCase):
     self.assertEqual(result["stress_rows"], 1)
 
 
+class SphericalControllerContractTests(unittest.TestCase):
+  def test_controller_core_is_platform_independent(self) -> None:
+    source = (
+      ROOT.parent.parent
+      / "components"
+      / "spherical_control"
+      / "src"
+      / "spherical_control.c"
+    ).read_text(encoding="utf-8")
+    for forbidden in ("freertos/", "esp_", "driver/", "sdkconfig.h"):
+      self.assertNotIn(forbidden, source)
+
+  def test_controller_in_loop_truth_state_stays_screening_only(self) -> None:
+    cfg = json.loads(
+      (ROOT / "control" / "config.json").read_text(encoding="utf-8")
+    )
+    self.assertEqual(
+      cfg["evidence_policy"]["pass_state"],
+      "CONTROLLER_IN_LOOP_SCREENING_PASS",
+    )
+    self.assertFalse(
+      cfg["evidence_policy"]["may_promote_to_controller_in_loop_pass"]
+    )
+    self.assertFalse(cfg["evidence_policy"]["physical_accepted"])
+    self.assertEqual(
+      cfg["status"]["hardware_firmware_binding"],
+      "NOT_IMPLEMENTED",
+    )
+    self.assertEqual(cfg["status"]["steering_control"], "NOT_IMPLEMENTED")
+
+
 if __name__ == "__main__":
   unittest.main()

@@ -1,0 +1,32 @@
+{
+  "schema_version": "2026-09-21.spherical-controller-in-loop.v1",
+  "controller_source": "../../../components/spherical_control/src/spherical_control.c",
+  "controller_header": "../../../components/spherical_control/include/spherical_control.h",
+  "plant_backend": "mujoco-3.13.0",
+  "control_period_s": 0.02,
+  "screening_target_speed_m_s": 0.10,
+  "command_duration_s": 3.0,
+  "coast_duration_s": 0.8,
+  "minimum_tracking_fraction": 0.40,
+  "maximum_absolute_pendulum_deg": 70.0,
+  "minimum_floor_contact_fraction": 0.95,
+  "status": {
+    "actuator_torque_speed_model": "PLACEHOLDER",
+    "pendulum_encoder": "SIMULATED_IDEAL",
+    "shell_speed_from_imu_gyro": "SIMULATED_IDEAL",
+    "steering_control": "NOT_IMPLEMENTED",
+    "hardware_firmware_binding": "NOT_IMPLEMENTED"
+  },
+  "evidence_policy": {
+    "pass_state": "CONTROLLER_IN_LOOP_SCREENING_PASS",
+    "may_promote_to_controller_in_loop_pass": false,
+    "physical_accepted": false
+  },
+  "limitations": [
+    "the pure-C controller is production-intended source but is not yet wired into the ESP-IDF app loop",
+    "pendulum encoder and steering angle sensor firmware drivers are not yet present",
+    "motor torque-speed data remains placeholder",
+    "steering command is intentionally zero until the steering actuator/sensor contract is measured",
+    "the MuJoCo IMU and encoder are idealized and do not yet inject measured bias, latency or quantization"
+  ]
+}
