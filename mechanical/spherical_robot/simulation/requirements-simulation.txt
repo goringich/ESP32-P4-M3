@@ -1,0 +1,3 @@
+# Primary multibody solver used by the spherical-robot exact-head CI.
+# Pin the engine version so evidence can be tied to one deterministic solver release.
+mujoco==3.13.0

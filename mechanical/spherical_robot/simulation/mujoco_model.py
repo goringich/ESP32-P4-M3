@@ -24,19 +24,36 @@ def sha256(path: Path) -> str:
   return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def build_xml() -> str:
+def build_xml(
+  *,
+  ballast_mass_g: float | None = None,
+  arm_mm: float | None = None,
+  friction_mu: float | None = None,
+) -> str:
   dims = json.loads(DIMENSIONS.read_text(encoding="utf-8"))
   sim = json.loads(SIMULATION.read_text(encoding="utf-8"))
 
   radius = float(dims["sphere_outer_diameter_mm"]) / 2000.0
   wall = float(dims["shell_wall_mm"]) / 1000.0
-  ballast = float(dims["ballast_mass_g"]) / 1000.0
+  selected_ballast_g = float(
+    dims["ballast_mass_g"] if ballast_mass_g is None else ballast_mass_g
+  )
+  ballast = selected_ballast_g / 1000.0
   extra = float(sim["pendulum_extra_mass_g_assumed"]) / 1000.0
-  pendulum_mass = ballast + extra
-  arm = float(dims["pendulum_arm_mm"]) / 1000.0
+  selected_arm_mm = float(
+    dims["pendulum_arm_mm"] if arm_mm is None else arm_mm
+  )
+  arm = selected_arm_mm / 1000.0
   steering_limit = float(dims["steering_limit_deg"])
-  mu_slide = float(sim["static_friction_mu_values"][1])
+  selected_friction = float(
+    sim["static_friction_mu_values"][1]
+    if friction_mu is None
+    else friction_mu
+  )
   motor_torque = float(dims["tt_motor_torque_nm_PLACEHOLDER"])
+
+  if min(radius, wall, ballast, extra, arm, selected_friction, motor_torque) <= 0:
+    raise ValueError("MuJoCo model inputs must be positive")
 
   shell_volume_cm3 = (
     4.0
@@ -48,7 +65,9 @@ def build_xml() -> str:
   shell_mass = shell_volume_cm3 * float(dims["petg_density_g_cm3"]) * 1.07 / 1000.0
   fixed_mass = (
     shell_mass
-    + float(dims["estimated_structural_print_volume_cm3"]) * float(dims["petg_density_g_cm3"]) / 1000.0
+    + float(dims["estimated_structural_print_volume_cm3"])
+    * float(dims["petg_density_g_cm3"])
+    / 1000.0
     + float(dims["battery_mass_g_PLACEHOLDER"]) / 1000.0
     + float(dims["main_motor_mass_g_PLACEHOLDER"]) / 1000.0
     + float(dims["estimated_fastener_mass_g"]) / 1000.0
@@ -61,7 +80,7 @@ def build_xml() -> str:
   <compiler angle="degree" coordinate="local"/>
   <option timestep="0.001" gravity="0 0 -9.80665" integrator="implicitfast"/>
   <default>
-    <geom condim="6" friction="{mu_slide:.6f} 0.01 0.002"/>
+    <geom condim="6" friction="{selected_friction:.6f} 0.01 0.002"/>
     <joint damping="0.001"/>
   </default>
   <worldbody>
@@ -96,6 +115,9 @@ def build_xml() -> str:
   <custom>
     <text name="dimensions_sha256" data="{sha256(DIMENSIONS)}"/>
     <text name="simulation_config_sha256" data="{sha256(SIMULATION)}"/>
+    <text name="scenario_ballast_g" data="{selected_ballast_g:.6f}"/>
+    <text name="scenario_arm_mm" data="{selected_arm_mm:.6f}"/>
+    <text name="scenario_friction_mu" data="{selected_friction:.6f}"/>
     <text name="evidence_state" data="GENERATED_MODEL_NOT_EXECUTED"/>
   </custom>
 </mujoco>

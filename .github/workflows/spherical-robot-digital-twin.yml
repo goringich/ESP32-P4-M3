@@ -44,3 +44,37 @@ jobs:
           ElementTree.parse(Path("/tmp/spherical-robot.xml"))
           PY
           git diff --check
+
+  mujoco:
+    name: Execute MuJoCo 3.13.0
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install pinned primary solver
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python -m pip install --disable-pip-version-check --no-input             -r mechanical/spherical_robot/simulation/requirements-simulation.txt
+      - name: Execute primary multibody scenario matrix
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python mechanical/spherical_robot/simulation/run_mujoco.py             --output /tmp/mujoco-evidence.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/mujoco-evidence.json").read_text())
+          assert report["status"] == "PASS", report
+          assert report["evidence_state"] == "PRIMARY_MULTIBODY_PASS", report
+          assert report["backend"]["version"] == "3.13.0", report
+          assert report["scenario_count"] == 27, report
+          assert report["failed_scenario_indexes"] == [], report
+          assert report["symmetry_check"]["passed"] is True, report
+          assert report["physical_accepted"] is False, report
+          assert report["unresolved_inputs"], report
+          PY
+          git diff --check

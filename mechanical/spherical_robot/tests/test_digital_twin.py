@@ -118,6 +118,16 @@ class MuJoCoInputTests(unittest.TestCase):
     self.assertIn("dimensions_sha256", xml)
     self.assertIn("GENERATED_MODEL_NOT_EXECUTED", xml)
 
+  def test_generated_model_accepts_scenario_overrides(self) -> None:
+    xml = mujoco_model.build_xml(
+      ballast_mass_g=400.0,
+      arm_mm=68.0,
+      friction_mu=0.65,
+    )
+    self.assertIn('scenario_ballast_g" data="400.000000"', xml)
+    self.assertIn('scenario_arm_mm" data="68.000000"', xml)
+    self.assertIn('scenario_friction_mu" data="0.650000"', xml)
+
 
 if __name__ == "__main__":
   unittest.main()
