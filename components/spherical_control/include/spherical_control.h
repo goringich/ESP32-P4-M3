@@ -17,9 +17,10 @@ typedef struct {
 } spherical_control_params_t;
 
 typedef struct {
+  float shell_roll_angle_rad;
   float shell_gyro_y_rad_s;
-  float pendulum_angle_rad;
-  float pendulum_speed_rad_s;
+  float pendulum_relative_angle_rad;
+  float pendulum_relative_speed_rad_s;
 } spherical_control_sensors_t;
 
 typedef struct {
@@ -31,6 +32,8 @@ typedef struct {
   float estimated_shell_speed_m_s;
   float speed_error_m_s;
   float desired_pendulum_angle_rad;
+  float absolute_pendulum_angle_rad;
+  float absolute_pendulum_speed_rad_s;
   float available_motor_torque_nm;
   float pendulum_torque_nm;
   float pendulum_command_normalized;
