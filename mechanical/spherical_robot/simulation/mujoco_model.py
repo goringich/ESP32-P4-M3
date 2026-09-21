@@ -80,7 +80,7 @@ def build_xml(
   <compiler angle="degree" coordinate="local"/>
   <option timestep="0.001" gravity="0 0 -9.80665" integrator="implicitfast"/>
   <default>
-    <geom condim="6" friction="{selected_friction:.6f} 0.01 0.002"/>
+    <geom condim="6" friction="{selected_friction:.6f} {selected_friction:.6f} 0.01 0.002 0.002"/>
     <joint damping="0.001"/>
   </default>
   <worldbody>
