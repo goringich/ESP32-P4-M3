@@ -61,8 +61,12 @@ def build_system(
 
   floor_material = chrono.ChContactMaterialNSC()
   floor_material.SetFriction(float(friction_mu))
+  floor_material.SetSpinningFriction(0.01)
+  floor_material.SetRollingFriction(0.002)
   shell_material = chrono.ChContactMaterialNSC()
   shell_material.SetFriction(float(friction_mu))
+  shell_material.SetSpinningFriction(0.01)
+  shell_material.SetRollingFriction(0.002)
 
   floor = chrono.ChBodyEasyBox(
     4.0,
