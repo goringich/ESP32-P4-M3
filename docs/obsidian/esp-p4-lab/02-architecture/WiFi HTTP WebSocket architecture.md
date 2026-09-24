@@ -1,139 +1,76 @@
 # WiFi HTTP WebSocket architecture
 
-## Общая идея
+## Слои
 
-Сетевая архитектура проекта разделена на два компонента:
+Сетевая архитектура разделена на:
 
-- `app_wifi.c` — поднимает сетевую среду и хранит Wi‑Fi status;
-- `app_net.c` — поднимает HTTP/WebSocket API поверх уже готовой сети.
+- `app_wifi.c` — radio/network bring-up и Wi-Fi status;
+- `app_net.c` — HTTP/WebSocket application transport.
 
-Это правильное разделение ответственности:
+Motor GPIO/state не принадлежит network task: внешние команды сериализуются через stepper queue и исполняются из app tick.
 
-- один слой отвечает за radio/network bringup;
-- второй — за прикладной API и транспорт данных.
+## Startup
 
-## Что является опорой архитектуры
+1. `app_init()` поднимает локальные подсистемы.
+2. `app_wifi_smoke_run()` инициализирует network stack и SoftAP/STA.
+3. При успешной сети `app_net_start()` запускает HTTP server.
+4. URI registration выполняется fail-soft: ошибка API setup не reset-ит MCU.
+5. `app_tick()` вызывает `app_net_tick()` только если API успешно стартовал.
 
-Сетевой стек нужен в проекте не просто ради "подключиться к Wi‑Fi", а ради трех конкретных задач:
+В tracked defaults STA auto-connect выключен; private STA credentials не являются частью repository config.
 
-- дать доступ к телеметрии без UART monitor;
-- дать удаленное управление двигателем;
-- поддержать будущий внешний web-клиент.
+## API
 
-Поэтому архитектура строится не вокруг web-страниц, а вокруг API.
+- `GET /`, `GET /pad` — embedded same-origin UI;
+- `GET /api/status` — compact status;
+- `GET /api/telemetry` — full telemetry;
+- `GET /api/wifi` — Wi-Fi state;
+- `POST /api/command` — `application/json` command;
+- `GET /ws` — WebSocket push/command channel.
 
-## Последовательность запуска
+## Browser security boundary
 
-Фактический порядок работы такой:
+Embedded actuator API больше не публикует wildcard CORS.
 
-1. `app_init()` вызывает `app_wifi_smoke_run()`.
-2. Wi‑Fi слой инициализирует `NVS`, `esp_netif`, default event loop.
-3. Создаются default netif для `STA` и `AP`.
-4. Выбирается режим Wi‑Fi:
-	- `WIFI_MODE_AP`, если `CONFIG_APP_WIFI_CONNECT` выключен или SSID пустой;
-	- `WIFI_MODE_APSTA`, если включен STA-режим и задан SSID.
-5. Конфигурируется SoftAP.
-6. При необходимости конфигурируется STA.
-7. Вызывается `esp_wifi_start()`.
-8. В `app.c` при успешном результате ставится `s_network_ready = true`.
-9. Если включен `CONFIG_APP_NET_ENABLE` и сеть считается готовой, вызывается `app_net_start()`.
-10. HTTP server начинает принимать запросы.
-11. В основном цикле `app_tick()` вызывает `app_net_tick()` для периодической WebSocket-рассылки.
+Для browser-origin traffic:
 
-Важно: в текущей конфигурации проекта по умолчанию используется именно режим `AP`, а не `APSTA`, потому что `CONFIG_APP_WIFI_CONNECT` не включен.
+- HTTP commands требуют current-host origin;
+- WebSocket handshake проверяет Origin;
+- cross-origin browser control не является поддерживаемым контрактом.
 
-## Роль SoftAP в архитектуре
+Это не заменяет полноценную authentication/TLS, но убирает ненужный wildcard browser access.
 
-SoftAP — это основной текущий способ доступа к устройству.
+Локальный Stepper Remote backend при необходимости обращается к ESP server-to-server, поэтому browser CORS ему не нужен.
 
-Почему это удобно:
+## Pull и push
 
-- для стенда не нужен внешний роутер;
-- ноутбук или телефон можно подключить прямо к ESP;
-- проверка API не зависит от UART;
-- демонстрация проекта становится автономной.
+REST/status endpoints дают pull-модель.
 
-Это особенно удачно для лабораторной работы и защиты: устройство можно показать без привязки к инфраструктуре аудитории.
+`app_net_tick()` раз в секунду:
 
-## Роль режима `APSTA`
+- получает active sockets;
+- выбирает WebSocket clients;
+- строит единый JSON;
+- ставит async send через `httpd_queue_work()`.
 
-Когда включен `CONFIG_APP_WIFI_CONNECT`, архитектура становится гибче:
+## State composition
 
-- ESP продолжает поднимать собственный AP;
-- одновременно может подключаться к внешней Wi‑Fi сети как STA;
-- после получения IP появляется `sta_ip`, пригодный для интеграции в общую сеть.
-
-То есть одна и та же прошивка может работать и автономно, и в составе более общей сетевой среды.
-
-## HTTP-часть архитектуры
-
-`app_net.c` регистрирует несколько endpoint'ов:
-
-- `GET /api/telemetry`
-- `GET /api/wifi`
-- `POST /api/command`
-- `OPTIONS /*`
-- `GET /ws`
-
-Архитектурно это означает разделение на два паттерна:
-
-- pull-модель через REST;
-- push-модель через WebSocket.
-
-### Pull-модель
-
-Подходит для:
-
-- ручной проверки через браузер или `curl`;
-- отладки;
-- простых клиентов без постоянного соединения.
-
-### Push-модель
-
-Подходит для:
-
-- web-dashboard;
-- live-обновления статусов;
-- минимизации ручного polling со стороны клиента.
-
-## Как сеть получает данные приложения
-
-`app_net_build_json()` не хранит собственное отдельное состояние всех подсистем, а каждый раз собирает его из источников:
+Network layer собирает state через публичные APIs:
 
 - `app_stepper_get_snapshot()`;
 - `app_wifi_get_status()`;
 - `app_get_system_status()`;
 - `app_mpu_get_status()`;
-- `app_get_i2c_status()`.
+- `app_get_i2c_status()`;
+- `app_get_ble_status()`.
 
-Это делает сетевой слой очень удобным для сопровождения: он выступает как сериализатор текущего состояния системы.
+## Ограничения
 
-## WebSocket-рассылка
-
-`app_net_tick()` раз в секунду:
-
-- берет список клиентов HTTP server;
-- выбирает только WebSocket-клиентов;
-- строит единый JSON;
-- ставит асинхронную отправку через очередь работ сервера.
-
-Такая схема хороша тем, что отправка не смешивается с логикой чтения состояния и не требует от клиента постоянно опрашивать REST endpoint.
-
-## CORS и интеграция с внешним UI
-
-API сразу сконфигурирован с CORS-заголовками. Это означает, что отдельный web-клиент может быть запущен с другого origin и всё равно обращаться к устройству.
-
-Для проекта это важный шаг в сторону реальной интеграции фронтенда и embedded-устройства.
-
-## Ограничения текущей сетевой архитектуры
-
-- нет аутентификации и авторизации;
+- нет end-user auth;
 - нет TLS;
-- JSON формируется вручную;
-- нет статической раздачи frontend-ресурсов из этого модуля;
-- нет versioned API.
-
-Но для лабораторного стенда этого более чем достаточно: архитектура уже показывает взаимодействие прошивки, сети и внешнего клиента на практическом уровне.
+- JSON manual `snprintf`;
+- текущая network/control часть относится к bench infrastructure;
+- product spherical controller должен иметь отдельный hardware/control safety contract.
 
 См. также:
 
@@ -141,4 +78,3 @@ API сразу сконфигурирован с CORS-заголовками. Э
 - [[03-components/app_net]]
 - [[06-operations/Runtime WiFi verification without UART]]
 - [[06-operations/API examples]]
-
