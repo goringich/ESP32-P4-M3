@@ -16,6 +16,14 @@ config APP_TICK_LOG
   bool "log app tick"
   default y
 
+config APP_I2C_DIAG_SWEEP_ON_MPU_FAIL
+  bool "probe alternate I2C pin pairs when MPU detection fails"
+  default n
+  help
+    Lab-only intrusive diagnostic. The sweep temporarily claims multiple GPIO
+    pairs as I2C pins. Keep disabled on assembled hardware unless those pins are
+    known to be electrically safe for probing.
+
 config APP_WIFI_SMOKE
   bool "run Wi-Fi smoke test on boot"
   default y
