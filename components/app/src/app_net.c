@@ -96,13 +96,57 @@ static char *app_net_alloc_json_buffer(void) {
   return calloc(1, APP_NET_JSON_MAX);
 }
 
-static void app_net_set_cors(httpd_req_t *req) {
-  httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-  httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "Content-Type");
+static void app_net_set_common_headers(httpd_req_t *req) {
   httpd_resp_set_hdr(req, "Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
   httpd_resp_set_hdr(req, "Pragma", "no-cache");
   httpd_resp_set_hdr(req, "Expires", "0");
+}
+
+static bool app_net_browser_origin_allowed(httpd_req_t *req) {
+  const size_t origin_len = httpd_req_get_hdr_value_len(req, "Origin");
+  if (origin_len == 0U) {
+    return true;
+  }
+
+  const size_t host_len = httpd_req_get_hdr_value_len(req, "Host");
+  if (host_len == 0U || origin_len > 95U || host_len > 63U) {
+    return false;
+  }
+
+  char origin[96] = {0};
+  char host[64] = {0};
+  if (httpd_req_get_hdr_value_str(req, "Origin", origin, sizeof(origin)) != ESP_OK
+      || httpd_req_get_hdr_value_str(req, "Host", host, sizeof(host)) != ESP_OK) {
+    return false;
+  }
+
+  char expected_origin[104] = {0};
+  int written = snprintf(expected_origin, sizeof(expected_origin), "http://%s", host);
+  if (written < 0 || (size_t)written >= sizeof(expected_origin)) {
+    return false;
+  }
+
+  return strcmp(origin, expected_origin) == 0;
+}
+
+static bool app_net_request_is_json(httpd_req_t *req) {
+  const size_t content_type_len =
+    httpd_req_get_hdr_value_len(req, "Content-Type");
+  if (content_type_len == 0U || content_type_len > 63U) {
+    return false;
+  }
+
+  char content_type[64] = {0};
+  if (httpd_req_get_hdr_value_str(
+        req,
+        "Content-Type",
+        content_type,
+        sizeof(content_type)
+      ) != ESP_OK) {
+    return false;
+  }
+
+  return strncmp(content_type, "application/json", 16U) == 0;
 }
 
 static const char *app_net_json_str(const char *value, char *buf, size_t len) {
@@ -348,37 +392,28 @@ static bool app_net_extract_command(const char *body, char *cmd) {
   }
 
   const char *command = strstr(body, "\"command\"");
-  if (command != NULL) {
-    const char *colon = strchr(command, ':');
-    if (colon == NULL) {
-      return false;
-    }
-    const char *quote = strchr(colon, '"');
-    if (quote == NULL || quote[1] == '\0') {
-      return false;
-    }
-    *cmd = quote[1];
-    return true;
+  if (command == NULL) {
+    return false;
   }
 
-  for (const char *p = body; *p != '\0'; p++) {
-    if (*p != ' ' && *p != '\r' && *p != '\n' && *p != '\t' && *p != '"') {
-      *cmd = *p;
-      return true;
-    }
+  const char *colon = strchr(command, ':');
+  if (colon == NULL) {
+    return false;
   }
 
-  return false;
-}
+  const char *quote = strchr(colon, '"');
+  if (quote == NULL
+      || quote[1] == '\0'
+      || quote[2] != '"') {
+    return false;
+  }
 
-static esp_err_t app_net_options_handler(httpd_req_t *req) {
-  app_net_set_cors(req);
-  httpd_resp_send(req, NULL, 0);
-  return ESP_OK;
+  *cmd = quote[1];
+  return true;
 }
 
 static esp_err_t app_net_root_handler(httpd_req_t *req) {
-  app_net_set_cors(req);
+  app_net_set_common_headers(req);
   httpd_resp_set_type(req, "text/html; charset=utf-8");
   httpd_resp_sendstr(req, APP_NET_EMBEDDED_UI);
   return ESP_OK;
@@ -398,7 +433,7 @@ static esp_err_t app_net_telemetry_handler(httpd_req_t *req) {
     return ESP_FAIL;
   }
 
-  app_net_set_cors(req);
+  app_net_set_common_headers(req);
   httpd_resp_set_type(req, "application/json");
   httpd_resp_send(req, json, json_len);
   free(json);
@@ -419,7 +454,7 @@ static esp_err_t app_net_status_handler(httpd_req_t *req) {
     return ESP_FAIL;
   }
 
-  app_net_set_cors(req);
+  app_net_set_common_headers(req);
   httpd_resp_set_type(req, "application/json");
   httpd_resp_send(req, json, json_len);
   free(json);
@@ -456,7 +491,7 @@ static esp_err_t app_net_wifi_handler(httpd_req_t *req) {
     return ESP_FAIL;
   }
 
-  app_net_set_cors(req);
+  app_net_set_common_headers(req);
   httpd_resp_set_type(req, "application/json");
   httpd_resp_sendstr(req, json);
   free(json);
@@ -464,6 +499,15 @@ static esp_err_t app_net_wifi_handler(httpd_req_t *req) {
 }
 
 static esp_err_t app_net_command_handler(httpd_req_t *req) {
+  if (!app_net_browser_origin_allowed(req)) {
+    httpd_resp_send_err(req, HTTPD_403_FORBIDDEN, "browser origin is not allowed");
+    return ESP_ERR_INVALID_STATE;
+  }
+  if (!app_net_request_is_json(req)) {
+    httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "application/json required");
+    return ESP_ERR_INVALID_ARG;
+  }
+
   char body[APP_NET_BODY_MAX] = {0};
   int received = httpd_req_recv(req, body, sizeof(body) - 1U);
   if (received <= 0) {
@@ -528,6 +572,10 @@ static esp_err_t app_net_queue_ws_send(int fd, const char *payload) {
 
 static esp_err_t app_net_ws_handler(httpd_req_t *req) {
   if (req->method == HTTP_GET) {
+    if (!app_net_browser_origin_allowed(req)) {
+      httpd_resp_send_err(req, HTTPD_403_FORBIDDEN, "browser origin is not allowed");
+      return ESP_ERR_INVALID_STATE;
+    }
     ESP_LOGI(TAG, "ws connected fd=%d", httpd_req_to_sockfd(req));
     return ESP_OK;
   }
@@ -586,7 +634,7 @@ esp_err_t app_net_start(void) {
   }
 
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-  config.max_uri_handlers = 9;
+  config.max_uri_handlers = 8;
 
   esp_err_t err = httpd_start(&s_server, &config);
   if (err != ESP_OK) {
@@ -624,11 +672,6 @@ esp_err_t app_net_start(void) {
     .method = HTTP_POST,
     .handler = app_net_command_handler,
   };
-  const httpd_uri_t options = {
-    .uri = "/*",
-    .method = HTTP_OPTIONS,
-    .handler = app_net_options_handler,
-  };
   const httpd_uri_t ws = {
     .uri = "/ws",
     .method = HTTP_GET,
@@ -636,14 +679,31 @@ esp_err_t app_net_start(void) {
     .is_websocket = true,
   };
 
-  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &root_get));
-  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &pad_get));
-  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &status_get));
-  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &telemetry_get));
-  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &wifi_get));
-  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &command_post));
-  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &options));
-  ESP_ERROR_CHECK(httpd_register_uri_handler(s_server, &ws));
+  const httpd_uri_t *handlers[] = {
+    &root_get,
+    &pad_get,
+    &status_get,
+    &telemetry_get,
+    &wifi_get,
+    &command_post,
+    &ws,
+  };
+
+  for (size_t i = 0; i < (sizeof(handlers) / sizeof(handlers[0])); i++) {
+    err = httpd_register_uri_handler(s_server, handlers[i]);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG,
+               "register %s failed: %s",
+               handlers[i]->uri,
+               esp_err_to_name(err));
+      esp_err_t stop_err = httpd_stop(s_server);
+      if (stop_err != ESP_OK) {
+        ESP_LOGW(TAG, "http server cleanup failed: %s", esp_err_to_name(stop_err));
+      }
+      s_server = NULL;
+      return err;
+    }
+  }
 
   ESP_LOGI(TAG, "http/ws server listening on port %d", config.server_port);
   return ESP_OK;
