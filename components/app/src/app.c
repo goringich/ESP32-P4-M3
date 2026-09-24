@@ -118,6 +118,7 @@ static esp_err_t app_mpu_whoami_check(void) {
   strlcpy(s_i2c_status.error, esp_err_to_name(err), sizeof(s_i2c_status.error));
   ESP_LOGW(TAG, "mpu: not detected on 0x68/0x69 (%s)", esp_err_to_name(err));
 
+#if CONFIG_APP_I2C_DIAG_SWEEP_ON_MPU_FAIL
   i2c_bus_deinit();
   i2c_bus_diag_sweep_mpu_pairs();
 
@@ -127,6 +128,7 @@ static esp_err_t app_mpu_whoami_check(void) {
     strlcpy(s_i2c_status.error, esp_err_to_name(restore_err), sizeof(s_i2c_status.error));
     return restore_err;
   }
+#endif
 
   return err;
 }
