@@ -63,7 +63,7 @@ type PendingReconnect = {
   baudRate: number;
 };
 
-function isLoopbackHostname(hostname: string) {
+export function isLoopbackHostname(hostname: string) {
   const normalized = hostname.trim().toLowerCase();
   return normalized === 'localhost'
     || normalized === '127.0.0.1'
@@ -71,7 +71,7 @@ function isLoopbackHostname(hostname: string) {
     || normalized === '[::1]';
 }
 
-function browserOriginAllowed(origin: string, requestHost: string | undefined) {
+export function browserOriginAllowed(origin: string, requestHost: string | undefined) {
   try {
     const url = new URL(origin);
     if (isLoopbackHostname(url.hostname)) {
