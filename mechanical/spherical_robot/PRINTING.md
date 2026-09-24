@@ -1,8 +1,10 @@
-# Печать P0.1
+# Печать сферического робота
+
+Текущая ревизия проекта определяется только `config/dimensions.json::project_revision`.
 
 Принтер: Anycubic Kobra 2 Pro, рабочее поле 220×220×250 мм. Единицы STL — миллиметры. Машиночитаемая таблица по каждому файлу: `exports/print_manifest.json`; ниже — компактная инструкция для всех экспортов.
 
-Общие правила: сопло 0.4 мм, слой 0.20 мм; minimum local wall 1.2 мм; shell 2.8 мм; structural wall ≥2.4 мм. Сначала напечатать `M3_TEST_COUPON`, `BEARING_FIT_COUPON`, `HEAT_INSERT_TEMPLATE` и `SPHERICAL_JOINT_TEST_FRAGMENT`. Не масштабировать посадочные детали в slicer.
+Общие правила: сопло 0.4 мм, слой 0.20 мм. Геометрические толщины `minimum_local_wall_mm`, `shell_wall_mm` и `structural_wall_mm` брать только из `config/dimensions.json`; не дублировать их вручную в инструкции. Сначала напечатать `M3_TEST_COUPON`, `BEARING_FIT_COUPON`, `HEAT_INSERT_TEMPLATE` и `SPHERICAL_JOINT_TEST_FRAGMENT`. Не масштабировать посадочные детали в slicer.
 
 | STL-файл(ы) | Материал | Ориентация | Стенки | Infill | Supports | Brim | Кол-во |
 |---|---|---|---:|---:|---|---|---:|
