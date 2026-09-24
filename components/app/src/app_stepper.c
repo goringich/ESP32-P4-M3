@@ -16,6 +16,7 @@
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
+#include "freertos/semphr.h"
 #include "sdkconfig.h"
 
 #define APP_STEPPER_COLOR_RESET "\x1b[0m"
@@ -96,8 +97,10 @@ static void app_stepper_set_mode(app_stepper_mode_t mode);
 static void app_stepper_handle_uart(void);
 static void app_stepper_handle_command(uint8_t cmd);
 static void app_stepper_drain_commands(void);
+static void app_stepper_tick_locked(void);
 
 static QueueHandle_t s_command_queue;
+static SemaphoreHandle_t s_state_mutex;
 
 static app_stepper_state_t s_stepper = {
   .mode = APP_STEPPER_MODE_STOP,
@@ -536,6 +539,12 @@ void app_stepper_get_snapshot(app_stepper_snapshot_t *snapshot) {
   }
 
   memset(snapshot, 0, sizeof(*snapshot));
+  if (s_state_mutex == NULL) {
+    return;
+  }
+  if (xSemaphoreTake(s_state_mutex, portMAX_DELAY) != pdTRUE) {
+    return;
+  }
   snapshot->mode = app_stepper_mode_to_str(s_stepper.mode);
   snapshot->sweep_state = "none";
   snapshot->left_motor_state = app_stepper_motor_to_str(s_stepper.left_direction);
@@ -565,10 +574,18 @@ void app_stepper_get_snapshot(app_stepper_snapshot_t *snapshot) {
 #else
   snapshot->led_gpio = -1;
 #endif
+  xSemaphoreGive(s_state_mutex);
 }
 
 void app_stepper_set_stabilize_velocity(float steps_per_second) {
+  if (s_state_mutex == NULL) {
+    return;
+  }
+  if (xSemaphoreTake(s_state_mutex, portMAX_DELAY) != pdTRUE) {
+    return;
+  }
   s_stepper.stabilize_velocity_sps = steps_per_second;
+  xSemaphoreGive(s_state_mutex);
 }
 
 static void app_stepper_handle_uart(void) {
@@ -622,6 +639,14 @@ esp_err_t app_stepper_init(void) {
     }
   }
 
+  if (s_state_mutex == NULL) {
+    s_state_mutex = xSemaphoreCreateMutex();
+    if (s_state_mutex == NULL) {
+      ESP_LOGE(TAG, "state mutex allocation failed");
+      return ESP_ERR_NO_MEM;
+    }
+  }
+
   err = app_stepper_uart_init();
   if (err != ESP_OK) {
     ESP_LOGW(TAG, "uart control disabled, motor logic still available");
@@ -647,7 +672,7 @@ esp_err_t app_stepper_init(void) {
   return ESP_OK;
 }
 
-void app_stepper_tick(void) {
+static void app_stepper_tick_locked(void) {
   const uint32_t now_ms = esp_log_timestamp();
 
   if (s_stepper.uart_ready) {
@@ -730,4 +755,17 @@ void app_stepper_tick(void) {
     app_stepper_apply_drive(-1, -1);
     app_stepper_emit_telemetry("stabilize_reverse");
   }
+}
+
+void app_stepper_tick(void) {
+  if (s_state_mutex == NULL) {
+    return;
+  }
+  if (xSemaphoreTake(s_state_mutex, portMAX_DELAY) != pdTRUE) {
+    return;
+  }
+
+  app_stepper_tick_locked();
+
+  xSemaphoreGive(s_state_mutex);
 }
