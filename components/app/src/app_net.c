@@ -550,10 +550,17 @@ static esp_err_t app_net_ws_handler(httpd_req_t *req) {
   if (err == ESP_OK && frame.type == HTTPD_WS_TYPE_TEXT && frame.len > 0) {
     char cmd = 0;
     if (app_net_extract_command(payload, &cmd)) {
-      app_stepper_command_char(cmd);
+      err = app_stepper_command_char(cmd);
+      if (err != ESP_OK) {
+        ESP_LOGW(TAG, "ws command queue failed: %s", esp_err_to_name(err));
+      }
     }
   }
   free(payload);
+
+  if (err != ESP_OK) {
+    return err;
+  }
 
   char *json = app_net_alloc_json_buffer();
   if (json == NULL) {
