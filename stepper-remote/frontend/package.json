@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --open",
+    "dev": "vite --open",
     "build": "tsc -b && vite build",
-    "preview": "vite preview --host 0.0.0.0 --open",
+    "preview": "vite preview --open",
     "test": "node --import ../backend/node_modules/tsx/dist/loader.mjs --test test/**/*.test.ts"
   },
   "dependencies": {
