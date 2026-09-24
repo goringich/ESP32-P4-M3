@@ -36,3 +36,6 @@ hello_world_p4.worktrees/
 
 # Obsolete coursework export: never track this file again
 course_work2526.pdf
+
+# Generated duplicate documentation exports
+docs/obsidian/esp-p4-lab/ESP-P4-LAB-ALL-IN-ONE.md
