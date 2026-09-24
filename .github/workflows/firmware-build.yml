@@ -1,0 +1,54 @@
+name: Firmware Build
+
+on:
+  pull_request:
+    paths:
+      - "CMakeLists.txt"
+      - "main/**"
+      - "components/**"
+      - "sdkconfig.defaults"
+      - "dependencies.lock"
+      - "esp-idf"
+      - ".gitmodules"
+      - ".github/workflows/firmware-build.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "CMakeLists.txt"
+      - "main/**"
+      - "components/**"
+      - "sdkconfig.defaults"
+      - "dependencies.lock"
+      - "esp-idf"
+      - ".gitmodules"
+      - ".github/workflows/firmware-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firmware-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Build ESP32-P4 firmware with pinned ESP-IDF
+        uses: espressif/esp-idf-ci-action@9d38657f3d789ca759b2b37aaf5ceffbc42c4f0d
+        with:
+          esp_idf_version: v5.5.2
+          target: esp32p4
+          path: "."
+          command: idf.py build
+      - name: Verify generated state stays untracked
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -z "$(git status --porcelain --untracked-files=no)"
