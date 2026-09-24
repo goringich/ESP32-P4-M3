@@ -22,6 +22,7 @@ FORBIDDEN_EXACT = {
   "sdkconfig.old",
   "pytest_hello_world.py",
   "3D-model/fiish.blend1",
+  "docs/obsidian/esp-p4-lab/ESP-P4-LAB-ALL-IN-ONE.md",
 }
 FORBIDDEN_PREFIXES = (
   "build/",
@@ -101,6 +102,7 @@ def verify_repository_hygiene(files: list[str]) -> None:
     "*.blend1",
     "sdkconfig",
     "sdkconfig.old",
+    "docs/obsidian/esp-p4-lab/ESP-P4-LAB-ALL-IN-ONE.md",
   ):
     require(expected in gitignore, f".gitignore missing {expected!r}")
 
@@ -174,6 +176,53 @@ def verify_firmware_identity(files: list[str]) -> None:
   require(not offenders, "legacy firmware identity remains in: " + ", ".join(offenders))
 
 
+def verify_network_security_contract() -> None:
+  embedded = (
+    ROOT / "components" / "app" / "src" / "app_net.c"
+  ).read_text(encoding="utf-8")
+  require(
+    'Access-Control-Allow-Origin", "*"' not in embedded,
+    "embedded actuator API must not restore wildcard CORS",
+  )
+  require(
+    "ESP_ERROR_CHECK(httpd_register_uri_handler" not in embedded,
+    "embedded HTTP URI registration must remain fail-soft",
+  )
+  require(
+    "app_net_browser_origin_allowed" in embedded,
+    "embedded browser-origin guard is missing",
+  )
+  require(
+    "application/json required" in embedded,
+    "embedded command endpoint must keep explicit JSON contract",
+  )
+
+  operator_server = (
+    ROOT / "stepper-remote" / "backend" / "src" / "server.ts"
+  ).read_text(encoding="utf-8")
+  require(
+    "app.use(cors())" not in operator_server,
+    "operator API must not restore permissive CORS",
+  )
+  require(
+    "STEPPER_REMOTE_ALLOW_REMOTE" in operator_server,
+    "operator API remote-bind gate is missing",
+  )
+  require(
+    "127.0.0.1" in operator_server,
+    "operator API must keep a loopback default",
+  )
+
+  vite = (
+    ROOT / "stepper-remote" / "frontend" / "vite.config.ts"
+  ).read_text(encoding="utf-8")
+  require(
+    "STEPPER_REMOTE_ALLOW_REMOTE" in vite
+    and "127.0.0.1" in vite,
+    "Vite operator proxy must remain loopback-by-default",
+  )
+
+
 def verify_dependency_contract() -> None:
   lock = DEPENDENCIES_LOCK.read_text(encoding="utf-8")
   require("version: 5.5.2" in lock, "dependencies.lock must remain bound to ESP-IDF 5.5.2")
@@ -212,6 +261,7 @@ def main() -> int:
     cfg = verify_dimensions()
     verify_print_manifest()
     verify_firmware_identity(files)
+    verify_network_security_contract()
     verify_dependency_contract()
     verify_revision_authority()
   except (OSError, ValueError, json.JSONDecodeError, subprocess.CalledProcessError, ContractError) as error:
