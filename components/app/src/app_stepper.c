@@ -14,6 +14,8 @@
 #include "driver/gpio.h"
 #include "driver/uart.h"
 #include "esp_log.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
 #include "sdkconfig.h"
 
 #define APP_STEPPER_COLOR_RESET "\x1b[0m"
@@ -26,6 +28,7 @@
 #define APP_STEPPER_UART_RX_BUF_SIZE 256
 #define APP_STEPPER_UART_TX_BUF_SIZE 0
 #define APP_STEPPER_DUPLICATE_CMD_GUARD_MS 150U
+#define APP_STEPPER_COMMAND_QUEUE_LENGTH 16U
 #define APP_STEPPER_STABILIZE_DEADBAND_RATIO 0.15f
 #define APP_STEPPER_STABILIZE_MAX_BUDGET_MS 120.0f
 
@@ -92,6 +95,9 @@ static void app_stepper_release(void);
 static void app_stepper_set_mode(app_stepper_mode_t mode);
 static void app_stepper_handle_uart(void);
 static void app_stepper_handle_command(uint8_t cmd);
+static void app_stepper_drain_commands(void);
+
+static QueueHandle_t s_command_queue;
 
 static app_stepper_state_t s_stepper = {
   .mode = APP_STEPPER_MODE_STOP,
@@ -511,7 +517,16 @@ static void app_stepper_handle_command(uint8_t cmd) {
 }
 
 esp_err_t app_stepper_command_char(char cmd) {
-  app_stepper_handle_command((uint8_t)cmd);
+  if (s_command_queue == NULL) {
+    return ESP_ERR_INVALID_STATE;
+  }
+
+  const uint8_t queued_cmd = (uint8_t)cmd;
+  if (xQueueSend(s_command_queue, &queued_cmd, 0) != pdTRUE) {
+    ESP_LOGW(TAG, "command queue full, dropping 0x%02X", queued_cmd);
+    return ESP_ERR_TIMEOUT;
+  }
+
   return ESP_OK;
 }
 
@@ -565,7 +580,22 @@ static void app_stepper_handle_uart(void) {
   }
 
   for (int i = 0; i < len; i++) {
-    app_stepper_handle_command(buf[i]);
+    esp_err_t err = app_stepper_command_char((char)buf[i]);
+    if (err != ESP_OK) {
+      ESP_LOGW(TAG, "uart command queue failed: %s", esp_err_to_name(err));
+      break;
+    }
+  }
+}
+
+static void app_stepper_drain_commands(void) {
+  if (s_command_queue == NULL) {
+    return;
+  }
+
+  uint8_t cmd = 0;
+  while (xQueueReceive(s_command_queue, &cmd, 0) == pdTRUE) {
+    app_stepper_handle_command(cmd);
   }
 }
 
@@ -580,6 +610,17 @@ esp_err_t app_stepper_init(void) {
 
   app_stepper_led_init();
   app_stepper_release();
+
+  if (s_command_queue == NULL) {
+    s_command_queue = xQueueCreate(
+      APP_STEPPER_COMMAND_QUEUE_LENGTH,
+      sizeof(uint8_t)
+    );
+    if (s_command_queue == NULL) {
+      ESP_LOGE(TAG, "command queue allocation failed");
+      return ESP_ERR_NO_MEM;
+    }
+  }
 
   err = app_stepper_uart_init();
   if (err != ESP_OK) {
@@ -612,6 +653,8 @@ void app_stepper_tick(void) {
   if (s_stepper.uart_ready) {
     app_stepper_handle_uart();
   }
+
+  app_stepper_drain_commands();
 
   if ((now_ms - s_stepper.last_telemetry_ms) >= 1000U) {
     s_stepper.last_telemetry_ms = now_ms;
