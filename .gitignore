@@ -1,23 +1,38 @@
+# ESP-IDF / generated firmware state
 build/
+managed_components/
+sdkconfig
+sdkconfig.old
 log/
 logs/monitor/*.log
 logs/monitor/latest.log
 
+# Generated tooling state
+.playwright-mcp/
+**/__pycache__/
+*.py[cod]
 *.tmp
 *.swp
 *.swo
 *~
 .codex
 
-sdkconfig
-sdkconfig.old
-hello_world_p4.worktrees/
+# Node / web build outputs
+stepper-remote/**/node_modules/
+stepper-remote/**/dist/
+coverage/
+
+# Blender backup files are not source artifacts
+*.blend1
 
 # Local credential material
 *.pem
 *.key
 .env
 .env.*
+
+# Local worktrees
+hello_world_p4.worktrees/
 
 # Obsolete coursework export: never track this file again
 course_work2526.pdf
