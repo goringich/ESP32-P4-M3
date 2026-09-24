@@ -1,4 +1,3 @@
-import cors from 'cors';
 import express from 'express';
 import os from 'node:os';
 import path from 'node:path';
@@ -63,6 +62,34 @@ type PendingReconnect = {
   path: string;
   baudRate: number;
 };
+
+function isLoopbackHostname(hostname: string) {
+  const normalized = hostname.trim().toLowerCase();
+  return normalized === 'localhost'
+    || normalized === '127.0.0.1'
+    || normalized === '::1'
+    || normalized === '[::1]';
+}
+
+function browserOriginAllowed(origin: string, requestHost: string | undefined) {
+  try {
+    const url = new URL(origin);
+    if (isLoopbackHostname(url.hostname)) {
+      return true;
+    }
+
+    const allowedOrigin = process.env.STEPPER_REMOTE_ALLOWED_ORIGIN?.trim();
+    if (allowedOrigin) {
+      return origin === allowedOrigin;
+    }
+
+    return process.env.STEPPER_REMOTE_ALLOW_REMOTE === '1'
+      && Boolean(requestHost)
+      && url.host === requestHost;
+  } catch {
+    return false;
+  }
+}
 
 export function createApp(deps: AppDependencies = {}) {
   const app = express();
@@ -133,7 +160,28 @@ export function createApp(deps: AppDependencies = {}) {
     }, 1200);
   });
 
-  app.use(cors());
+  app.use((req, res, next) => {
+    const remoteEnabled = process.env.STEPPER_REMOTE_ALLOW_REMOTE === '1';
+    if (!remoteEnabled && !isLoopbackHostname(req.hostname)) {
+      res.status(403).json({
+        ok: false,
+        error: 'remote host access is disabled',
+      });
+      return;
+    }
+
+    const origin = req.get('origin');
+    const mutating = !['GET', 'HEAD', 'OPTIONS'].includes(req.method);
+    if (mutating && origin && !browserOriginAllowed(origin, req.get('host'))) {
+      res.status(403).json({
+        ok: false,
+        error: 'browser origin is not allowed',
+      });
+      return;
+    }
+
+    next();
+  });
   app.use(express.json());
 
   app.get('/api/transport', (_req, res) => {
@@ -419,10 +467,15 @@ export function createApp(deps: AppDependencies = {}) {
   return app;
 }
 
-const port = 3001;
+const port = Number.parseInt(process.env.STEPPER_REMOTE_PORT ?? '3001', 10);
+const host = process.env.STEPPER_REMOTE_HOST?.trim() || '127.0.0.1';
 
-function collectListenUrls(port: number) {
+function collectListenUrls(port: number, bindHost: string) {
   const urls = new Set<string>([`http://127.0.0.1:${port}`]);
+
+  if (isLoopbackHostname(bindHost)) {
+    return Array.from(urls);
+  }
   let interfaces: ReturnType<typeof os.networkInterfaces>;
 
   try {
@@ -449,12 +502,28 @@ function collectListenUrls(port: number) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error(`invalid STEPPER_REMOTE_PORT: ${process.env.STEPPER_REMOTE_PORT ?? ''}`);
+  }
+
+  const remoteEnabled = process.env.STEPPER_REMOTE_ALLOW_REMOTE === '1';
+  if (!isLoopbackHostname(host) && !remoteEnabled) {
+    throw new Error(
+      'remote bind refused: set STEPPER_REMOTE_ALLOW_REMOTE=1 explicitly'
+    );
+  }
+
   const app = createApp();
 
-  app.listen(port, '0.0.0.0', () => {
-    console.log(`backend listening on 0.0.0.0:${port}`);
-    for (const url of collectListenUrls(port)) {
+  app.listen(port, host, () => {
+    console.log(`backend listening on ${host}:${port}`);
+    for (const url of collectListenUrls(port, host)) {
       console.log(`ui available at ${url}/`);
+    }
+    if (!isLoopbackHostname(host)) {
+      console.warn(
+        'remote operator access is enabled; restrict the host firewall and set STEPPER_REMOTE_ALLOWED_ORIGIN'
+      );
     }
     console.log('wifi mode is proxied by backend -> ESP AP');
   });
