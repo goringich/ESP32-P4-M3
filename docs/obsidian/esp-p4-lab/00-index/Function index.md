@@ -46,8 +46,9 @@
 - [[04-functions/app_net_ws_send_work]]
 - [[04-functions/app_net_telemetry_handler]]
 - [[04-functions/app_net_wifi_handler]]
-- [[04-functions/app_net_options_handler]]
-- [[04-functions/app_net_set_cors]]
+- [[04-functions/app_net_set_common_headers]]
+- [[04-functions/app_net_browser_origin_allowed]]
+- [[04-functions/app_net_request_is_json]]
 
 Это ключевой набор функций для удаленного API, JSON и WebSocket push.
 
