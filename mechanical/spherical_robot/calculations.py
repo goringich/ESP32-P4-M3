@@ -121,31 +121,47 @@ def sizing_report(cfg: dict[str, Any]) -> dict[str, Any]:
   if total_mass_g <= 0:
     raise SizingError("total mass must be positive")
 
+  ballast_variants = cfg.get("ballast_variants_g")
+  if not isinstance(ballast_variants, list) or not ballast_variants:
+    raise SizingError("ballast_variants_g must be a non-empty list")
+  arm_variants = cfg.get("pendulum_arm_radii_mm")
+  if not isinstance(arm_variants, list) or not arm_variants:
+    raise SizingError("pendulum_arm_radii_mm must be a non-empty list")
+
   ballast_kg = ballast_mass_g / 1000.0
   arm_m = arm_mm / 1000.0
   gravity_torque_nm = ballast_kg * 9.80665 * arm_m
+
+  worst_ballast_g = max(float(value) for value in ballast_variants)
+  worst_arm_mm = max(float(value) for value in arm_variants)
+  design_gravity_torque_nm = (
+    worst_ballast_g / 1000.0
+    * 9.80665
+    * worst_arm_mm / 1000.0
+  )
   continuous_torque_nm = (
-    gravity_torque_nm
+    design_gravity_torque_nm
     * require_number(cfg, "design_torque_safety_factor")
     / require_number(cfg, "gearbox_efficiency")
   )
   short_torque_nm = continuous_torque_nm * 1.7
-  com_shift_mm = ballast_mass_g * arm_mm / total_mass_g
+  design_total_mass_g = body_mass_g + worst_ballast_g
+  com_shift_mm = worst_ballast_g * worst_arm_mm / design_total_mass_g
 
   shaft_d_m = require_number(cfg, "shaft_diameter_mm") / 1000.0
   span_m = require_number(cfg, "shaft_support_span_mm") / 1000.0
-  ballast_variants = cfg.get("ballast_variants_g")
-  if not isinstance(ballast_variants, list) or not ballast_variants:
-    raise SizingError("ballast_variants_g must be a non-empty list")
-  worst_moving_mass_kg = (max(float(v) for v in ballast_variants) + 80.0) / 1000.0
+  worst_moving_mass_kg = (worst_ballast_g + 80.0) / 1000.0
   load_n = worst_moving_mass_kg * 9.80665 * 5.0
   bend_moment_nm = load_n * span_m / 4.0
   bend_stress_mpa = 32.0 * bend_moment_nm / (math.pi * shaft_d_m**3) / 1e6
   bearing_radial_design_n = load_n / 2.0
 
   sphere_radius_m = outer_radius_mm / 1000.0
-  traction_force_n = gravity_torque_nm / sphere_radius_m
-  minimum_idealized_mu = traction_force_n / (total_mass_g / 1000.0 * 9.80665)
+  traction_force_n = design_gravity_torque_nm / sphere_radius_m
+  minimum_idealized_mu = (
+    traction_force_n
+    / (design_total_mass_g / 1000.0 * 9.80665)
+  )
   shell_rpm_at_target = (
     require_number(cfg, "target_shell_speed_m_s")
     / (2.0 * math.pi * sphere_radius_m)
@@ -176,8 +192,12 @@ def sizing_report(cfg: dict[str, Any]) -> dict[str, Any]:
       "swept_radius_mm": swept_radius_mm,
       "ballast_mass_g": ballast_mass_g,
       "gravity_torque_nm": gravity_torque_nm,
+      "design_ballast_mass_g": worst_ballast_g,
+      "design_arm_mm": worst_arm_mm,
+      "design_gravity_torque_nm": design_gravity_torque_nm,
       "minimum_continuous_drive_torque_nm": continuous_torque_nm,
       "minimum_short_drive_torque_nm": short_torque_nm,
+      "torque_basis": "worst_configured_ballast_and_arm_radius",
     },
     "mass": {
       "shell_mass_g_estimate": shell_mass_g,
@@ -199,6 +219,23 @@ def sizing_report(cfg: dict[str, Any]) -> dict[str, Any]:
     "clearance": {
       "radial_reserve_mm": radial_reserve_mm,
       "required_dynamic_clearance_mm": clearance_mm,
+    },
+    "actuator_screening": {
+      "motor_torque_nm_placeholder": require_number(cfg, "tt_motor_torque_nm_PLACEHOLDER"),
+      "motor_speed_rpm_placeholder": require_number(cfg, "tt_motor_speed_rpm_PLACEHOLDER"),
+      "target_output_rpm": require_number(cfg, "target_pendulum_output_rpm"),
+      "continuous_torque_margin_nm": (
+        require_number(cfg, "tt_motor_torque_nm_PLACEHOLDER") - continuous_torque_nm
+      ),
+      "short_torque_margin_nm": (
+        require_number(cfg, "tt_motor_torque_nm_PLACEHOLDER") - short_torque_nm
+      ),
+      "meets_continuous_torque_screen": (
+        require_number(cfg, "tt_motor_torque_nm_PLACEHOLDER") >= continuous_torque_nm
+      ),
+      "meets_short_torque_screen": (
+        require_number(cfg, "tt_motor_torque_nm_PLACEHOLDER") >= short_torque_nm
+      ),
     },
     "unresolved_input_status_keys": unresolved,
     "physical_accepted": False,
@@ -239,11 +276,18 @@ def human_report(report: dict[str, Any]) -> str:
       f"total mass estimate: {mass['total_mass_g_estimate']/1000.0:.2f} kg; "
       f"max COM shift: {mass['maximum_com_shift_mm_estimate']:.1f} mm"
     ),
-    f"gravity torque: {pendulum['gravity_torque_nm']:.3f} N·m",
+    f"nominal gravity torque: {pendulum['gravity_torque_nm']:.3f} N·m",
     (
-      "drive screening target: "
+      "drive screening target (worst configured ballast/radius): "
       f">= {pendulum['minimum_continuous_drive_torque_nm']:.2f} N·m continuous, "
       f">= {pendulum['minimum_short_drive_torque_nm']:.2f} N·m short"
+    ),
+    (
+      "current placeholder actuator: "
+      f"{report['actuator_screening']['motor_torque_nm_placeholder']:.2f} N·m, "
+      f"{report['actuator_screening']['motor_speed_rpm_placeholder']:.0f} rpm; "
+      "continuous torque screen="
+      f"{'PASS' if report['actuator_screening']['meets_continuous_torque_screen'] else 'FAIL'}"
     ),
     (
       "8 mm shaft at 5x shock screening: "

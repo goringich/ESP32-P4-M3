@@ -27,7 +27,10 @@ esp_err_t mpu9250_read_whoami(uint8_t addr, uint8_t *out_whoami) {
   }
 
   uint8_t pwr = 0x00;
-  (void)i2c_bus_write(addr, MPU_REG_PWR_MGMT_1, &pwr, 1);
+  esp_err_t err = i2c_bus_write(addr, MPU_REG_PWR_MGMT_1, &pwr, 1);
+  if (err != ESP_OK) {
+    return err;
+  }
 
   return i2c_bus_read(addr, MPU_REG_WHO_AM_I, out_whoami, 1);
 }
