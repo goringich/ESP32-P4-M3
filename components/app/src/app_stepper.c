@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "sdkconfig.h"
+
 #if CONFIG_APP_CONTROL_ENABLE
 #include "app_control.h"
 #endif
@@ -17,7 +19,6 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
-#include "sdkconfig.h"
 
 #define APP_STEPPER_COLOR_RESET "\x1b[0m"
 #define APP_STEPPER_COLOR_HDR "\x1b[38;5;214m"
