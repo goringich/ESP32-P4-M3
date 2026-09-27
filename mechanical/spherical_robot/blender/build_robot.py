@@ -1004,15 +1004,46 @@ def build():
                 print_meta(grip, material_name="TPU 95A", orientation="flat outer face on bed", walls=3, infill=100, supports=False, brim=False, quantity=24, status="BLOCKED", placeholders="TPU availability, M2.5 retention hardware and protrusion test")
             grip_index += 1
 
+    # Regenerate the exact exterior meshes before importing; never trust stale STL.
+    exterior_spec = importlib.util.spec_from_file_location("exterior_build", ROOT / "exterior" / "build.py")
+    exterior_module = importlib.util.module_from_spec(exterior_spec)
+    exterior_spec.loader.exec_module(exterior_module)
+    exterior_dir = ROOT / "exports" / "exterior"
+    exterior_module.build(exterior_dir)
+
+    def import_exterior(name):
+        bpy.ops.object.select_all(action="DESELECT")
+        bpy.ops.wm.stl_import(filepath=str(exterior_dir / (name + ".stl")), merge_vertices=True)
+        obj = bpy.context.selected_objects[0]
+        obj.name = name
+        move_to_collection(obj, "01_SHELL")
+        obj.parent = shell_root
+        assign_material(obj, white_solid)
+        return obj
+
     plus_x = panel_objects[0]
-    hatch_opening = CFG["service_hatch_opening_mm"]
-    hatch_cutter = tangent_box("SERVICE_HATCH_CUTTER", hatch_opening, wall + 10, (1, 0, 0), outer_r - wall / 2, grey, "00_REFERENCE", bevel=4)
-    boolean_difference(plus_x, hatch_cutter, "Service hatch opening")
-    hatch = tangent_box("SERVICE_HATCH", (hatch_opening[0] - 0.6, hatch_opening[1] - 0.6), 2.2, (1, 0, 0), outer_r - 1.7, white_solid, "01_SHELL", shell_root, bevel=3.6)
-    print_meta(hatch, orientation="flat inner face on bed", walls=5, infill=30, supports=False, brim=False, status="PROTOTYPE_READY", placeholders="switch and charge connector cutouts")
-    for y, z in ((-39, -23), (-39, 23), (39, -23), (39, 23)):
-        screw = cylinder(f"SERVICE_HATCH_M3_{y}_{z}", 3.0, 3.0, (outer_r - 0.7, y, z), dark, "06_FASTENERS", shell_root, vertices=32, rotation=(0, math.radians(90), 0), bevel=0.2)
-        screw["FASTENER"] = "M3 flush head"
+    hatch_cfg = CFG["exterior"]
+    hatch_opening = [v + 2 * hatch_cfg["hatch_gap_mm"] for v in hatch_cfg["hatch_size_mm"]]
+    # Full-depth cutter follows the whole curved opening, including its corners.
+    hatch_cutter = box("SERVICE_HATCH_CUTTER", (outer_r, hatch_opening[0], hatch_opening[1]),
+                       (outer_r / 2, 0, 0), grey, "00_REFERENCE", bevel=0)
+    boolean_difference(plus_x, hatch_cutter, "Curved hatch opening")
+    seat = import_exterior("SERVICE_HATCH_SEAT")
+    bpy.context.view_layer.objects.active = plus_x
+    union = plus_x.modifiers.new("Integral hatch load ledge", "BOOLEAN")
+    union.operation = "UNION"
+    union.solver = "EXACT"
+    union.object = seat
+    bpy.ops.object.modifier_apply(modifier=union.name)
+    bpy.data.objects.remove(seat, do_unlink=True)
+    hatch = import_exterior("SERVICE_HATCH")
+    print_meta(hatch, orientation="curved lid: slice and inspect support contact", walls=5,
+               infill=30, supports=True, brim=True, status="BLOCKED",
+               placeholders="M3 fit coupon, support removal, full assembly collision and physical rolling")
+    mechanical_connection(hatch, plus_x.name, "4x recessed M3 flat-head screws + washers + locknuts",
+                          "integral spherical ledge", "install nuts from inside before closing shell",
+                          "remove four screws; pull radially outward", "driver + 5.5 mm wrench",
+                          "rectangular opening", "four through screws")
     charge = box("CHARGE_CONNECTOR_PLACEHOLDER", (8, 12, 8), (outer_r - 4, -20, 0), dark, "05_ELECTRONICS", electronics_root, bevel=1.0)
     switch = box("MAIN_SWITCH_PLACEHOLDER", (8, 19.2, 13), (outer_r - 4, 20, 0), dark, "05_ELECTRONICS", electronics_root, bevel=1.0)
 
