@@ -140,3 +140,11 @@ Generated state is intentionally not source:
 `dependencies.lock`, the ESP-IDF submodule, source code, canonical CAD inputs, and intentional engineering exports remain tracked.
 
 The repository contract workflow fails if generated state or stale legacy identity returns.
+
+## Exterior candidate P0.3
+
+See [Russian integration guide](mechanical/spherical_robot/INTEGRATION_RU.md) and
+[release status](mechanical/spherical_robot/RELEASE_STATUS.md).
+The new curved hatch and AV alternative are in `mechanical/spherical_robot/exports/exterior`;
+full-assembly STL/GLB/BLEND exports predate this change and must be regenerated before printing.
+This is not a physically accepted or assembly-verified release.

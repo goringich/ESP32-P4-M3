@@ -1,0 +1,24 @@
+{
+  "revision": "P0.3-exterior-candidate",
+  "parameter_sha256": "b59367eb417a7e9a11beb60f2a2c12c7680e9bc25404a7d7e26aa8be94cf5638",
+  "source_sha256": "b3f3d2fd2f894b011d88964dca2a64da65eb05a35beee60c479fd7f806cd2e9a",
+  "coordinate_frame": "assembly millimetres, +X outward; NOT bed oriented",
+  "parts": [
+    {
+      "part": "SERVICE_HATCH",
+      "sha256": "7ab00542f90b4fa900bd40da3cdf06c9afb3b3d7053da33e3bb1c4e4e69301f1"
+    },
+    {
+      "part": "SERVICE_HATCH_AV",
+      "sha256": "1125fb5fc71ebafc9034fc5b3580fbde8894f1ade589b32f4c84c414db25b4f0"
+    },
+    {
+      "part": "SERVICE_HATCH_SEAT",
+      "sha256": "af407f87bfe5f1848628a49b27fa46b624544942712b7e79b02fdfb6e0723111"
+    }
+  ],
+  "physical_accepted": false,
+  "slicer_status": "NOT_RUN",
+  "assembly_collision_status": "NOT_RUN",
+  "status": "GEOMETRY_CANDIDATE"
+}

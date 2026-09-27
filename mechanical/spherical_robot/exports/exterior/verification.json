@@ -1,0 +1,103 @@
+{
+  "revision": "P0.3-exterior-candidate",
+  "parameter_sha256": "b59367eb417a7e9a11beb60f2a2c12c7680e9bc25404a7d7e26aa8be94cf5638",
+  "source_sha256": "b3f3d2fd2f894b011d88964dca2a64da65eb05a35beee60c479fd7f806cd2e9a",
+  "coordinate_frame": "assembly millimetres, +X outward; NOT bed oriented",
+  "parts": [
+    {
+      "part": "SERVICE_HATCH",
+      "sha256": "7ab00542f90b4fa900bd40da3cdf06c9afb3b3d7053da33e3bb1c4e4e69301f1",
+      "watertight": true,
+      "connected_solids": 1,
+      "triangles": 7324,
+      "volume_mm3": 21609.863,
+      "assembly_bounds_mm": [
+        [
+          119.139,
+          -46.0,
+          -29.0
+        ],
+        [
+          134.974,
+          46.0,
+          29.0
+        ]
+      ],
+      "print_file": "SERVICE_HATCH_PRINT.stl",
+      "print_sha256": "2ad7107df92d28b3d71ae3dd53a51aece4b6d27e2fcd26f1dd27a8a1ea64f428",
+      "print_bounds_mm": [
+        [
+          -29.0,
+          -46.0,
+          0.0
+        ],
+        [
+          29.0,
+          46.0,
+          15.835
+        ]
+      ],
+      "support_decision": "REQUIRED: concave underside; slicer inspection pending"
+    },
+    {
+      "part": "SERVICE_HATCH_AV",
+      "sha256": "1125fb5fc71ebafc9034fc5b3580fbde8894f1ade589b32f4c84c414db25b4f0",
+      "watertight": true,
+      "connected_solids": 1,
+      "triangles": 10592,
+      "volume_mm3": 20867.935,
+      "assembly_bounds_mm": [
+        [
+          119.139,
+          -46.0,
+          -29.0
+        ],
+        [
+          134.674,
+          46.0,
+          29.0
+        ]
+      ],
+      "print_file": "SERVICE_HATCH_AV_PRINT.stl",
+      "print_sha256": "d74482ec7836a367684ea5b64b34bebce616c25424fc2e3ee71b01544213dd0c",
+      "print_bounds_mm": [
+        [
+          -29.0,
+          -46.089,
+          0.0
+        ],
+        [
+          29.0,
+          45.911,
+          15.535
+        ]
+      ],
+      "support_decision": "REQUIRED: concave underside; slicer inspection pending"
+    },
+    {
+      "part": "SERVICE_HATCH_SEAT",
+      "sha256": "af407f87bfe5f1848628a49b27fa46b624544942712b7e79b02fdfb6e0723111",
+      "watertight": true,
+      "connected_solids": 1,
+      "triangles": 4720,
+      "volume_mm3": 20042.888,
+      "assembly_bounds_mm": [
+        [
+          109.611,
+          -53.0,
+          -36.0
+        ],
+        [
+          129.307,
+          53.0,
+          36.0
+        ]
+      ]
+    }
+  ],
+  "physical_accepted": false,
+  "slicer_status": "NOT_RUN",
+  "assembly_collision_status": "NOT_RUN",
+  "status": "MESH_VERIFIED_ASSEMBLY_BLOCKED",
+  "mesh_status": "PASS"
+}
