@@ -1,0 +1,52 @@
+{
+  "schema_version": "2026-09-29.stabilized-sphere-tt80.p0",
+  "project_revision": "P0-internal-drive-unit",
+  "evidence_state": "DESIGN_PROTOTYPE",
+  "sphere": {
+    "outer_diameter_mm": 270.0,
+    "wall_mm": 2.8,
+    "inner_diameter_mm_calculated": 264.4,
+    "shell_source": "reuse outer size family from mechanical/spherical_robot; simplify internal interfaces"
+  },
+  "drive": {
+    "architecture": "two_motor_internal_drive_unit",
+    "wheel_count": 2,
+    "wheel_diameter_mm_user_reported": 80.0,
+    "wheel_width_mm_PLACEHOLDER": null,
+    "wheel_hub_depth_mm_PLACEHOLDER": null,
+    "tt_motor_body_mm_user_reported": [65.0, 20.0, 23.0],
+    "tt_motor_installed_height_mm_user_reported": 28.0,
+    "tt_motor_d_shaft_round_mm_user_reported": 5.4,
+    "tt_motor_d_shaft_flat_mm_user_reported": 3.3,
+    "tt_motor_speed_rpm_PLACEHOLDER": 100.0,
+    "tt_motor_stall_current_a_PLACEHOLDER": 2.0,
+    "contact_preload": "compliant upper guide / low-friction follower"
+  },
+  "electronics": {
+    "esp32_p4_m3_pcb_mm": [92.0, 62.0, 1.6],
+    "mpu9250_board_mm_PLACEHOLDER": [20.0, 15.0, 4.0],
+    "battery_mm_user_reported_candidate": [78.0, 38.0, 23.0],
+    "motor_driver_p0": "existing L293D only if PWM enable pins are accessible",
+    "motor_driver_product_candidate": "DRV8833_or_TB6612_class"
+  },
+  "control": {
+    "target_period_ms": 5,
+    "maximum_first_run_pwm_percent": 25.0,
+    "hold_pitch_deg": 0.0,
+    "maximum_initial_drive_pitch_bias_deg": 5.0,
+    "emergency_tilt_cutoff_deg": 35.0,
+    "imu_stale_cutoff_ms": 50
+  },
+  "status": {
+    "sphere_outer_diameter_mm": "REUSED_CANONICAL",
+    "sphere_wall_mm": "REUSED_CANONICAL",
+    "wheel_diameter_mm": "USER_REPORTED",
+    "wheel_width_mm": "PLACEHOLDER",
+    "wheel_hub_depth_mm": "PLACEHOLDER",
+    "tt_motor_body_mm": "USER_REPORTED",
+    "tt_motor_performance": "PLACEHOLDER",
+    "battery_envelope": "ASSUMED",
+    "mpu9250_envelope": "PLACEHOLDER",
+    "physical_accepted": false
+  }
+}
