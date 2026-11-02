@@ -283,6 +283,7 @@ class I2CBusHandleTests(unittest.TestCase):
       command = [
         compiler, "-std=c11", "-Wall", "-Wextra", "-Werror",
         "-Wno-unused-variable", "-Wno-unused-parameter", "-Wno-unused-function",
+        "-Wno-unused-but-set-variable",
         "-I", str(work), "-I", str(INCLUDE),
         str(SOURCE), str(harness), "-o", str(executable),
       ]
