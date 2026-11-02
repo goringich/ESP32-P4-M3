@@ -52,5 +52,8 @@ jobs:
               --exclude='build' --exclude='build/*' \
               --exclude='managed_components' --exclude='managed_components/*'
           cd "${source_dir}"
+          # Build-only profile: the app compiles L293D sources unconditionally.
+          # Enable their existing Kconfig defaults only in this ephemeral CI export.
+          printf '\\nCONFIG_APP_MODE_L293D_TEST=y\\n# CONFIG_APP_MODE_MPU9250 is not set\\n' >> sdkconfig.defaults
           idf.py -B "${build_dir}" set-target esp32p4
           idf.py -B "${build_dir}" build
