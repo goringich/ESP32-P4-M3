@@ -45,5 +45,12 @@ jobs:
           set -Eeuo pipefail
           . /opt/esp/idf/export.sh >/dev/null
           build_dir="${RUNNER_TEMP}/i2c-firmware-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          source_dir="${RUNNER_TEMP}/i2c-source-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          mkdir -p "${source_dir}"
+          git -c "safe.directory=${PWD}" archive HEAD |
+            tar -xf - -C "${source_dir}" \
+              --exclude='build' --exclude='build/*' \
+              --exclude='managed_components' --exclude='managed_components/*'
+          cd "${source_dir}"
           idf.py -B "${build_dir}" set-target esp32p4
           idf.py -B "${build_dir}" build
