@@ -44,5 +44,6 @@ jobs:
         run: |
           set -Eeuo pipefail
           . /opt/esp/idf/export.sh >/dev/null
-          idf.py set-target esp32p4
-          idf.py build
+          build_dir="${RUNNER_TEMP}/i2c-firmware-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          idf.py -B "${build_dir}" set-target esp32p4
+          idf.py -B "${build_dir}" build
