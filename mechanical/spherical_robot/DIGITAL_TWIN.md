@@ -137,3 +137,12 @@ Gmsh and CalculiX. Until coupon-backed anisotropic FDM properties and the final
 slicer topology are bound, a green solve is only
 `STRUCTURAL_FEA_SCREENING_PASS`, not `STRUCTURAL_ANALYSIS_PASS` and never
 physical acceptance. See `STRUCTURAL_FEA.md`.
+
+
+## Controller-in-loop screening
+
+The production-intended pure-C controller under
+`components/spherical_control` is compiled unchanged for the host and driven
+against MuJoCo in 54 forward/reverse scenarios. Until the encoder/steering
+drivers and firmware binding exist, a green run is only
+`CONTROLLER_IN_LOOP_SCREENING_PASS`. See `CONTROLLER_IN_LOOP.md`.
