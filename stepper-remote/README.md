@@ -1,70 +1,86 @@
 # Stepper Remote
 
-This web stack is the operator UI for the ESP32-P4 gyroscope platform bench in this repo.
+This web stack is the operator UI for the ESP32-P4 bench infrastructure in this repository.
 
-## What works
+It can send commands, open serial ports, build firmware, and flash hardware. Treat it as a privileged local operator tool, not as a public web application.
 
-- Local web UI: served from the backend on `http://127.0.0.1:3001/`
-- Serial workflow: browser -> local backend -> `/dev/ttyUSB0`
-- Wi-Fi workflow: browser -> backend proxy -> ESP AP at `http://192.168.4.1`
-- BLE status is exposed by firmware telemetry and shown in the UI
+## Safe default
 
-## One-command start
-
-From the repo root:
+Start from the repository root:
 
 ```bash
 ./scripts/run_stepper_remote_web.sh
 ```
 
-The script:
+The backend and Vite tooling bind to loopback by default:
 
-1. builds the frontend
-2. builds the backend
-3. starts the backend that serves the built frontend on `0.0.0.0:3001`
+- main UI: `http://127.0.0.1:3001/`
+- pad UI: `http://127.0.0.1:3001/pad`
 
-Then open:
+Cross-origin browser access is not enabled by default.
 
-- `http://127.0.0.1:3001/` for the main UI
-- `http://127.0.0.1:3001/pad` for the simple pad view
-- `http://<backend-host-ip>:3001/` from another device that can reach the backend host
+The backend derives the firmware project directory from this repository instead of assuming a machine-specific path. You can still override it with `IDF_PROJECT_DIR`.
 
-## Important transport note
+## Explicit remote operator mode
 
-Opening the web UI locally and controlling the board over Wi-Fi are different things.
+LAN exposure is intentionally opt-in because the API can build, flash, connect serial ports, and command the device.
 
-- The local UI can open as long as the backend is running.
-- In `wifi` mode the browser talks only to the backend. The backend proxies requests to the ESP AP.
-- Because of that, the browser device may stay on another Wi-Fi network if it can reach the backend host.
-- But the backend host itself still must have a real route to the ESP AP: second adapter, dual-homed host, or router route.
-- Wi-Fi transport from this PC to the ESP AP requires a real Wi-Fi adapter on the host.
-- On this machine, recent checks showed `WIFI-HW missing`, so `http://192.168.4.1` is not reachable from this PC until Wi-Fi hardware is available.
+Example:
 
-Because of that:
+```bash
+STEPPER_REMOTE_HOST=0.0.0.0 \
+STEPPER_REMOTE_ALLOW_REMOTE=1 \
+STEPPER_REMOTE_ALLOWED_ORIGIN=http://192.168.1.50:3001 \
+./scripts/run_stepper_remote_web.sh
+```
 
-- use `serial` mode from this workstation when working directly over USB
-- use another phone/laptop with Wi-Fi if you want to drive the ESP AP over `wifi` mode
-- or run the backend on a machine that can both reach `192.168.4.1` and expose `http://<backend-ip>:3001` to the browser device
+When remote mode is enabled:
 
-## ESP AP credentials
+- restrict TCP port 3001 with the host firewall to trusted clients;
+- set `STEPPER_REMOTE_ALLOWED_ORIGIN` to the exact browser origin when possible;
+- do not expose the service directly to the Internet;
+- use a trusted network only.
 
-- SSID prefix: `JC-ESP32P4M3`
-- Password: `00000000`
+## Transport model
 
-## Backend ports
+The operator UI and the ESP transport are separate layers.
 
-- backend API + static UI: `3001`
-- frontend dev server, if you run it separately: Vite with `/api` proxy to `3001`
+- `serial`: browser -> local backend -> serial device;
+- `wifi`: browser -> backend -> ESP HTTP API, default ESP base URL `http://192.168.4.1`.
+
+The backend host must have a real route to the ESP Wi-Fi endpoint for Wi-Fi mode to work.
+
+## Environment overrides
+
+- `STEPPER_REMOTE_HOST` — backend/Vite bind host; default `127.0.0.1`;
+- `STEPPER_REMOTE_PORT` — backend port; default `3001`;
+- `STEPPER_REMOTE_ALLOW_REMOTE=1` — required for non-loopback bind;
+- `STEPPER_REMOTE_ALLOWED_ORIGIN` — allowed remote browser origin;
+- `IDF_PROJECT_DIR` — firmware project root; defaults to this repository;
+- `IDF_PATH` — ESP-IDF root; defaults to `<repo>/esp-idf`;
+- `IDF_EXPORT_SCRIPT` — ESP-IDF export script override;
+- `ESP_WIFI_BASE_URL` — ESP HTTP base URL; default `http://192.168.4.1`.
 
 ## Main API surfaces
 
+Read/status:
+
 - `GET /api/ports`
-- `POST /api/connect`
-- `POST /api/disconnect`
-- `POST /api/command`
+- `GET /api/connection`
+- `GET /api/tooling`
 - `GET /api/telemetry`
 - `GET /api/logs`
 - `GET /api/logs/stream`
+
+Mutating/operator actions:
+
+- `POST /api/connect`
+- `POST /api/disconnect`
+- `POST /api/command`
 - `POST /api/transport`
 - `POST /api/tooling/build`
 - `POST /api/tooling/flash`
+
+## ESP Wi-Fi defaults
+
+Firmware AP defaults are controlled by `sdkconfig.defaults` and Kconfig. Do not duplicate passwords or private STA credentials in this README.

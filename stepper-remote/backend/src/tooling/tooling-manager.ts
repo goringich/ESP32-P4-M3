@@ -1,4 +1,6 @@
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { ToolingAction, ToolingState } from '../types/serial.js';
 
 type ToolingStateListener = (state: ToolingState) => void;
@@ -19,9 +21,13 @@ type ToolingManagerOptions = {
   spawnFn?: SpawnFn;
 };
 
-const DEFAULT_PROJECT_DIR = process.env.IDF_PROJECT_DIR ?? '/home/goringich/esp';
-const DEFAULT_IDF_PATH = process.env.IDF_PATH ?? '/home/goringich/esp/esp-idf';
-const DEFAULT_EXPORT_SCRIPT = process.env.IDF_EXPORT_SCRIPT ?? `${DEFAULT_IDF_PATH}/export.sh`;
+const MODULE_DIR = dirname(fileURLToPath(import.meta.url));
+const DEFAULT_PROJECT_DIR =
+  process.env.IDF_PROJECT_DIR ?? resolve(MODULE_DIR, '../../../..');
+const DEFAULT_IDF_PATH =
+  process.env.IDF_PATH ?? resolve(DEFAULT_PROJECT_DIR, 'esp-idf');
+const DEFAULT_EXPORT_SCRIPT =
+  process.env.IDF_EXPORT_SCRIPT ?? resolve(DEFAULT_IDF_PATH, 'export.sh');
 
 function shellEscape(value: string): string {
   return `'${value.replace(/'/g, `'\\''`)}'`;

@@ -5,6 +5,18 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 FRONTEND_DIR="${REPO_DIR}/stepper-remote/frontend"
 BACKEND_DIR="${REPO_DIR}/stepper-remote/backend"
+HOST="${STEPPER_REMOTE_HOST:-127.0.0.1}"
+PORT="${STEPPER_REMOTE_PORT:-3001}"
+
+is_loopback() {
+  [[ "$1" == "127.0.0.1" || "$1" == "localhost" || "$1" == "::1" || "$1" == "[::1]" ]]
+}
+
+if ! is_loopback "${HOST}" && [[ "${STEPPER_REMOTE_ALLOW_REMOTE:-0}" != "1" ]]; then
+  echo "[stepper-remote] refusing remote bind to ${HOST}" >&2
+  echo "[stepper-remote] set STEPPER_REMOTE_ALLOW_REMOTE=1 explicitly if LAN access is intended" >&2
+  exit 2
+fi
 
 echo "[stepper-remote] building frontend"
 (
@@ -18,11 +30,10 @@ echo "[stepper-remote] building backend"
   npm run build
 )
 
-echo "[stepper-remote] starting backend on http://127.0.0.1:3001"
-echo "[stepper-remote] open http://127.0.0.1:3001/ in a browser"
-HOST_IPS="$(hostname -I 2>/dev/null | xargs || true)"
-if [[ -n "${HOST_IPS}" ]]; then
-  echo "[stepper-remote] backend also listens on 0.0.0.0:3001"
-  echo "[stepper-remote] reachable host IPs: ${HOST_IPS}"
+echo "[stepper-remote] starting backend on http://${HOST}:${PORT}"
+if ! is_loopback "${HOST}"; then
+  echo "[stepper-remote] WARNING: remote operator access can build, flash, and control hardware"
+  echo "[stepper-remote] restrict the host firewall and set STEPPER_REMOTE_ALLOWED_ORIGIN"
 fi
+
 exec bash -lc "cd '${BACKEND_DIR}' && npm start"

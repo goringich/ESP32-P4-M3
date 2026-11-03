@@ -31,13 +31,15 @@
 
 static const char *TAG = "app";
 static bool s_network_ready;
+static bool s_network_api_ready;
+static bool s_stepper_ready;
 static app_system_status_t s_system_status = {
   .ready = false,
   .uptime_ms = 0,
   .tick = 0,
   .tick_delay_ms = APP_MAIN_TICK_MS,
-  .firmware = "hello_world_p4",
-  .app_mode = "l293d_test",
+  .firmware = "esp32_p4_m3",
+  .app_mode = "",
   .last_error = "",
 };
 static app_i2c_status_t s_i2c_status = {
@@ -60,7 +62,8 @@ static app_ble_status_t s_ble_status = {
 };
 
 static void app_log_color_block(const char *label, const char *color);
-static void app_mpu_whoami_check(void);
+static const char *app_mode_name(void);
+static esp_err_t app_mpu_whoami_check(void);
 static void app_emit_system_telemetry(uint32_t tick_counter, uint32_t uptime_ms);
 
 static void app_log_color_block(const char *label, const char *color) {
@@ -73,7 +76,17 @@ static void app_log_color_block(const char *label, const char *color) {
   ESP_LOGI(TAG, "%s%s%s", color, divider, APP_LOG_COLOR_RESET);
 }
 
-static void app_mpu_whoami_check(void) {
+static const char *app_mode_name(void) {
+#if CONFIG_APP_MODE_L293D_TEST
+  return "l293d_test";
+#elif CONFIG_APP_MODE_MPU9250
+  return "mpu9250";
+#else
+  return "unknown";
+#endif
+}
+
+static esp_err_t app_mpu_whoami_check(void) {
   uint8_t addr = 0;
   uint8_t who = 0;
 
@@ -93,7 +106,7 @@ static void app_mpu_whoami_check(void) {
     strlcpy(s_i2c_status.last_scan_summary, "found=1, timeouts=0, other=0", sizeof(s_i2c_status.last_scan_summary));
     s_i2c_status.error[0] = '\0';
     ESP_LOGW(TAG, "mpu: addr=0x%02X WHO_AM_I=0x%02X (%s)", addr, who, mpu9250_whoami_name(who));
-    return;
+    return ESP_OK;
   }
 
   s_i2c_status.ready = false;
@@ -105,20 +118,35 @@ static void app_mpu_whoami_check(void) {
   strlcpy(s_i2c_status.error, esp_err_to_name(err), sizeof(s_i2c_status.error));
   ESP_LOGW(TAG, "mpu: not detected on 0x68/0x69 (%s)", esp_err_to_name(err));
 
+#if CONFIG_APP_I2C_DIAG_SWEEP_ON_MPU_FAIL
   i2c_bus_deinit();
   i2c_bus_diag_sweep_mpu_pairs();
+
+  esp_err_t restore_err = i2c_bus_init();
+  if (restore_err != ESP_OK) {
+    ESP_LOGE(TAG, "i2c restore after diagnostics failed: %s", esp_err_to_name(restore_err));
+    strlcpy(s_i2c_status.error, esp_err_to_name(restore_err), sizeof(s_i2c_status.error));
+    return restore_err;
+  }
+#endif
+
+  return err;
 }
 
 static void app_emit_system_telemetry(uint32_t tick_counter, uint32_t uptime_ms) {
-  s_system_status.ready = true;
   s_system_status.tick = tick_counter;
   s_system_status.uptime_ms = uptime_ms;
   s_system_status.tick_delay_ms = APP_MAIN_TICK_MS;
-  printf("@telemetry {\"kind\":\"system\",\"uptime_ms\":%" PRIu32 ",\"tick\":%" PRIu32
-         ",\"tick_delay_ms\":%u,\"firmware\":\"hello_world_p4\",\"app_mode\":\"l293d_test\"}\n",
+  printf("@telemetry {\"kind\":\"system\",\"ready\":%s,\"uptime_ms\":%" PRIu32
+         ",\"tick\":%" PRIu32 ",\"tick_delay_ms\":%u,\"firmware\":\"%s\","
+         "\"app_mode\":\"%s\",\"last_error\":\"%s\"}\n",
+         s_system_status.ready ? "true" : "false",
          uptime_ms,
          tick_counter,
-         APP_MAIN_TICK_MS);
+         APP_MAIN_TICK_MS,
+         s_system_status.firmware,
+         s_system_status.app_mode,
+         s_system_status.last_error);
 }
 
 void app_init(void) {
@@ -127,34 +155,49 @@ void app_init(void) {
   esp_log_level_set("i2c.master", ESP_LOG_ERROR);
   esp_log_level_set("i2c_bus", ESP_LOG_INFO);
 
+  strlcpy(s_system_status.app_mode, app_mode_name(), sizeof(s_system_status.app_mode));
+
   app_log_color_block("APP INITIALIZATION", APP_LOG_COLOR_BLOCK_INIT);
-  ESP_LOGI(TAG, "init");
+  ESP_LOGI(TAG, "init firmware=%s mode=%s",
+           s_system_status.firmware,
+           s_system_status.app_mode);
 
   esp_err_t err = i2c_bus_init();
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "i2c init failed: %s", esp_err_to_name(err));
-    return;
-  }
-
-  app_log_color_block("I2C SCAN", APP_LOG_COLOR_BLOCK_SCAN);
-
-  err = i2c_bus_scan();
-  if (err != ESP_OK) {
     s_i2c_status.ready = false;
     strlcpy(s_i2c_status.error, esp_err_to_name(err), sizeof(s_i2c_status.error));
-    ESP_LOGE(TAG, "i2c scan failed: %s", esp_err_to_name(err));
+    app_set_system_error(esp_err_to_name(err));
+    ESP_LOGE(TAG, "i2c init failed: %s", esp_err_to_name(err));
   } else {
-    s_i2c_status.ready = true;
-    strlcpy(s_i2c_status.last_scan_summary, "scan completed", sizeof(s_i2c_status.last_scan_summary));
-    s_i2c_status.error[0] = '\0';
-  }
+    app_log_color_block("I2C SCAN", APP_LOG_COLOR_BLOCK_SCAN);
 
-  app_mpu_whoami_check();
+    err = i2c_bus_scan();
+    if (err != ESP_OK) {
+      s_i2c_status.ready = false;
+      strlcpy(s_i2c_status.error, esp_err_to_name(err), sizeof(s_i2c_status.error));
+      app_set_system_error(esp_err_to_name(err));
+      ESP_LOGE(TAG, "i2c scan failed: %s", esp_err_to_name(err));
+    } else {
+      s_i2c_status.ready = true;
+      strlcpy(
+        s_i2c_status.last_scan_summary,
+        "scan completed",
+        sizeof(s_i2c_status.last_scan_summary)
+      );
+      s_i2c_status.error[0] = '\0';
+    }
+
+    err = app_mpu_whoami_check();
+    if (err != ESP_OK) {
+      app_set_system_error(esp_err_to_name(err));
+    }
+  }
 
 #if CONFIG_APP_WIFI_SMOKE
   app_log_color_block("WIFI SMOKE TEST", APP_LOG_COLOR_BLOCK_WIFI);
   err = app_wifi_smoke_run();
   if (err != ESP_OK) {
+    app_set_system_error(esp_err_to_name(err));
     ESP_LOGW(TAG, "wifi smoke result: %s", esp_err_to_name(err));
   } else {
     s_network_ready = true;
@@ -164,7 +207,10 @@ void app_init(void) {
 #if CONFIG_APP_MODE_L293D_TEST
   err = app_stepper_init();
   if (err != ESP_OK) {
+    app_set_system_error(esp_err_to_name(err));
     ESP_LOGE(TAG, "stepper init failed: %s", esp_err_to_name(err));
+  } else {
+    s_stepper_ready = true;
   }
 #endif
 
@@ -176,6 +222,7 @@ void app_init(void) {
   err = app_ble_init();
   app_ble_get_status(&s_ble_status);
   if (err != ESP_OK) {
+    app_set_system_error(esp_err_to_name(err));
     ESP_LOGW(TAG, "ble init result: %s", esp_err_to_name(err));
   }
 #endif
@@ -184,15 +231,21 @@ void app_init(void) {
   if (s_network_ready) {
     err = app_net_start();
     if (err != ESP_OK) {
+      app_set_system_error(esp_err_to_name(err));
       ESP_LOGW(TAG, "network API disabled: %s", esp_err_to_name(err));
+    } else {
+      s_network_api_ready = true;
     }
   }
 #endif
+
+  s_system_status.ready = true;
+  ESP_LOGI(TAG, "runtime initialized");
 }
 
 void app_tick(void) {
 #if CONFIG_APP_CONTROL_ENABLE
-  {
+  if (s_stepper_ready) {
     static uint32_t s_last_control_ms = 0;
     const uint32_t now_ctrl = esp_log_timestamp();
     if ((now_ctrl - s_last_control_ms) >= (uint32_t)CONFIG_APP_CONTROL_DT_MS) {
@@ -207,7 +260,9 @@ void app_tick(void) {
 #endif
 
 #if CONFIG_APP_MODE_L293D_TEST
-  app_stepper_tick();
+  if (s_stepper_ready) {
+    app_stepper_tick();
+  }
 #endif
 
 #if CONFIG_APP_BLE_ENABLE
@@ -216,7 +271,9 @@ void app_tick(void) {
 #endif
 
 #if CONFIG_APP_NET_ENABLE
-  app_net_tick();
+  if (s_network_api_ready) {
+    app_net_tick();
+  }
 #endif
 
 #if CONFIG_APP_TICK_LOG
@@ -239,8 +296,6 @@ void app_tick(void) {
                s_log_counter,
                esp_err_to_name(err),
                APP_LOG_COLOR_RESET);
-    } else {
-      app_set_system_error(NULL);
     }
   }
 #endif

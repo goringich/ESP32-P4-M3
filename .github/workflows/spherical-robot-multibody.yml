@@ -89,16 +89,10 @@ jobs:
           conda install --yes projectchrono::pychrono=10.0.0 -c conda-forge
           python -m pip install --disable-pip-version-check --no-input \
             -r mechanical/spherical_robot/simulation/requirements-simulation.txt
-      - name: Execute independent cross-check
+      - name: Execute single-sandbox independent cross-check
         run: |
           set -Eeuo pipefail
-          python mechanical/spherical_robot/simulation/run_mujoco.py \
-            --output /tmp/mujoco-evidence.json
-          python mechanical/spherical_robot/simulation/run_chrono.py \
-            --output /tmp/chrono-evidence.json
-          python mechanical/spherical_robot/simulation/compare_multibody.py \
-            --mujoco /tmp/mujoco-evidence.json \
-            --chrono /tmp/chrono-evidence.json \
+          python mechanical/spherical_robot/simulation/run_multibody_crosscheck.py \
             --output /tmp/multibody-crosscheck.json
           python - <<'PY'
           import json
@@ -108,6 +102,12 @@ jobs:
           assert report["evidence_state"] == "INDEPENDENT_DYNAMICS_CROSSCHECK_PASS", report
           assert report["metrics"]["scenario_count"] == 27, report
           assert report["metrics"]["direction_agreement_fraction"] >= 0.95, report
+          assert report["entrypoint"]["single_sandbox_lifetime"] is True, report
+          assert [row["stage"] for row in report["entrypoint"]["stages"]] == [
+            "mujoco",
+            "chrono",
+            "compare",
+          ], report
           assert report["physical_accepted"] is False, report
           PY
           git diff --check

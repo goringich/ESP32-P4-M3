@@ -12,7 +12,7 @@ test('telemetry parser ingests structured MCU lines', () => {
 
   state = applyLogTelemetry(
     state,
-    '@telemetry {"kind":"system","uptime_ms":1250,"tick":3,"tick_delay_ms":5,"firmware":"hello_world_p4","app_mode":"l293d_test"}',
+    '@telemetry {"kind":"system","uptime_ms":1250,"tick":3,"tick_delay_ms":5,"firmware":"esp32_p4_m3","app_mode":"l293d_test"}',
     10
   );
   state = applyLogTelemetry(
@@ -26,7 +26,7 @@ test('telemetry parser ingests structured MCU lines', () => {
     30
   );
 
-  assert.equal(state.system.firmware, 'hello_world_p4');
+  assert.equal(state.system.firmware, 'esp32_p4_m3');
   assert.equal(state.system.tick, 3);
   assert.equal(state.mpu.model, 'MPU9250');
   assert.equal(state.mpu.accel.z, 0.3);
