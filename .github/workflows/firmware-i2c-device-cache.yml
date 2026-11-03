@@ -1,0 +1,59 @@
+name: Firmware I2C Device Cache
+
+on:
+  pull_request:
+    paths:
+      - "components/i2c_bus/**"
+      - "tests/test_i2c_bus_handle_cache.py"
+      - ".github/workflows/firmware-i2c-device-cache.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "components/i2c_bus/**"
+      - "tests/test_i2c_bus_handle_cache.py"
+      - ".github/workflows/firmware-i2c-device-cache.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  i2c-handle-lifecycle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout immutable source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Compile and exercise I2C device lifecycle against mocks
+        run: python3 -m unittest discover -s tests -p 'test_i2c_bus_handle_cache.py' -v
+
+  firmware-esp-idf-552:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    container:
+      image: docker.io/espressif/idf@sha256:05cbfc42ed2e987b8026722c15bf1d8523d3e4fd1b4ac04d2e4056f5e0918b99
+    steps:
+      - name: Checkout immutable source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Build firmware using pinned ESP-IDF 5.5.2
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          . /opt/esp/idf/export.sh >/dev/null
+          build_dir="${RUNNER_TEMP}/i2c-firmware-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          source_dir="${RUNNER_TEMP}/i2c-source-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          mkdir -p "${source_dir}"
+          git -c "safe.directory=${PWD}" archive HEAD |
+            tar -xf - -C "${source_dir}" \
+              --exclude='build' --exclude='build/*' \
+              --exclude='managed_components' --exclude='managed_components/*'
+          cd "${source_dir}"
+          # Build-only profile: the app compiles L293D sources unconditionally.
+          # Enable their existing Kconfig defaults only in this ephemeral CI export.
+          printf '%s\n' 'CONFIG_APP_MODE_L293D_TEST=y' '# CONFIG_APP_MODE_MPU9250 is not set' >> sdkconfig.defaults
+          idf.py -B "${build_dir}" set-target esp32p4
+          idf.py -B "${build_dir}" build
